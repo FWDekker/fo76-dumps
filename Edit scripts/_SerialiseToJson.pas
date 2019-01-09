@@ -12,7 +12,12 @@ end;
 
 function Process(e: IInterface): integer;
 begin
-    outputLines.Add('    "' + IntToHex(FormID(e), 8) + '" : ' + Serialize(e, 1) + ',');
+    if (outputLines.Count > 1) then
+    begin
+        outputLines.Add('    ,');
+    end;
+
+    outputLines.Add('    "' + IntToHex(FormID(e), 8) + '" : ' + Serialize(e, 1));
 end;
 
 function Finalize: integer;
@@ -32,22 +37,22 @@ var
 begin
     eType := ElementType(e);
 
-    if (Ord(eType) = Ord(etValue)) then
+    if ((Ord(eType) = Ord(etValue)) OR (Ord(eType) = Ord(etFlag))) then
     begin
         Result := SerializeValue(e);
     end
     else if (Ord(eType) = Ord(etSubRecord)) then
     begin
-        if (CanContainFormIDs(e)) then
+        if (ElementCount(e) = 0) then
         begin
-            Result := SerializeArray(e, indentLevel);
+            Result := SerializeValue(e);
         end
         else
         begin
-            Result := SerializeValue(e);
+            Result := SerializeObject(e, indentLevel);
         end;
     end
-    else if ((Ord(eType) = Ord(etMainRecord)) OR (Ord(eType) = Ord(etStruct)) OR (Ord(eType) = Ord(etSubRecordStruct))) then
+    else if ((Ord(eType) = Ord(etMainRecord)) OR (Ord(eType) = Ord(etStruct)) OR (Ord(eType) = Ord(etSubRecordStruct)) OR (Ord(eType) = Ord(etUnion))) then
     begin
         Result := SerializeObject(e, indentLevel);
     end
@@ -59,7 +64,7 @@ begin
     begin
         // Error
         AddMessage('UNKNOWN TYPE!!! ' + Name(e) + ' // ' + etToString(ElementType(e)));
-        Result := '"<!>' + etToString(ElementType(e)) + '</!>"';
+        Result := '"<! DUMP ERROR. UNKNOWN TYPE `' + etToString(ElementType(e)) + '` !>"';
     end;
 end;
 
