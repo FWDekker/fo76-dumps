@@ -135,7 +135,11 @@ begin
 
     // Add speaker at start of paragraph
     speaker := GetEditValue(ElementBySignature(LinksTo(ElementBySignature(ElementByIndex(ChildGroup(topic), 0), 'ANAM')), 'FULL'));
-    if ((speaker <> '') AND (speaker <> lastSpeaker)) then
+    if (speaker = '') then
+    begin
+        speaker := GetEditValue(ElementBySignature(LinksTo(ElementBySignature(ElementByIndex(ChildGroup(topic), 0), 'ANAM')), 'EDID'));
+    end;
+    if ((speaker <> '_NPC_NoLines') AND (speaker <> lastSpeaker)) then
     begin
         Result := Result + '''''''' + speaker + ''''''': ';
     end;
