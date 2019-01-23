@@ -49,6 +49,12 @@ var
 
     i: integer;
 begin
+    if (GetEditValue(ElementByPath(ElementBySignature(note, 'SNAM'), 'Terminal')) <> '') then
+    begin
+        Result := 'This disk shows terminal entries.';
+        Exit;
+    end;
+
     scene := LinksTo(ElementByPath(ElementBySignature(note, 'SNAM'), 'Scene'));
     actions := ElementByPath(scene, 'Actions');
 
