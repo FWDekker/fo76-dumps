@@ -1,4 +1,4 @@
-unit _SerialiseToJson;
+unit SerialiseToJson;
 
 var
     outputLines: TStringList;

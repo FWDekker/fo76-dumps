@@ -1,4 +1,4 @@
-unit _ExportGMST;
+unit ExportTabularGMST;
 
 var
     outputLines: TStringList;

@@ -1,4 +1,4 @@
-unit _ExportWikiNOTE;
+unit ExportWikiNOTE;
 
 var
     outputLines: TStringList;
