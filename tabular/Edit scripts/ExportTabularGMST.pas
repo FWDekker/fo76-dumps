@@ -24,7 +24,8 @@ function Finalize: integer;
 begin
     if (outputLines.Count > 0) then
     begin
-        outputLines.SaveToFile('fo76_dump_gmst.csv');
+        CreateDir('dumps/');
+        outputLines.SaveToFile('dumps/GMST.csv');
     end;
 end;
 

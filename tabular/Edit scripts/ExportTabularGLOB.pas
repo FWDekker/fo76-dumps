@@ -22,7 +22,8 @@ function Finalize: integer;
 begin
     if (outputLines.Count > 0) then
     begin
-        outputLines.SaveToFile('fo76_dump_globs.csv');
+        CreateDir('dumps/');
+        outputLines.SaveToFile('dumps/GLOB.csv');
     end;
 end;
 

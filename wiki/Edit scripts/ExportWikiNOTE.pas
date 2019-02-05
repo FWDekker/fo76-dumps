@@ -32,7 +32,8 @@ function Finalize: integer;
 begin
     if (outputLines.Count > 0) then
     begin
-        outputLines.SaveToFile('fo76_dump_note.wiki');
+        CreateDir('dumps/');
+        outputLines.SaveToFile('dumps/NOTE.wiki');
     end;
 end;
 
