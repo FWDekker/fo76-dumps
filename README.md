@@ -29,6 +29,7 @@ Wiki dumps are generated for the [Fallout Wiki](https://fallout.wikia.com/) and 
 | Source           | File        | Description |
 |------------------|-------------|-------------|
 | `SeventySix.esm` | `NOTE.wiki` | Holodisks   |
+| `SeventySix.esm` | `TERM.wiki` | Terminals   |
 
   </p>
 </details>
