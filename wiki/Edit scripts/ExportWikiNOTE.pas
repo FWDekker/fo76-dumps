@@ -1,7 +1,9 @@
 unit ExportWikiNOTE;
 
-var
-    outputLines: TStringList;
+uses ExportWikiCore;
+
+
+var outputLines: TStringList;
     lastSpeaker: string;
 
 
@@ -36,8 +38,7 @@ end;
 
 
 function GetNoteDialogue(note: IInterface): string;
-var
-    scene: IInterface;
+var scene: IInterface;
     actions: IInterface;
     actionList: TList;
 
@@ -115,8 +116,7 @@ begin
 end;
 
 function GetTopicDialogue(topic: IInterface): string;
-var
-    speaker: string;
+var speaker: string;
     lines: IInterface;
     line: string;
     comment: string;
@@ -175,13 +175,6 @@ begin
     end;
 
     Result := Trim(Result);
-end;
-
-function EscapeHTML(text: string): string;
-begin
-    Result := text;
-    Result := StringReplace(Result, '<', '&lt;', [rfReplaceAll]);
-    Result := StringReplace(Result, '>', '&gt;', [rfReplaceAll]);
 end;
 
 

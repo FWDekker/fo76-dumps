@@ -3,8 +3,7 @@ unit ExportWikiTERM;
 uses ExportWikiCore;
 
 
-var
-    outputLines: TStringList;
+var outputLines: TStringList;
     visitHistory: TStringList;
 
 
@@ -48,8 +47,7 @@ end;
 
 
 function WriteTerminalContents(e: IInterface; depth: integer): string;
-var
-    body: IInterface;
+var body: IInterface;
     bodyItem: IInterface;
 
     menu: IInterface;

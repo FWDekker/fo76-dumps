@@ -29,8 +29,7 @@ end;
  * @return `true` iff [e] is referenced by a record with signature [sig]
  *)
 function IsReferencedBy(e: IInterface; sig: string): boolean;
-var
-    i: integer;
+var i: integer;
 begin
     Result := false;
 
