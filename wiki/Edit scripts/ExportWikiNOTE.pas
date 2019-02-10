@@ -1,6 +1,7 @@
 unit ExportWikiNOTE;
 
-uses ExportWikiCore;
+uses ExportCore,
+     ExportWikiCore;
 
 
 var outputLines: TStringList;
@@ -22,11 +23,11 @@ begin
 
     lastSpeaker := '';
 
-    // AddMessage(GetEditValue(ElementBySignature(e, 'FULL')));
-    outputLines.Add('==' + GetEditValue(ElementBySignature(e, 'FULL')) + '==');
-    outputLines.Add('Form ID: ' + LowerCase(IntToHex(FormID(e), 8)));
-    outputLines.Add('Weight:  ' + GetEditValue(ElementByPath(ElementBySignature(e, 'DATA'), 'Weight')));
-    outputLines.Add('Value:   ' + GetEditValue(ElementByPath(ElementBySignature(e, 'DATA'), 'Value')));
+    // AddMessage(evBySignature(e, 'FULL'));
+    outputLines.Add('==' + evBySignature(e, 'FULL') + '==');
+    outputLines.Add('Form ID: ' + StringFormID(e));
+    outputLines.Add('Weight:  ' + evByPath(eBySignature(e, 'DATA'), 'Weight'));
+    outputLines.Add('Value:   ' + evByPath(eBySignature(e, 'DATA'), 'Value'));
     outputLines.Add('Transcript: ' + #10 + GetNoteDialogue(e) + #10 + #10);
 end;
 
@@ -48,21 +49,21 @@ var scene: IInterface;
 
     i: integer;
 begin
-    if (GetEditValue(ElementByPath(ElementBySignature(note, 'SNAM'), 'Terminal')) <> '') then
+    if (evByPath(eBySignature(note, 'SNAM'), 'Terminal') <> '') then
     begin
         Result := 'This disk shows terminal entries.';
         Exit;
     end;
 
-    scene := LinksTo(ElementByPath(ElementBySignature(note, 'SNAM'), 'Scene'));
-    actions := ElementByPath(scene, 'Actions');
+    scene := LinksTo(eByPath(eBySignature(note, 'SNAM'), 'Scene'));
+    actions := eByPath(scene, 'Actions');
 
     // Find max stage (and validate their values)
     maxStage := 0;
-    for i := 0 to ElementCount(actions) - 1 do
+    for i := 0 to eCount(actions) - 1 do
     begin
-        startStage := StrToInt(GetEditValue(ElementBySignature(ElementByIndex(actions, i), 'SNAM')));
-        endStage := StrToInt(GetEditValue(ElementBySignature(ElementByIndex(actions, i), 'ENAM')));
+        startStage := StrToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
+        endStage := StrToInt(evBySignature(eByIndex(actions, i), 'ENAM'));
 
         if (startStage < 0) then
         begin
@@ -92,12 +93,12 @@ begin
     end;
 
     // Populate TList
-    for i := 0 to ElementCount(actions) - 1 do
+    for i := 0 to eCount(actions) - 1 do
     begin
-        startStage := StrToInt(GetEditValue(ElementBySignature(ElementByIndex(actions, i), 'SNAM')));
+        startStage := StrToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
 
         actionList.Delete(startStage);
-        actionList.Insert(startStage, ElementByIndex(actions, i));
+        actionList.Insert(startStage, eByIndex(actions, i));
     end;
 
     // Iterate TList to build transcript
@@ -105,9 +106,9 @@ begin
 
     for i := 0 to maxStage do
     begin
-        if (GetEditValue(ElementBySignature(ObjectToElement(actionList.Items[i]), 'DATA')) <> '') then
+        if (evBySignature(ObjectToElement(actionList.Items[i]), 'DATA') <> '') then
         begin
-            Result := Result + GetTopicDialogue(LinksTo(ElementBySignature(ObjectToElement(actionList.Items[i]), 'DATA'))) + #10 + #10;
+            Result := Result + GetTopicDialogue(LinksTo(eBySignature(ObjectToElement(actionList.Items[i]), 'DATA'))) + #10 + #10;
         end;
     end;
     Delete(Result, Length(Result) - 1, 1); // Remove trailing newline
@@ -130,7 +131,7 @@ begin
         Exit;
     end;
 
-    if (ElementCount(ChildGroup(topic)) <> 1) then
+    if (eCount(ChildGroup(topic)) <> 1) then
     begin
         AddMessage('ERROR - Unexpected no. of children');
         Result := 'ERROR';
@@ -138,10 +139,10 @@ begin
     end;
 
     // Add speaker at start of paragraph
-    speaker := GetEditValue(ElementBySignature(LinksTo(ElementBySignature(ElementByIndex(ChildGroup(topic), 0), 'ANAM')), 'FULL'));
+    speaker := evBySignature(LinksTo(eBySignature(eByIndex(ChildGroup(topic), 0), 'ANAM')), 'FULL');
     if (speaker = '') then
     begin
-        speaker := GetEditValue(ElementBySignature(LinksTo(ElementBySignature(ElementByIndex(ChildGroup(topic), 0), 'ANAM')), 'EDID'));
+        speaker := evBySignature(LinksTo(eBySignature(eByIndex(ChildGroup(topic), 0), 'ANAM')), 'EDID');
     end;
     if ((speaker <> '_NPC_NoLines') AND (speaker <> lastSpeaker)) then
     begin
@@ -150,11 +151,11 @@ begin
     lastSpeaker := speaker;
 
     // Add lines of paragraph
-    lines := ElementByPath(ElementByIndex(ChildGroup(topic), 0), 'Responses');
-    for i := 0 to ElementCount(lines) do
+    lines := eByPath(eByIndex(ChildGroup(topic), 0), 'Responses');
+    for i := 0 to eCount(lines) do
     begin
-        line := EscapeHTML(Trim(GetEditValue(ElementBySignature(ElementByIndex(lines, i), 'NAM1'))));
-        comment := EscapeHTML(Trim(GetEditValue(ElementBySignature(ElementByIndex(lines, i), 'NAM2'))));
+        line := EscapeHTML(Trim(evBySignature(eByIndex(lines, i), 'NAM1')));
+        comment := EscapeHTML(Trim(evBySignature(eByIndex(lines, i), 'NAM2')));
         comment := StringReplace(comment, '"', '&quot;', [rfReplaceAll]);
 
         if (Trim(comment) = '') then

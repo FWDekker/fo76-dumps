@@ -1,6 +1,7 @@
 unit ExportTabularGLOB;
 
-uses ExportTabularCore;
+uses ExportCore,
+	 ExportTabularCore;
 
 
 var outputLines: TStringList;
@@ -15,9 +16,9 @@ end;
 function Process(e: IInterface): integer;
 begin
     outputLines.Add(
-        EscapeCsvString(LowerCase(IntToHex(FormID(e), 8))) + ', ' +
-        EscapeCsvString(GetEditValue(ElementBySignature(e, 'EDID'))) + ', ' +
-        GetEditValue(ElementBySignature(e, 'FLTV'))
+        EscapeCsvString(StringFormID(e)) + ', ' +
+        EscapeCsvString(evBySignature(e, 'EDID')) + ', ' +
+        evBySignature(e, 'FLTV')
     );
 end;
 

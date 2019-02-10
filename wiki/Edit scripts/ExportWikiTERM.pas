@@ -1,6 +1,7 @@
 unit ExportWikiTERM;
 
-uses ExportWikiCore;
+uses ExportCore,
+     ExportWikiCore;
 
 
 var outputLines: TStringList;
@@ -29,10 +30,10 @@ begin
 
     visitHistory.Clear();
 
-    outputLines.Add('==' + GetEditValue(ElementBySignature(e, 'FULL')) + ' (' + LowerCase(IntToHex(FormID(e), 8)) + ')==');
+    outputLines.Add('==' + evBySignature(e, 'FULL') + ' (' + StringFormID(e) + ')==');
     outputLines.Add('{{Transcript|text=');
     outputLines.Add('Welcome to ROBCO Industries (TM) Termlink');
-    outputLines.Add(EscapeHTML(Trim(GetEditValue(ElementBySignature(e, 'WNAM')))));
+    outputLines.Add(EscapeHTML(Trim(evBySignature(e, 'WNAM'))));
     outputLines.Add('}}');
     outputLines.Add('');
     WriteTerminalContents(e, 0);
@@ -56,48 +57,48 @@ var body: IInterface;
 
     i: integer;
 begin
-    visitHistory.Add(IntToHex(FormID(e), 8));
+    visitHistory.Add(StringFormID(e));
 
-    body := ElementByPath(e, 'Body Text');
-    for i := 0 to ElementCount(body) - 1 do
+    body := eByPath(e, 'Body Text');
+    for i := 0 to eCount(body) - 1 do
     begin
-        bodyItem := ElementByIndex(body, i);
-        outputLines.Add(EscapeHTML(GetEditValue(ElementBySignature(bodyItem, 'BTXT'))));
+        bodyItem := eByIndex(body, i);
+        outputLines.Add(EscapeHTML(evBySignature(bodyItem, 'BTXT')));
     end;
 
-    menu := ElementByPath(e, 'Menu Items');
-    for i := 0 to ElementCount(menu) - 1 do
+    menu := eByPath(e, 'Menu Items');
+    for i := 0 to eCount(menu) - 1 do
     begin
-        menuItem := ElementByIndex(menu, i);
-        menuItemType := GetEditValue(ElementBySignature(menuItem, 'ANAM'));
+        menuItem := eByIndex(menu, i);
+        menuItemType := evBySignature(menuItem, 'ANAM');
 
-        if (ElementCount(ElementByPath(menuItem, 'Conditions')) > 0) then
+        if (eCount(eByPath(menuItem, 'Conditions')) > 0) then
         begin
             outputLines.Add('{{Info: The following header is conditional}}');
         end;
 
         if (menuItemType = 'Display Text') then
         begin
-            outputLines.Add(EscapeHTML(CreateWikiHeader(GetEditValue(ElementBySignature(menuItem, 'ITXT')), depth + 1)));
+            outputLines.Add(EscapeHTML(CreateWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
             outputLines.Add('{{Transcript|text=');
-            outputLines.Add(EscapeHTML(Trim(GetEditValue(ElementBySignature(menuItem, 'UNAM')))));
+            outputLines.Add(EscapeHTML(Trim(evBySignature(menuItem, 'UNAM'))));
             outputLines.Add('}}');
             outputLines.Add('');
         end
         else if (menuItemType = 'Submenu - Terminal') then
         begin
-            if (visitHistory.IndexOf(IntToHex(FormID(LinksTo(ElementBySignature(menuItem, 'TNAM'))), 8)) >= 0) then
+            if (visitHistory.IndexOf(StringFormID(LinksTo(eBySignature(menuItem, 'TNAM')))) >= 0) then
             begin
-                if (GetEditValue(ElementBySignature(menuItem, 'RNAM')) <> '') then
+                if (evBySignature(menuItem, 'RNAM') <> '') then
                 begin
-                    outputLines.Add(EscapeHTML(CreateWikiHeader(GetEditValue(ElementBySignature(menuItem, 'ITXT')), depth + 1)));
-                    outputLines.Add(EscapeHTML(Trim(GetEditValue(ElementBySignature(menuItem, 'RNAM')))));
+                    outputLines.Add(EscapeHTML(CreateWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+                    outputLines.Add(EscapeHTML(Trim(evBySignature(menuItem, 'RNAM'))));
                 end;
             end
             else
             begin
-                outputLines.Add(EscapeHTML(CreateWikiHeader(GetEditValue(ElementBySignature(menuItem, 'ITXT')), depth + 1)));
-                WriteTerminalContents(LinksTo(ElementBySignature(menuItem, 'TNAM')), depth + 1);
+                outputLines.Add(EscapeHTML(CreateWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+                WriteTerminalContents(LinksTo(eBySignature(menuItem, 'TNAM')), depth + 1);
             end;
         end
         else if (menuItemType = 'Submenu - Return to Top Level') then
@@ -110,13 +111,13 @@ begin
         end
         else if (menuItemType = 'Display Image') then
         begin
-            outputLines.Add('{{Image: ' + GetEditValue(ElementBySignature(menuItem, 'VNAM')) + '}}');
+            outputLines.Add('{{Image: ' + evBySignature(menuItem, 'VNAM') + '}}');
         end
         else
         begin
             AddMessage('Warning: Unexpected menu item type `' + menuItemType + '`');
 
-            outputLines.Add(EscapeHTML(CreateWikiHeader(GetEditValue(ElementBySignature(menuItem, 'ITXT')), depth + 1)));
+            outputLines.Add(EscapeHTML(CreateWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
             outputLines.Add('{{Error: Unexpected menu item type}}');
         end;
     end;
