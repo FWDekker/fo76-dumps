@@ -42,11 +42,8 @@ end;
 
 function Finalize: integer;
 begin
-    if (outputLines.Count > 0) then
-    begin
-        CreateDir('dumps/');
-        outputLines.SaveToFile('dumps/TERM.wiki');
-    end;
+    CreateDir('dumps/');
+    outputLines.SaveToFile('dumps/TERM.wiki');
 end;
 
 

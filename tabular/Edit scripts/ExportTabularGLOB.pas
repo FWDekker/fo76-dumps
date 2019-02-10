@@ -23,11 +23,8 @@ end;
 
 function Finalize: integer;
 begin
-    if (outputLines.Count > 0) then
-    begin
-        CreateDir('dumps/');
-        outputLines.SaveToFile('dumps/GLOB.csv');
-    end;
+    CreateDir('dumps/');
+    outputLines.SaveToFile('dumps/GLOB.csv');
 end;
 
 
