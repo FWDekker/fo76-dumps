@@ -1,7 +1,9 @@
 unit ExportTabularIDs;
 
-var
-    outputLines: TStringList;
+uses ExportTabularCore;
+
+
+var outputLines: TStringList;
 
 
 function Initialize: integer;
@@ -13,10 +15,11 @@ end;
 function Process(e: IInterface): integer;
 begin
     outputLines.Add(
-        '"' + Signature(e) + '", ' +
-        '"' + LowerCase(IntToHex(FormID(e), 8)) + '", ' +
-        '"' + GetEditValue(ElementBySignature(e, 'EDID')) + '", ' +
-        '"' + GetEditValue(ElementBySignature(e, 'FULL')) + '"');
+        EscapeCsvString(Signature(e)) + ', ' +
+        EscapeCsvString(LowerCase(IntToHex(FormID(e), 8))) + ', ' +
+        EscapeCsvString(GetEditValue(ElementBySignature(e, 'EDID'))) + ', ' +
+        EscapeCsvString(GetEditValue(ElementBySignature(e, 'FULL')))
+    );
 end;
 
 function Finalize: integer;

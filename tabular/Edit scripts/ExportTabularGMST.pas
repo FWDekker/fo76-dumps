@@ -1,7 +1,9 @@
 unit ExportTabularGMST;
 
-var
-    outputLines: TStringList;
+uses ExportTabularCore;
+
+
+var outputLines: TStringList;
 
 
 function Initialize: integer;
@@ -13,10 +15,10 @@ end;
 function Process(e: IInterface): integer;
 begin
     outputLines.Add(
-        '"' + LowerCase(IntToHex(FormID(e), 8)) + '", ' +
-        '"' + GetEditValue(ElementBySignature(e, 'EDID')) + '", ' +
-        '"' + LetterToType(copy(GetEditValue(ElementBySignature(e, 'EDID')), 1, 1)) + '", ' +
-        '"' + GetEditValue(LastElement(ElementBySignature(e, 'DATA'))) + '"'
+        EscapeCsvString(LowerCase(IntToHex(FormID(e), 8))) + ', ' +
+        EscapeCsvString(GetEditValue(ElementBySignature(e, 'EDID'))) + ', ' +
+        EscapeCsvString(LetterToType(copy(GetEditValue(ElementBySignature(e, 'EDID')), 1, 1))) + ', ' +
+        EscapeCsvString(GetEditValue(LastElement(ElementBySignature(e, 'DATA'))))
     );
 end;
 

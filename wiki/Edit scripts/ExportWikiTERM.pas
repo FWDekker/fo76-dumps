@@ -1,5 +1,8 @@
 unit ExportWikiTERM;
 
+uses ExportWikiCore;
+
+
 var
     outputLines: TStringList;
     visitHistory: TStringList;
@@ -124,55 +127,6 @@ begin
     end;
 
     visitHistory.Delete(visitHistory.Count - 1);
-end;
-
-
-function CreateWikiHeader(text: string; depth: integer): string;
-var
-    i: integer;
-begin
-    Result := '';
-
-    for i := 1 to (depth + 2) do begin
-        Result := Result + '=';
-    end;
-
-    Result := Result + text;
-
-    for i := 1 to (depth + 2) do begin
-        Result := Result + '=';
-    end;
-end;
-
-function IsReferencedBy(e: IInterface; sig: string): boolean;
-var
-    i: integer;
-begin
-    Result := false;
-
-    for i := 0 to (ReferencedByCount(e) - 1) do
-    begin
-        if (Signature(ReferencedByIndex(e, i)) = sig) then
-        begin
-            Result := true;
-            Exit;
-        end;
-    end;
-end;
-
-function EscapeHTML(text: string): String;
-begin
-    Result := text;
-    Result := StringReplace(Result, '<', '&lt;', [rfReplaceAll]);
-    Result := StringReplace(Result, '>', '&gt;', [rfReplaceAll]);
-end;
-
-function EscapeWiki(text: String): String;
-begin
-    Result := text;
-    Result := StringReplace(Result, '{', '&#123;', [rfReplaceAll]);
-    Result := StringReplace(Result, '|', '&#124;', [rfReplaceAll]);
-    Result := StringReplace(Result, '}', '&#125;', [rfReplaceAll]);
 end;
 
 
