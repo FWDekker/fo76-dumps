@@ -32,14 +32,14 @@ begin
 end;
 
 (**
- * Escapes a selection of MediaWiki symbols, including those escaped by [EscapeHTML].
+ * Escapes a selection of MediaWiki symbols.
  *
  * @param text the text to escape
  * @return a MediaWiki-escaped version of [text]
  *)
 function EscapeWiki(text: String): String;
 begin
-    Result := EscapeHTML(text);
+    Result := text;
     Result := StringReplace(Result, '{', '&#123;', [rfReplaceAll]);
     Result := StringReplace(Result, '|', '&#124;', [rfReplaceAll]);
     Result := StringReplace(Result, '}', '&#125;', [rfReplaceAll]);
