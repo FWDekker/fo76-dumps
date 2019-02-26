@@ -16,7 +16,7 @@ end;
 function Process(e: IInterface): integer;
 begin
     outputLines.Add(
-        EscapeCsvString(StringFormID(e)) + ', ' +
+        EscapeCsvString(Signature(e)) + ', ' +
         EscapeCsvString(StringFormID(e)) + ', ' +
         EscapeCsvString(evBySignature(e, 'EDID')) + ', ' +
         EscapeCsvString(evBySignature(e, 'FULL'))
