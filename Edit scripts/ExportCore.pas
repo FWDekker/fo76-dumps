@@ -129,6 +129,85 @@ end;
 
 
 (***
+ *
+ * I/O utility functions.
+ *
+ ***)
+
+(**
+ * Deletes files `[filename].001` through `[filename].999`.
+ *
+ * @param filename the prefix of the files to delete
+ *)
+procedure ClearLargeFiles(filename: string);
+var i: integer;
+begin
+    for i := 1 to 999 do
+    begin
+        DeleteFile(filename + '.' + PadLeft('0', IntToStr(i), 3));
+    end;
+end;
+
+(**
+ * Appends [text] to [filename] while using [lines] as a buffer to write in chunks of [maxSize] lines.
+ *
+ * The first chunk is written to `[filename].001`, the second to `[filename].002`, and so on.
+ *
+ * @param filename the prefix of the file to write to
+ * @param lines    the line buffer
+ * @param maxSize  the maximum size of a chunk before the buffer should be flushed
+ * @param text     the new line to add
+ *)
+procedure AppendLargeFile(filename: string; lines: TStringList; maxSize: integer; text: string);
+begin
+    lines.Add(text);
+
+    if (lines.Count >= maxSize) then
+    begin
+        lines.SaveToFile(_FindFreeLargeFile(filename));
+        lines.Clear();
+    end;
+end;
+
+(**
+ * Flushes the line buffer [lines] to a [filename] part even if the buffer is not file.
+ *
+ * @param filename the prefix of the file to write to
+ * @param lines    the line buffer
+ * @see AppendLargeFile
+ *)
+procedure FlushLargeFile(filename: string; lines: TStringList);
+begin
+    lines.SaveToFile(_FindFreeLargeFile(filename));
+    lines.Clear();
+end;
+
+(**
+ * Determines the first filename part that does not exist.
+ * 
+ * @param filename the prefix of the file to find
+ * @return the first filename part that does not exist
+ * @see AppendLargeFile
+ *)
+function _FindFreeLargeFile(filename: string): string;
+var i: integer;
+    candidate: string;
+begin
+    for i := 1 to 999 do
+    begin
+        candidate := filename + '.' + PadLeft('0', IntToStr(i), 3);
+
+        if (not FileExists(candidate)) then
+        begin
+            Result := candidate;
+            Break;
+        end;
+    end;
+end;
+
+
+
+(***
  * 
  * Generic utility functions.
  * 
@@ -151,6 +230,25 @@ begin
 	end;
 end;
 
+(**
+ * Prepends [c] to [s] until [s] is at least [n] characters long.
+ *
+ * If [s] is already longer than [n] characters, [s] is returned unchanged.
+ *
+ * @param c the character to prepend
+ * @param s the string to prepend to
+ * @param n the desired string length
+ * @return a string of at least [n] characters that consists of [s] preceded by copies of [c]
+ *)
+function PadLeft(c: char; s: string; n: size): string;
+begin
+    Result := s;
+
+    while (Length(Result) < n) do
+    begin
+        Result := c + Result;
+    end;
+end;
 
 
 end.

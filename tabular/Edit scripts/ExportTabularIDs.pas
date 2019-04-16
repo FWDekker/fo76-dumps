@@ -5,17 +5,23 @@ uses ExportCore,
 
 
 var outputLines: TStringList;
+var filePartSize: integer;
 
 
 function Initialize: integer;
 begin
     outputLines := TStringList.Create;
-    outputLines.Add('"Signature", "Form ID", "Editor ID", "Name"');
+    filePartSize := 500000;
+
+    CreateDir('dumps/');
+    ClearLargeFiles('dumps/IDs.csv');
+
+    AppendLargeFile('dumps/IDs.csv', outputLines, filePartSize, '"Signature", "Form ID", "Editor ID", "Name"');
 end;
 
 function Process(e: IInterface): integer;
 begin
-    outputLines.Add(
+    AppendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
         EscapeCsvString(Signature(e)) + ', ' +
         EscapeCsvString(StringFormID(e)) + ', ' +
         EscapeCsvString(evBySignature(e, 'EDID')) + ', ' +
@@ -25,8 +31,7 @@ end;
 
 function Finalize: integer;
 begin
-    CreateDir('dumps/');
-    outputLines.SaveToFile('dumps/IDs.csv');
+    FlushLargeFile('dumps/IDs.csv', outputLines);
 end;
 
 
