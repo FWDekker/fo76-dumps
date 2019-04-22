@@ -10,11 +10,12 @@ Tabular dumps are a simplified sort of dump that contains only the most importan
   <summary>Click here for a list of tabular dumps</summary>
   <p>
 
-| Source           | File       | Description                               |
-|------------------|------------|-------------------------------------------|
-| `SeventySix.esm` | `IDs.csv`  | Form IDs, editor IDs, names, and keywords |
-| `SeventySix.esm` | `GLOB.csv` | Global variables                          |
-| `SeventySix.esm` | `GMST.csv` | Game settings                             |
+| Source           | File        | Description                               |
+|------------------|-------------|-------------------------------------------|
+| `SeventySix.esm` | `IDs.csv`   | Form IDs, editor IDs, names, and keywords |
+| `SeventySix.esm` | `GLOB.csv`  | Global variables                          |
+| `SeventySix.esm` | `GMST.csv`  | Game settings                             |
+| `SeventySix.esm` | `SCRAP.csv` | Scrap yields                              |
 
   </p>
 </details>
