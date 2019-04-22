@@ -13,6 +13,7 @@ Tabular dumps are a simplified sort of dump that contains only the most importan
 | Source           | File        | Description                               |
 |------------------|-------------|-------------------------------------------|
 | `SeventySix.esm` | `IDs.csv`   | Form IDs, editor IDs, names, and keywords |
+| `SeventySix.esm` | `COBJ.csv`  | Craftable object recipes and components   |
 | `SeventySix.esm` | `GLOB.csv`  | Global variables                          |
 | `SeventySix.esm` | `GMST.csv`  | Game settings                             |
 | `SeventySix.esm` | `SCRAP.csv` | Scrap yields                              |
