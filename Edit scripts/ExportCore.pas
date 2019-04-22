@@ -59,13 +59,8 @@ begin
     Result := ElementByIndex(e, i);
 end;
 
-
 (**
  * Shorthand for calling [GetEditValue] and [ElementBySignature].
- *
- * @param e   the record to get the edit value from
- * @param sig the signature of the element to return the edit value of
- * @return the edit value of the element with signature [sig] in [e]
  *)
 function evBySignature(e: IInterface; sig: string): string;
 begin
@@ -74,14 +69,18 @@ end;
 
 (**
  * Shorthand for calling [GetEditValue] and [ElementByPath].
- *
- * @param e    the record to get the edit value from
- * @param path the path of the element to return the edit value of
- * @return the edit value of the element with path [path] in [e]
  *)
 function evByPath(e: IInterface; path: string): string;
 begin
     Result := gev(eByPath(e, path));
+end;
+
+(**
+ * Shorthand for calling [GetEditValue] and [ElementByName].
+ *)
+function evByName(e: IInterface; nam: string): string;
+begin
+    Result := gev(eByName(e, nam));
 end;
 
 
