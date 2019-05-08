@@ -1,6 +1,6 @@
 # Fallout 76 data dumps
 This repository contains a number of data dumps of _Fallout 76_ in several formats.
-The dumps have last been updated for version 1.1.3.11 of _Fallout 76_.
+The dumps have last been updated for version 1.1.4.3 of _Fallout 76_.
 
 ## Files
 ### Tabular
