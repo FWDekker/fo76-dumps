@@ -10,13 +10,13 @@ Tabular dumps are a simplified sort of dump that contains only the most importan
   <summary>Click here for a list of tabular dumps</summary>
   <p>
 
-| Source           | File        | Description                               |
-|------------------|-------------|-------------------------------------------|
-| `SeventySix.esm` | `IDs.csv`   | Form IDs, editor IDs, names, and keywords |
-| `SeventySix.esm` | `COBJ.csv`  | Craftable object recipes and components   |
-| `SeventySix.esm` | `GLOB.csv`  | Global variables                          |
-| `SeventySix.esm` | `GMST.csv`  | Game settings                             |
-| `SeventySix.esm` | `SCRAP.csv` | Scrap yields                              |
+| Source           | File       | Description                                      |
+|------------------|------------|--------------------------------------------------|
+| `SeventySix.esm` | `IDs.csv`  | Form IDs, editor IDs, names, and keywords        |
+| `SeventySix.esm` | `COBJ.csv` | Craftable object recipes and components          |
+| `SeventySix.esm` | `GLOB.csv` | Global variables                                 |
+| `SeventySix.esm` | `GMST.csv` | Game settings                                    |
+| `SeventySix.esm` | `MISC.csv` | Inventory item weights, values, and scrap yields |
 
   </p>
 </details>

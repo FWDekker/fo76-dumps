@@ -1,4 +1,4 @@
-unit ExportTabularSCRAP;
+unit ExportTabularMISC;
 
 uses ExportCore,
      ExportTabularCore;
@@ -10,7 +10,7 @@ var outputLines: TStringList;
 function Initialize: integer;
 begin
     outputLines := TStringList.Create;
-    outputLines.Add('"Form ID", "Editor ID", "Item name", "Components"');
+    outputLines.Add('"Form ID", "Editor ID", "Item name", "Value", "Weight", "Components"');
 end;
 
 function Process(e: IInterface): integer;
@@ -19,6 +19,8 @@ begin
         EscapeCsvString(StringFormID(e)) + ', ' +
         EscapeCsvString(evBySignature(e, 'EDID')) + ', ' +
         EscapeCsvString(evBySignature(e, 'FULL')) + ', ' +
+        EscapeCsvString(evByPath(eBySignature(e, 'DATA'), 'Weight')) + ', ' +
+        EscapeCsvString(evByPath(eBySignature(e, 'DATA'), 'Value')) + ', ' +
         EscapeCsvString(GetFlatComponentList(e))
     );
 end;
@@ -26,7 +28,7 @@ end;
 function Finalize: integer;
 begin
     CreateDir('dumps/');
-    outputLines.SaveToFile('dumps/SCRAP.csv');
+    outputLines.SaveToFile('dumps/MISC.csv');
 end;
 
 
