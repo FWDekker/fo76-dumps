@@ -12,9 +12,9 @@ unit ExportTabularCore;
  *)
 function EscapeCsvString(text: string): string;
 begin
-	Result := text;
-	Result := StringReplace(Result, '"', '\"', [rfReplaceAll]);
-	Result := '"' + text + '"';
+    Result := text;
+    Result := StringReplace(Result, '"', '\"', [rfReplaceAll]);
+    Result := '"' + text + '"';
 end;
 
 

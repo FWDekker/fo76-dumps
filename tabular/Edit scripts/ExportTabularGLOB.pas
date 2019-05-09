@@ -1,7 +1,7 @@
 unit ExportTabularGLOB;
 
 uses ExportCore,
-	 ExportTabularCore;
+     ExportTabularCore;
 
 
 var outputLines: TStringList;

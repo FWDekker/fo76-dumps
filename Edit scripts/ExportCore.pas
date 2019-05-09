@@ -1,5 +1,5 @@
 (**
- * A collection of functions shared between the different export types. 
+ * A collection of functions shared between the different export types.
  *)
 unit ExportCore;
 
@@ -98,7 +98,7 @@ end;
 
 
 (***
- * 
+ *
  * xEdit utility functions
  *
  ***)
@@ -183,7 +183,7 @@ end;
 
 (**
  * Determines the first filename part that does not exist.
- * 
+ *
  * @param filename the prefix of the file to find
  * @return the first filename part that does not exist
  * @see AppendLargeFile
@@ -207,9 +207,9 @@ end;
 
 
 (***
- * 
+ *
  * Generic utility functions.
- * 
+ *
  ***)
 
 (**
@@ -222,11 +222,11 @@ end;
 function RepeatString(text: string; amount: integer): string;
 var i: integer;
 begin
-	Result := '';
+    Result := '';
 
-	for i := 1 to amount do begin
-		Result := Result + text;
-	end;
+    for i := 1 to amount do begin
+        Result := Result + text;
+    end;
 end;
 
 (**
