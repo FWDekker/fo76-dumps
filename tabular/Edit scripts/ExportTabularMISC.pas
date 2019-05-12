@@ -10,7 +10,7 @@ var outputLines: TStringList;
 function Initialize: integer;
 begin
     outputLines := TStringList.Create;
-    outputLines.Add('"Form ID", "Editor ID", "Item name", "Value", "Weight", "Components"');
+    outputLines.Add('"Form ID", "Editor ID", "Item name", "Weight", "Value", "Components"');
 end;
 
 function Process(e: IInterface): integer;
