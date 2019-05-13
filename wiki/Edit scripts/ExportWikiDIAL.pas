@@ -54,7 +54,7 @@ begin
         Exit;
     end;
 
-    outputLines.Add('==' + evBySignature(quest, 'EDID') + '==');
+    outputLines.Add('==' + evBySignature(quest, 'EDID') + ' (' + StringFormID(quest) + ')==');
     outputLines.Add('{|class="va-table va-table-full np-table-dialogue"');
     outputLines.Add('|-');
     outputLines.Add('! style="width:2%" | #');
@@ -128,7 +128,7 @@ begin
                     end;
                     dialogHasRowSpan := true;
                 end;
-                outputLines.Add('| ''''' + EscapeHTML(Trim(evBySignature(response, 'NAM1'))) + '''''');
+                outputLines.Add('| ' + EscapeHTML(Trim(evBySignature(response, 'NAM1'))));
                 outputLines.Add('| ''''' + EscapeHTML(Trim(evBySignature(response, 'NAM2'))) + '''''');
                 outputLines.Add('');
 
