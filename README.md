@@ -39,7 +39,7 @@ Wiki dumps are generated for the [Fallout Wiki](https://fallout.wikia.com/) and 
 </details>
 
 ## Generation
-All dumps have been created using [xEdit](https://tes5edit.github.io/) scripts, which are written in [a special form of Object Pascal](https://tes5edit.github.io/docs/11-Scripting-Functions.html#s_11-7). The scripts can be found in the `Edit scripts` directories.
+All dumps have been created using [xEdit](https://tes5edit.github.io/) scripts, which are written in [a special form of Object Pascal](https://tes5edit.github.io/docs/11-Scripting-Functions.html#s_11-7). The scripts can be found in the `Edit scripts` directory.
 
 ## Contact
 * Bugs can be reported on the [Issues](https://github.com/FWDekker/fo76-dumps/issues) page.
