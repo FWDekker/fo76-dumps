@@ -48,15 +48,13 @@ var i: Integer;
     component: IInterface;
 begin
     components := eBySignature(e, 'FVPA');
-    if (eCount(components) = 0) then
-    begin
+    if (eCount(components) = 0) then begin
         result := '';
         exit;
     end;
 
     result := ',';
-    for i := 0 to eCount(components) - 1 do
-    begin
+    for i := 0 to eCount(components) - 1 do begin
         component := eByIndex(components, i);
         result := result + evBySignature(linksTo(eByPath(component, 'Component')), 'EDID') + ' (' + intToStr(evByPath(component, 'Count')) + '),';
     end;

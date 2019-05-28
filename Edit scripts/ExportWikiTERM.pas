@@ -16,15 +16,13 @@ end;
 
 function process(e: IInterface): Integer;
 begin
-    if (signature(e) <> 'TERM') then
-    begin
+    if (signature(e) <> 'TERM') then begin
         addMessage('Error: ' + name(e) + ' is not a TERM.');
         addMessage('Script aborted.');
         exit;
     end;
 
-    if (not isReferencedBy(e, 'REFR')) then
-    begin
+    if (not isReferencedBy(e, 'REFR')) then begin
         exit;
     end;
 
@@ -60,61 +58,43 @@ begin
     visitHistory.add(stringFormID(e));
 
     body := eByPath(e, 'Body Text');
-    for i := 0 to eCount(body) - 1 do
-    begin
+    for i := 0 to eCount(body) - 1 do begin
         bodyItem := eByIndex(body, i);
         outputLines.add(escapeHTML(evBySignature(bodyItem, 'BTXT')));
     end;
 
     menu := eByPath(e, 'Menu Items');
-    for i := 0 to eCount(menu) - 1 do
-    begin
+    for i := 0 to eCount(menu) - 1 do begin
         menuItem := eByIndex(menu, i);
         menuItemType := evBySignature(menuItem, 'ANAM');
 
-        if (eCount(eByPath(menuItem, 'Conditions')) > 0) then
-        begin
+        if (eCount(eByPath(menuItem, 'Conditions')) > 0) then begin
             outputLines.add('{{Info: The following header is conditional}}');
         end;
 
-        if (menuItemType = 'Display Text') then
-        begin
+        if (menuItemType = 'Display Text') then begin
             outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
             outputLines.add('{{Transcript|text=');
             outputLines.add(escapeHTML(trim(evBySignature(menuItem, 'UNAM'))));
             outputLines.add('}}');
             outputLines.add('');
-        end
-        else if (menuItemType = 'Submenu - Terminal') then
-        begin
-            if (visitHistory.indexOf(stringFormID(linksTo(eBySignature(menuItem, 'TNAM')))) >= 0) then
-            begin
-                if (evBySignature(menuItem, 'RNAM') <> '') then
-                begin
+        end else if (menuItemType = 'Submenu - Terminal') then begin
+            if (visitHistory.indexOf(stringFormID(linksTo(eBySignature(menuItem, 'TNAM')))) >= 0) then begin
+                if (evBySignature(menuItem, 'RNAM') <> '') then begin
                     outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
                     outputLines.add(escapeHTML(trim(evBySignature(menuItem, 'RNAM'))));
                 end;
-            end
-            else
-            begin
+            end else begin
                 outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
                 writeTerminalContents(linksTo(eBySignature(menuItem, 'TNAM')), depth + 1);
             end;
-        end
-        else if (menuItemType = 'Submenu - Return to Top Level') then
-        begin
+        end else if (menuItemType = 'Submenu - Return to Top Level') then begin
             // Do nothing
-        end
-        else if (menuItemType = 'Submenu - Force Redraw') then
-        begin
+        end else if (menuItemType = 'Submenu - Force Redraw') then begin
             // Do nothing
-        end
-        else if (menuItemType = 'Display Image') then
-        begin
+        end else if (menuItemType = 'Display Image') then begin
             outputLines.add('{{Image: ' + evBySignature(menuItem, 'VNAM') + '}}');
-        end
-        else
-        begin
+        end else begin
             addMessage('Warning: Unexpected menu item type `' + menuItemType + '`');
 
             outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));

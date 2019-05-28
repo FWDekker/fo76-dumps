@@ -115,10 +115,8 @@ var i: Integer;
 begin
     result := false;
 
-    for i := 0 to (referencedByCount(e) - 1) do
-    begin
-        if (signature(referencedByIndex(e, i)) = sig) then
-        begin
+    for i := 0 to (referencedByCount(e) - 1) do begin
+        if (signature(referencedByIndex(e, i)) = sig) then begin
             result := true;
             exit;
         end;
@@ -141,8 +139,7 @@ end;
 procedure clearLargeFiles(filename: String);
 var i: Integer;
 begin
-    for i := 1 to 999 do
-    begin
+    for i := 1 to 999 do begin
         deleteFile(filename + '.' + padLeft('0', intToStr(i), 3));
     end;
 end;
@@ -161,8 +158,7 @@ procedure appendLargeFile(filename: String; lines: TStringList; maxSize: Integer
 begin
     lines.add(text);
 
-    if (lines.count >= maxSize) then
-    begin
+    if (lines.count >= maxSize) then begin
         lines.saveToFile(_findFreeLargeFile(filename));
         lines.clear();
     end;
@@ -192,12 +188,10 @@ function _findFreeLargeFile(filename: String): String;
 var i: Integer;
     candidate: String;
 begin
-    for i := 1 to 999 do
-    begin
+    for i := 1 to 999 do begin
         candidate := filename + '.' + padLeft('0', intToStr(i), 3);
 
-        if (not fileExists(candidate)) then
-        begin
+        if (not fileExists(candidate)) then begin
             result := candidate;
             break;
         end;
@@ -243,8 +237,7 @@ function padLeft(c: Char; s: String; n: Size): String;
 begin
     result := s;
 
-    while (length(result) < n) do
-    begin
+    while (length(result) < n) do begin
         result := c + result;
     end;
 end;

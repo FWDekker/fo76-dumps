@@ -45,15 +45,13 @@ var i: Integer;
     quantity: IInterface;
 begin
     components := eBySignature(e, 'MCQP');
-    if (eCount(components) = 0) then
-    begin
+    if (eCount(components) = 0) then begin
         result := '';
         exit;
     end;
 
     result := ',';
-    for i := 0 to eCount(components) - 1 do
-    begin
+    for i := 0 to eCount(components) - 1 do begin
         component := linksTo(eByName(eByIndex(components, i), 'Component'));
         quantity := linksTo(eByName(eByIndex(components, i), 'Component Count Keyword'));
 
@@ -77,12 +75,10 @@ begin
     quantityName := evBySignature(quantity, 'EDID');
     componentQuantities := eBySignature(component, 'CVPA');
 
-    for i := 0 to eCount(componentQuantities) - 1 do
-    begin
+    for i := 0 to eCount(componentQuantities) - 1 do begin
         componentQuantity := eByIndex(componentQuantities, i);
 
-        if (compareStr(quantityName, evBySignature(linksTo(eByName(componentQuantity, 'Scrap Count Keyword')), 'EDID')) = 0) then
-        begin
+        if (compareStr(quantityName, evBySignature(linksTo(eByName(componentQuantity, 'Scrap Count Keyword')), 'EDID')) = 0) then begin
             result := evByName(componentQuantity, 'Scrap Component Count');
             break;
         end;

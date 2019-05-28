@@ -51,8 +51,7 @@ begin
     result := ',';
 
     keywords := eBySignature(eByPath(e, 'Keywords'), 'KWDA');
-    for i := 0 to eCount(keywords) - 1 do
-    begin
+    for i := 0 to eCount(keywords) - 1 do begin
         result := result + evBySignature(linksTo(eByIndex(keywords, i)), 'EDID') + ',';
     end;
 end;

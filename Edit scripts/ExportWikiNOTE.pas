@@ -15,8 +15,7 @@ end;
 
 function process(e: IInterface): Integer;
 begin
-    if (signature(e) <> 'NOTE') then
-    begin
+    if (signature(e) <> 'NOTE') then begin
         addMessage('Warning: ' + name(e) + ' is not a NOTE');
         exit;
     end;
@@ -49,8 +48,7 @@ var scene: IInterface;
 
     i: Integer;
 begin
-    if (evByPath(eBySignature(note, 'SNAM'), 'Terminal') <> '') then
-    begin
+    if (evByPath(eBySignature(note, 'SNAM'), 'Terminal') <> '') then begin
         result := 'This disk shows terminal entries.';
         exit;
     end;
@@ -60,41 +58,35 @@ begin
 
     // Find max stage (and validate their values)
     maxStage := 0;
-    for i := 0 to eCount(actions) - 1 do
-    begin
+    for i := 0 to eCount(actions) - 1 do begin
         startStage := strToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
         endStage := strToInt(evBySignature(eByIndex(actions, i), 'ENAM'));
 
-        if (startStage < 0) then
-        begin
+        if (startStage < 0) then begin
             addMessage('ERROR - Negative ENAM');
             result := 'ERROR';
             exit;
         end;
 
-        if (startStage > endStage) then
-        begin
+        if (startStage > endStage) then begin
             addMessage('ERROR - ENAM greater than SNAM');
             result := 'ERROR';
             exit;
         end;
 
-        if (endStage > maxStage) then
-        begin
+        if (endStage > maxStage) then begin
             maxStage := endStage;
         end;
     end;
 
     // Allocate TList
     actionList := TList.create;
-    for i := 0 to maxStage do
-    begin
+    for i := 0 to maxStage do begin
         actionList.add(NULL);
     end;
 
     // Populate TList
-    for i := 0 to eCount(actions) - 1 do
-    begin
+    for i := 0 to eCount(actions) - 1 do begin
         startStage := strToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
 
         actionList.delete(startStage);
@@ -104,10 +96,8 @@ begin
     // Iterate TList to build transcript
     result := '{{Transcript|text=' + #10;
 
-    for i := 0 to maxStage do
-    begin
-        if (evBySignature(objectToElement(actionList.items[i]), 'DATA') <> '') then
-        begin
+    for i := 0 to maxStage do begin
+        if (evBySignature(objectToElement(actionList.items[i]), 'DATA') <> '') then begin
             result := result + getTopicDialogue(linksTo(eBySignature(objectToElement(actionList.items[i]), 'DATA'))) + #10 + #10;
         end;
     end;
@@ -124,15 +114,13 @@ var speaker: String;
 
     i: Integer;
 begin
-    if (signature(topic) <> 'DIAL') then
-    begin
+    if (signature(topic) <> 'DIAL') then begin
         addMessage('ERROR - Unexpected signature: ' + signature(topic));
         result := 'ERROR';
         exit;
     end;
 
-    if (eCount(childGroup(topic)) <> 1) then
-    begin
+    if (eCount(childGroup(topic)) <> 1) then begin
         addMessage('ERROR - Unexpected no. of children');
         result := 'ERROR';
         exit;
@@ -140,38 +128,29 @@ begin
 
     // Add speaker at start of paragraph
     speaker := evBySignature(linksTo(eBySignature(eByIndex(childGroup(topic), 0), 'ANAM')), 'FULL');
-    if (speaker = '') then
-    begin
+    if (speaker = '') then begin
         speaker := evBySignature(linksTo(eBySignature(eByIndex(childGroup(topic), 0), 'ANAM')), 'EDID');
     end;
-    if ((speaker <> '_NPC_NoLines') AND (speaker <> lastSpeaker)) then
-    begin
+    if ((speaker <> '_NPC_NoLines') and (speaker <> lastSpeaker)) then begin
         result := result + '''''''' + speaker + ''''''': ';
     end;
     lastSpeaker := speaker;
 
     // Add lines of paragraph
     lines := eByPath(eByIndex(childGroup(topic), 0), 'Responses');
-    for i := 0 to eCount(lines) do
-    begin
+    for i := 0 to eCount(lines) do begin
         line := escapeHTML(trim(evBySignature(eByIndex(lines, i), 'NAM1')));
         comment := escapeHTML(trim(evBySignature(eByIndex(lines, i), 'NAM2')));
         comment := stringReplace(comment, '"', '&quot;', [rfReplaceAll]);
 
-        if (trim(comment) = '') then
-        begin
-            if ((result = '') AND (pos('*', line) = 1)) then
-            begin
+        if (trim(comment) = '') then begin
+            if ((result = '') and (pos('*', line) = 1)) then begin
                 result := result + '<nowiki>' + line + '</nowiki> ';
-            end
-            else
-            begin
+            end else begin
                 result := result + line + ' ';
             end;
-        end
-        else
-            result := result + '{{tooltip|' + line + '|' + comment + '}}' + ' ';
-        begin
+        end else begin
+            result := result + '{{tooltip|' + line + '|' + comment + '}}' + ' '; 
         end;
     end;
 
