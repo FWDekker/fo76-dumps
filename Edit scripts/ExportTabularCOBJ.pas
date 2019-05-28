@@ -56,7 +56,9 @@ begin
     result := ',';
     for i := 0 to eCount(components) - 1 do begin
         component := eByIndex(components, i);
-        result := result + evBySignature(linksTo(eByPath(component, 'Component')), 'EDID') + ' (' + intToStr(evByPath(component, 'Count')) + '),';
+        result := result
+            + evBySignature(linksTo(eByPath(component, 'Component')), 'EDID')
+            + ' (' + intToStr(evByPath(component, 'Count')) + '),';
     end;
 end;
 

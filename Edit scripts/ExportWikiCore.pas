@@ -8,7 +8,7 @@ uses ExportCore;
 
 (**
  * Returns a wiki-style section header.
- * 
+ *
  * @param text  the name of the section header
  * @param depth the depth of the section header, where 0 is the default level
  * @return a wiki-style section header

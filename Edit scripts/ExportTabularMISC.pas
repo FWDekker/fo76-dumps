@@ -55,7 +55,9 @@ begin
         component := linksTo(eByName(eByIndex(components, i), 'Component'));
         quantity := linksTo(eByName(eByIndex(components, i), 'Component Count Keyword'));
 
-        result := result + evBySignature(component, 'EDID') + ' (' + intToStr(quantityKeywordToValue(component, quantity)) + '),';
+        result := result
+            + evBySignature(component, 'EDID')
+            + ' (' + intToStr(quantityKeywordToValue(component, quantity)) + '),';
     end;
 end;
 
@@ -78,7 +80,12 @@ begin
     for i := 0 to eCount(componentQuantities) - 1 do begin
         componentQuantity := eByIndex(componentQuantities, i);
 
-        if (compareStr(quantityName, evBySignature(linksTo(eByName(componentQuantity, 'Scrap Count Keyword')), 'EDID')) = 0) then begin
+        if (
+            strEquals(
+                quantityName,
+                evBySignature(linksTo(eByName(componentQuantity, 'Scrap Count Keyword')), 'EDID')
+            )
+        ) then begin
             result := evByName(componentQuantity, 'Scrap Component Count');
             break;
         end;

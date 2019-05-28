@@ -98,7 +98,9 @@ begin
 
     for i := 0 to maxStage do begin
         if (evBySignature(objectToElement(actionList.items[i]), 'DATA') <> '') then begin
-            result := result + getTopicDialogue(linksTo(eBySignature(objectToElement(actionList.items[i]), 'DATA'))) + #10 + #10;
+            result := result
+                + getTopicDialogue(linksTo(eBySignature(objectToElement(actionList.items[i]), 'DATA')))
+                + #10 + #10;
         end;
     end;
     delete(result, length(result) - 1, 1); // Remove trailing newline
@@ -150,7 +152,7 @@ begin
                 result := result + line + ' ';
             end;
         end else begin
-            result := result + '{{tooltip|' + line + '|' + comment + '}}' + ' '; 
+            result := result + '{{tooltip|' + line + '|' + comment + '}}' + ' ';
         end;
     end;
 

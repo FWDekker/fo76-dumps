@@ -110,7 +110,8 @@ begin
                     if (eCount(responses) = 1) then begin
                         outputLines.add('| {{ID|' + stringFormID(dialog) + '}}');
                     end else begin
-                        outputLines.add('| rowspan="' + intToStr(eCount(responses)) + '" | {{ID|' + stringFormID(dialog) + '}}');
+                        outputLines.add('| rowspan="'
+                            + intToStr(eCount(responses)) + '" | {{ID|' + stringFormID(dialog) + '}}');
                     end;
                     dialogHasRowSpan := true;
                 end;

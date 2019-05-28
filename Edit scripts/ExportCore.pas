@@ -242,5 +242,13 @@ begin
     end;
 end;
 
+(**
+ * Shorthand for `compareStr(a, b) = 0`.
+ *)
+function strEquals(a: String, b: String): Boolean;
+begin
+    result := compareStr(a, b) = 0;
+end;
+
 
 end.
