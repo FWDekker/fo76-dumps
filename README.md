@@ -3,6 +3,8 @@ This repository contains a number of data dumps of _Fallout 76_ in several forma
 The dumps have last been updated for version 1.1.5.4 of _Fallout 76_.
 
 ## Files
+The dumps are distributed as attachments to [this repository's releases](https://github.com/FWDekker/fo76-dumps/releases).
+
 ### Tabular
 Tabular dumps are a simplified sort of dump that contains only the most important information. These records should be very easy to understand by anyone. For more information on how to browse them, check [the wiki page](https://github.com/FWDekker/fo76-dumps/wiki/Browsing-CSV-files).
 
@@ -10,13 +12,13 @@ Tabular dumps are a simplified sort of dump that contains only the most importan
   <summary>Click here for a list of tabular dumps</summary>
   <p>
 
-| Source           | File       | Description                                      |
-|------------------|------------|--------------------------------------------------|
-| `SeventySix.esm` | `IDs.csv`  | Form IDs, editor IDs, names, and keywords        |
-| `SeventySix.esm` | `COBJ.csv` | Craftable object recipes and components          |
-| `SeventySix.esm` | `GLOB.csv` | Global variables                                 |
-| `SeventySix.esm` | `GMST.csv` | Game settings                                    |
-| `SeventySix.esm` | `MISC.csv` | Inventory item weights, values, and scrap yields |
+| Dump script                                                     | Filename   | Description                                      |
+|-----------------------------------------------------------------|------------|--------------------------------------------------|
+| [`ExportTabularIDs.pas`](Edit%20scripts/ExportTabularIDs.pas)   | `IDs.csv`  | Form IDs, editor IDs, names, and keywords        |
+| [`ExportTabularCOBJ.pas`](Edit%20scripts/ExportTabularCOBJ.pas) | `COBJ.csv` | Craftable object recipes and components          |
+| [`ExportTabularGLOB.pas`](Edit%20scripts/ExportTabularGLOB.pas) | `GLOB.csv` | Global variables                                 |
+| [`ExportTabularGMST.pas`](Edit%20scripts/ExportTabularGMST.pas) | `GMST.csv` | Game settings                                    |
+| [`ExportTabularMISC.pas`](Edit%20scripts/ExportTabularMISC.pas) | `MISC.csv` | Inventory item weights, values, and scrap yields |
 
   </p>
 </details>
@@ -28,12 +30,12 @@ Wiki dumps are generated for the [Fallout Wiki](https://fallout.wikia.com/) and 
   <summary>Click here for a list of wiki dumps</summary>
   <p>
 
-| Source           | File        | Description |
-|------------------|-------------|-------------|
-| `SeventySix.esm` | `BOOK.wiki` | Notes       |
-| `SeventySix.esm` | `DIAL.wiki` | Dialogue    |
-| `SeventySix.esm` | `NOTE.wiki` | Holodisks   |
-| `SeventySix.esm` | `TERM.wiki` | Terminals   |
+| Dump script                                               | Filename    | Description |
+|-----------------------------------------------------------|-------------|-------------|
+| [`ExportWikiBOOK.pas`](Edit%20scripts/ExportWikiBOOK.pas) | `BOOK.wiki` | Notes       |
+| [`ExportWikiDIAL.pas`](Edit%20scripts/ExportWikiDIAL.pas) | `DIAL.wiki` | Dialogue    |
+| [`ExportWikiNOTE.pas`](Edit%20scripts/ExportWikiNOTE.pas) | `NOTE.wiki` | Holodisks   |
+| [`ExportWikiTERM.pas`](Edit%20scripts/ExportWikiTERM.pas) | `TERM.wiki` | Terminals   |
 
   </p>
 </details>
