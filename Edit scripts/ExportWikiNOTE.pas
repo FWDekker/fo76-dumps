@@ -5,78 +5,78 @@ uses ExportCore,
 
 
 var outputLines: TStringList;
-    lastSpeaker: string;
+    lastSpeaker: String;
 
 
-function Initialize: integer;
+function initialize: Integer;
 begin
-    outputLines := TStringList.Create;
+    outputLines := TStringList.create;
 end;
 
-function Process(e: IInterface): integer;
+function process(e: IInterface): Integer;
 begin
-    if (Signature(e) <> 'NOTE') then
+    if (signature(e) <> 'NOTE') then
     begin
-        AddMessage('Warning: ' + Name(e) + ' is not a NOTE');
-        Exit;
+        addMessage('Warning: ' + name(e) + ' is not a NOTE');
+        exit;
     end;
 
     lastSpeaker := '';
 
     // AddMessage(evBySignature(e, 'FULL'));
-    outputLines.Add('==' + evBySignature(e, 'FULL') + '==');
-    outputLines.Add('Form ID: ' + StringFormID(e));
-    outputLines.Add('Weight:  ' + evByPath(eBySignature(e, 'DATA'), 'Weight'));
-    outputLines.Add('Value:   ' + evByPath(eBySignature(e, 'DATA'), 'Value'));
-    outputLines.Add('Transcript: ' + #10 + GetNoteDialogue(e) + #10 + #10);
+    outputLines.add('==' + evBySignature(e, 'FULL') + '==');
+    outputLines.add('Form ID: ' + stringFormID(e));
+    outputLines.add('Weight:  ' + evByPath(eBySignature(e, 'DATA'), 'Weight'));
+    outputLines.add('Value:   ' + evByPath(eBySignature(e, 'DATA'), 'Value'));
+    outputLines.add('Transcript: ' + #10 + getNoteDialogue(e) + #10 + #10);
 end;
 
-function Finalize: integer;
+function finalize: Integer;
 begin
-    CreateDir('dumps/');
-    outputLines.SaveToFile('dumps/NOTE.wiki');
+    createDir('dumps/');
+    outputLines.saveToFile('dumps/NOTE.wiki');
 end;
 
 
-function GetNoteDialogue(note: IInterface): string;
+function getNoteDialogue(note: IInterface): String;
 var scene: IInterface;
     actions: IInterface;
     actionList: TList;
 
-    maxStage: integer;
-    startStage: integer;
-    endStage: integer;
+    maxStage: Integer;
+    startStage: Integer;
+    endStage: Integer;
 
-    i: integer;
+    i: Integer;
 begin
     if (evByPath(eBySignature(note, 'SNAM'), 'Terminal') <> '') then
     begin
-        Result := 'This disk shows terminal entries.';
-        Exit;
+        result := 'This disk shows terminal entries.';
+        exit;
     end;
 
-    scene := LinksTo(eByPath(eBySignature(note, 'SNAM'), 'Scene'));
+    scene := linksTo(eByPath(eBySignature(note, 'SNAM'), 'Scene'));
     actions := eByPath(scene, 'Actions');
 
     // Find max stage (and validate their values)
     maxStage := 0;
     for i := 0 to eCount(actions) - 1 do
     begin
-        startStage := StrToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
-        endStage := StrToInt(evBySignature(eByIndex(actions, i), 'ENAM'));
+        startStage := strToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
+        endStage := strToInt(evBySignature(eByIndex(actions, i), 'ENAM'));
 
         if (startStage < 0) then
         begin
-            AddMessage('ERROR - Negative ENAM');
-            Result := 'ERROR';
-            Exit;
+            addMessage('ERROR - Negative ENAM');
+            result := 'ERROR';
+            exit;
         end;
 
         if (startStage > endStage) then
         begin
-            AddMessage('ERROR - ENAM greater than SNAM');
-            Result := 'ERROR';
-            Exit;
+            addMessage('ERROR - ENAM greater than SNAM');
+            result := 'ERROR';
+            exit;
         end;
 
         if (endStage > maxStage) then
@@ -86,96 +86,96 @@ begin
     end;
 
     // Allocate TList
-    actionList := TList.Create;
+    actionList := TList.create;
     for i := 0 to maxStage do
     begin
-        actionList.Add(NULL);
+        actionList.add(NULL);
     end;
 
     // Populate TList
     for i := 0 to eCount(actions) - 1 do
     begin
-        startStage := StrToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
+        startStage := strToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
 
-        actionList.Delete(startStage);
-        actionList.Insert(startStage, eByIndex(actions, i));
+        actionList.delete(startStage);
+        actionList.insert(startStage, eByIndex(actions, i));
     end;
 
     // Iterate TList to build transcript
-    Result := '{{Transcript|text=' + #10;
+    result := '{{Transcript|text=' + #10;
 
     for i := 0 to maxStage do
     begin
-        if (evBySignature(ObjectToElement(actionList.Items[i]), 'DATA') <> '') then
+        if (evBySignature(objectToElement(actionList.items[i]), 'DATA') <> '') then
         begin
-            Result := Result + GetTopicDialogue(LinksTo(eBySignature(ObjectToElement(actionList.Items[i]), 'DATA'))) + #10 + #10;
+            result := result + getTopicDialogue(linksTo(eBySignature(objectToElement(actionList.items[i]), 'DATA'))) + #10 + #10;
         end;
     end;
-    Delete(Result, Length(Result) - 1, 1); // Remove trailing newline
+    delete(result, length(result) - 1, 1); // Remove trailing newline
 
-    Result := Result + '}}';
+    result := result + '}}';
 end;
 
-function GetTopicDialogue(topic: IInterface): string;
-var speaker: string;
+function getTopicDialogue(topic: IInterface): String;
+var speaker: String;
     lines: IInterface;
-    line: string;
-    comment: string;
+    line: String;
+    comment: String;
 
-    i: integer;
+    i: Integer;
 begin
-    if (Signature(topic) <> 'DIAL') then
+    if (signature(topic) <> 'DIAL') then
     begin
-        AddMessage('ERROR - Unexpected signature: ' + Signature(topic));
-        Result := 'ERROR';
-        Exit;
+        addMessage('ERROR - Unexpected signature: ' + signature(topic));
+        result := 'ERROR';
+        exit;
     end;
 
-    if (eCount(ChildGroup(topic)) <> 1) then
+    if (eCount(childGroup(topic)) <> 1) then
     begin
-        AddMessage('ERROR - Unexpected no. of children');
-        Result := 'ERROR';
-        Exit;
+        addMessage('ERROR - Unexpected no. of children');
+        result := 'ERROR';
+        exit;
     end;
 
     // Add speaker at start of paragraph
-    speaker := evBySignature(LinksTo(eBySignature(eByIndex(ChildGroup(topic), 0), 'ANAM')), 'FULL');
+    speaker := evBySignature(linksTo(eBySignature(eByIndex(childGroup(topic), 0), 'ANAM')), 'FULL');
     if (speaker = '') then
     begin
-        speaker := evBySignature(LinksTo(eBySignature(eByIndex(ChildGroup(topic), 0), 'ANAM')), 'EDID');
+        speaker := evBySignature(linksTo(eBySignature(eByIndex(childGroup(topic), 0), 'ANAM')), 'EDID');
     end;
     if ((speaker <> '_NPC_NoLines') AND (speaker <> lastSpeaker)) then
     begin
-        Result := Result + '''''''' + speaker + ''''''': ';
+        result := result + '''''''' + speaker + ''''''': ';
     end;
     lastSpeaker := speaker;
 
     // Add lines of paragraph
-    lines := eByPath(eByIndex(ChildGroup(topic), 0), 'Responses');
+    lines := eByPath(eByIndex(childGroup(topic), 0), 'Responses');
     for i := 0 to eCount(lines) do
     begin
-        line := EscapeHTML(Trim(evBySignature(eByIndex(lines, i), 'NAM1')));
-        comment := EscapeHTML(Trim(evBySignature(eByIndex(lines, i), 'NAM2')));
-        comment := StringReplace(comment, '"', '&quot;', [rfReplaceAll]);
+        line := escapeHTML(trim(evBySignature(eByIndex(lines, i), 'NAM1')));
+        comment := escapeHTML(trim(evBySignature(eByIndex(lines, i), 'NAM2')));
+        comment := stringReplace(comment, '"', '&quot;', [rfReplaceAll]);
 
-        if (Trim(comment) = '') then
+        if (trim(comment) = '') then
         begin
-            if ((Result = '') AND (Pos('*', line) = 1)) then
+            if ((result = '') AND (pos('*', line) = 1)) then
             begin
-                Result := Result + '<nowiki>' + line + '</nowiki> ';
+                result := result + '<nowiki>' + line + '</nowiki> ';
             end
             else
             begin
-                Result := Result + line + ' ';
+                result := result + line + ' ';
             end;
         end
         else
-            Result := Result + '{{tooltip|' + line + '|' + comment + '}}' + ' ';
+            result := result + '{{tooltip|' + line + '|' + comment + '}}' + ' ';
         begin
         end;
     end;
 
-    Result := Trim(Result);
+    result := trim(result);
 end;
 
 

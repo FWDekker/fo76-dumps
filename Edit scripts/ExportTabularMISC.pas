@@ -7,28 +7,28 @@ uses ExportCore,
 var outputLines: TStringList;
 
 
-function Initialize: integer;
+function initialize: Integer;
 begin
-    outputLines := TStringList.Create;
-    outputLines.Add('"Form ID", "Editor ID", "Item name", "Weight", "Value", "Components"');
+    outputLines := TStringList.create;
+    outputLines.add('"Form ID", "Editor ID", "Item name", "Weight", "Value", "Components"');
 end;
 
-function Process(e: IInterface): integer;
+function process(e: IInterface): Integer;
 begin
-    outputLines.Add(
-        EscapeCsvString(StringFormID(e)) + ', ' +
-        EscapeCsvString(evBySignature(e, 'EDID')) + ', ' +
-        EscapeCsvString(evBySignature(e, 'FULL')) + ', ' +
-        EscapeCsvString(evByPath(eBySignature(e, 'DATA'), 'Weight')) + ', ' +
-        EscapeCsvString(evByPath(eBySignature(e, 'DATA'), 'Value')) + ', ' +
-        EscapeCsvString(GetFlatComponentList(e))
+    outputLines.add(
+        escapeCsvString(stringFormID(e)) + ', ' +
+        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
+        escapeCsvString(evBySignature(e, 'FULL')) + ', ' +
+        escapeCsvString(evByPath(eBySignature(e, 'DATA'), 'Weight')) + ', ' +
+        escapeCsvString(evByPath(eBySignature(e, 'DATA'), 'Value')) + ', ' +
+        escapeCsvString(getFlatComponentList(e))
     );
 end;
 
-function Finalize: integer;
+function finalize: Integer;
 begin
-    CreateDir('dumps/');
-    outputLines.SaveToFile('dumps/MISC.csv');
+    createDir('dumps/');
+    outputLines.saveToFile('dumps/MISC.csv');
 end;
 
 
@@ -38,8 +38,8 @@ end;
  * @param e the element to return the components of
  * @return the components of [e] as a comma-separated list of editor IDs and counts
  *)
-function GetFlatComponentList(e: IInterface): string;
-var i: integer;
+function getFlatComponentList(e: IInterface): String;
+var i: Integer;
     components: IInterface;
     component: IInterface;
     quantity: IInterface;
@@ -47,17 +47,17 @@ begin
     components := eBySignature(e, 'MCQP');
     if (eCount(components) = 0) then
     begin
-        Result := '';
-        Exit;
+        result := '';
+        exit;
     end;
 
-    Result := ',';
+    result := ',';
     for i := 0 to eCount(components) - 1 do
     begin
-        component := LinksTo(eByName(eByIndex(components, i), 'Component'));
-        quantity := LinksTo(eByName(eByIndex(components, i), 'Component Count Keyword'));
+        component := linksTo(eByName(eByIndex(components, i), 'Component'));
+        quantity := linksTo(eByName(eByIndex(components, i), 'Component Count Keyword'));
 
-        Result := Result + evBySignature(component, 'EDID') + ' (' + IntToStr(QuantityKeywordToValue(component, quantity)) + '),';
+        result := result + evBySignature(component, 'EDID') + ' (' + intToStr(quantityKeywordToValue(component, quantity)) + '),';
     end;
 end;
 
@@ -68,9 +68,9 @@ end;
  * @param quantity  the quantity keyword to look up in [component]
  * @return the number of items the quantity keyword [quantity] signifies for [component]
  *)
-function QuantityKeywordToValue(component: IInterface; quantity: IInterface): integer;
-var i: integer;
-    quantityName: string;
+function quantityKeywordToValue(component: IInterface; quantity: IInterface): Integer;
+var i: Integer;
+    quantityName: String;
     componentQuantities: IInterface;
     componentQuantity: IInterface;
 begin
@@ -81,10 +81,10 @@ begin
     begin
         componentQuantity := eByIndex(componentQuantities, i);
 
-        if (CompareStr(quantityName, evBySignature(LinksTo(eByName(componentQuantity, 'Scrap Count Keyword')), 'EDID')) = 0) then
+        if (compareStr(quantityName, evBySignature(linksTo(eByName(componentQuantity, 'Scrap Count Keyword')), 'EDID')) = 0) then
         begin
-            Result := evByName(componentQuantity, 'Scrap Component Count');
-            Break;
+            result := evByName(componentQuantity, 'Scrap Component Count');
+            break;
         end;
     end;
 end;

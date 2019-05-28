@@ -10,11 +10,11 @@ unit ExportTabularCore;
  * @param the text to escape
  * @return a CSV-escaped version of [text]
  *)
-function EscapeCsvString(text: string): string;
+function escapeCsvString(text: String): String;
 begin
-    Result := text;
-    Result := StringReplace(Result, '"', '\"', [rfReplaceAll]);
-    Result := '"' + text + '"';
+    result := text;
+    result := stringReplace(result, '"', '\"', [rfReplaceAll]);
+    result := '"' + text + '"';
 end;
 
 

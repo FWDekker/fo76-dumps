@@ -12,75 +12,75 @@ unit ExportCore;
  ***)
 
 (**
- * Shorthand for [GetEditValue].
+ * Shorthand for [getEditValue].
  *)
-function gev(e: IwbElement): string;
+function gev(e: IwbElement): String;
 begin
-    Result := GetEditValue(e);
+    result := getEditValue(e);
 end;
 
 (**
- * Shorthand for [ElementBySignature].
+ * Shorthand for [elementBySignature].
  *)
-function eBySignature(e: IwbContainer; sig: string): IwbElement;
+function eBySignature(e: IwbContainer; sig: String): IwbElement;
 begin
-    Result := ElementBySignature(e, sig);
+    result := elementBySignature(e, sig);
 end;
 
 (**
- * Shorthand for [ElementByPath].
+ * Shorthand for [elementByPath].
  *)
-function eByPath(e: IwbContainer; path: string): IwbElement;
+function eByPath(e: IwbContainer; path: String): IwbElement;
 begin
-    Result := ElementByPath(e, path);
+    result := elementByPath(e, path);
 end;
 
 (**
- * Shorthand for [ElementByName].
+ * Shorthand for [elementByName].
  *)
-function eByName(e: IwbContainer; nam: string): IwbElement;
+function eByName(e: IwbContainer; nam: String): IwbElement;
 begin
-    Result := ElementByName(e, nam);
+    result := elementByName(e, nam);
 end;
 
 (**
- * Shorthand for [ElementCount].
+ * Shorthand for [elementCount].
  *)
-function eCount(e: IwbContainer): integer;
+function eCount(e: IwbContainer): Integer;
 begin
-    Result := ElementCount(e);
+    result := elementCount(e);
 end;
 
 (**
- * Shorthand for [ElementByIndex].
+ * Shorthand for [elementByIndex].
  *)
-function eByIndex(e: IwbContainer; i: integer): IwbElement;
+function eByIndex(e: IwbContainer; i: Integer): IwbElement;
 begin
-    Result := ElementByIndex(e, i);
+    result := elementByIndex(e, i);
 end;
 
 (**
- * Shorthand for calling [GetEditValue] and [ElementBySignature].
+ * Shorthand for calling [getEditValue] and [elementBySignature].
  *)
-function evBySignature(e: IInterface; sig: string): string;
+function evBySignature(e: IInterface; sig: String): String;
 begin
-    Result := gev(eBySignature(e, sig));
+    result := gev(eBySignature(e, sig));
 end;
 
 (**
- * Shorthand for calling [GetEditValue] and [ElementByPath].
+ * Shorthand for calling [getEditValue] and [elementByPath].
  *)
-function evByPath(e: IInterface; path: string): string;
+function evByPath(e: IInterface; path: String): String;
 begin
-    Result := gev(eByPath(e, path));
+    result := gev(eByPath(e, path));
 end;
 
 (**
- * Shorthand for calling [GetEditValue] and [ElementByName].
+ * Shorthand for calling [getEditValue] and [elementByName].
  *)
-function evByName(e: IInterface; nam: string): string;
+function evByName(e: IInterface; nam: String): String;
 begin
-    Result := gev(eByName(e, nam));
+    result := gev(eByName(e, nam));
 end;
 
 
@@ -90,9 +90,9 @@ end;
  * @param e the record to return the form ID of
  * @return a lowercase string representation of [e]'s form ID
  *)
-function StringFormID(e: IInterface): string;
+function stringFormID(e: IInterface): String;
 begin
-    Result := LowerCase(IntToHex(FormID(e), 8));
+    result := lowerCase(intToHex(formID(e), 8));
 end;
 
 
@@ -110,17 +110,17 @@ end;
  * @param sig the signature to check
  * @return `true` iff [e] is referenced by a record with signature [sig]
  *)
-function IsReferencedBy(e: IInterface; sig: string): boolean;
-var i: integer;
+function isReferencedBy(e: IInterface; sig: String): Boolean;
+var i: Integer;
 begin
-    Result := false;
+    result := false;
 
-    for i := 0 to (ReferencedByCount(e) - 1) do
+    for i := 0 to (referencedByCount(e) - 1) do
     begin
-        if (Signature(ReferencedByIndex(e, i)) = sig) then
+        if (signature(referencedByIndex(e, i)) = sig) then
         begin
-            Result := true;
-            Exit;
+            result := true;
+            exit;
         end;
     end;
 end;
@@ -138,12 +138,12 @@ end;
  *
  * @param filename the prefix of the files to delete
  *)
-procedure ClearLargeFiles(filename: string);
-var i: integer;
+procedure clearLargeFiles(filename: String);
+var i: Integer;
 begin
     for i := 1 to 999 do
     begin
-        DeleteFile(filename + '.' + PadLeft('0', IntToStr(i), 3));
+        deleteFile(filename + '.' + padLeft('0', intToStr(i), 3));
     end;
 end;
 
@@ -157,14 +157,14 @@ end;
  * @param maxSize  the maximum size of a chunk before the buffer should be flushed
  * @param text     the new line to add
  *)
-procedure AppendLargeFile(filename: string; lines: TStringList; maxSize: integer; text: string);
+procedure appendLargeFile(filename: String; lines: TStringList; maxSize: Integer; text: String);
 begin
-    lines.Add(text);
+    lines.add(text);
 
-    if (lines.Count >= maxSize) then
+    if (lines.count >= maxSize) then
     begin
-        lines.SaveToFile(_FindFreeLargeFile(filename));
-        lines.Clear();
+        lines.saveToFile(_findFreeLargeFile(filename));
+        lines.clear();
     end;
 end;
 
@@ -175,10 +175,10 @@ end;
  * @param lines    the line buffer
  * @see AppendLargeFile
  *)
-procedure FlushLargeFile(filename: string; lines: TStringList);
+procedure flushLargeFile(filename: String; lines: TStringList);
 begin
-    lines.SaveToFile(_FindFreeLargeFile(filename));
-    lines.Clear();
+    lines.saveToFile(_findFreeLargeFile(filename));
+    lines.clear();
 end;
 
 (**
@@ -188,18 +188,18 @@ end;
  * @return the first filename part that does not exist
  * @see AppendLargeFile
  *)
-function _FindFreeLargeFile(filename: string): string;
-var i: integer;
-    candidate: string;
+function _findFreeLargeFile(filename: String): String;
+var i: Integer;
+    candidate: String;
 begin
     for i := 1 to 999 do
     begin
-        candidate := filename + '.' + PadLeft('0', IntToStr(i), 3);
+        candidate := filename + '.' + padLeft('0', intToStr(i), 3);
 
-        if (not FileExists(candidate)) then
+        if (not fileExists(candidate)) then
         begin
-            Result := candidate;
-            Break;
+            result := candidate;
+            break;
         end;
     end;
 end;
@@ -219,13 +219,13 @@ end;
  * @param amount the number of times to repeat [text]
  * @return the concatenation of [amount] times [text]
  *)
-function RepeatString(text: string; amount: integer): string;
-var i: integer;
+function repeatString(text: String; amount: Integer): String;
+var i: Integer;
 begin
-    Result := '';
+    result := '';
 
     for i := 1 to amount do begin
-        Result := Result + text;
+        result := result + text;
     end;
 end;
 
@@ -239,13 +239,13 @@ end;
  * @param n the desired string length
  * @return a string of at least [n] characters that consists of [s] preceded by copies of [c]
  *)
-function PadLeft(c: char; s: string; n: size): string;
+function padLeft(c: Char; s: String; n: Size): String;
 begin
-    Result := s;
+    result := s;
 
-    while (Length(Result) < n) do
+    while (length(result) < n) do
     begin
-        Result := c + Result;
+        result := c + result;
     end;
 end;
 

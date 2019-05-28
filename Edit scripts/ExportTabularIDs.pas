@@ -5,36 +5,36 @@ uses ExportCore,
 
 
 var outputLines: TStringList;
-var filePartSize: integer;
+var filePartSize: Integer;
 
 
-function Initialize: integer;
+function initialize: Integer;
 begin
-    outputLines := TStringList.Create;
+    outputLines := TStringList.create;
     filePartSize := 500000;
 
-    CreateDir('dumps/');
-    ClearLargeFiles('dumps/IDs.csv');
+    createDir('dumps/');
+    clearLargeFiles('dumps/IDs.csv');
 
-    AppendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
+    appendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
         '"Signature", "Form ID", "Editor ID", "Name", "Keywords"'
     );
 end;
 
-function Process(e: IInterface): integer;
+function process(e: IInterface): Integer;
 begin
-    AppendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
-        EscapeCsvString(Signature(e)) + ', ' +
-        EscapeCsvString(StringFormID(e)) + ', ' +
-        EscapeCsvString(evBySignature(e, 'EDID')) + ', ' +
-        EscapeCsvString(evBySignature(e, 'FULL')) + ', ' +
-        EscapeCsvString(GetFlatKeywordList(e))
+    appendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
+        escapeCsvString(signature(e)) + ', ' +
+        escapeCsvString(stringFormID(e)) + ', ' +
+        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
+        escapeCsvString(evBySignature(e, 'FULL')) + ', ' +
+        escapeCsvString(getFlatKeywordList(e))
     );
 end;
 
-function Finalize: integer;
+function finalize: Integer;
 begin
-    FlushLargeFile('dumps/IDs.csv', outputLines);
+    flushLargeFile('dumps/IDs.csv', outputLines);
 end;
 
 
@@ -44,16 +44,16 @@ end;
  * @param e the element to return the keywords of
  * @return the keywords of [e] as a comma-separated list of editor IDs
  *)
-function GetFlatKeywordList(e: IInterface): string;
-var i: integer;
+function getFlatKeywordList(e: IInterface): String;
+var i: Integer;
     keywords: IInterface;
 begin
-    Result := ',';
+    result := ',';
 
     keywords := eBySignature(eByPath(e, 'Keywords'), 'KWDA');
     for i := 0 to eCount(keywords) - 1 do
     begin
-        Result := Result + evBySignature(LinksTo(eByIndex(keywords, i)), 'EDID') + ',';
+        result := result + evBySignature(linksTo(eByIndex(keywords, i)), 'EDID') + ',';
     end;
 end;
 

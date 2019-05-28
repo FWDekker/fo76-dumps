@@ -8,62 +8,62 @@ var outputLines: TStringList;
     visitHistory: TStringList;
 
 
-function Initialize: integer;
+function initialize: Integer;
 begin
-    outputLines := TStringList.Create;
-    visitHistory := TStringList.Create;
+    outputLines := TStringList.create;
+    visitHistory := TStringList.create;
 end;
 
-function Process(e: IInterface): integer;
+function process(e: IInterface): Integer;
 begin
-    if (Signature(e) <> 'TERM') then
+    if (signature(e) <> 'TERM') then
     begin
-        AddMessage('Error: ' + Name(e) + ' is not a TERM.');
-        AddMessage('Script aborted.');
-        Exit;
+        addMessage('Error: ' + name(e) + ' is not a TERM.');
+        addMessage('Script aborted.');
+        exit;
     end;
 
-    if (not IsReferencedBy(e, 'REFR')) then
+    if (not isReferencedBy(e, 'REFR')) then
     begin
-        Exit;
+        exit;
     end;
 
-    visitHistory.Clear();
+    visitHistory.clear();
 
-    outputLines.Add('==' + evBySignature(e, 'FULL') + ' (' + StringFormID(e) + ')==');
-    outputLines.Add('{{Transcript|text=');
-    outputLines.Add('Welcome to ROBCO Industries (TM) Termlink');
-    outputLines.Add(EscapeHTML(Trim(evBySignature(e, 'WNAM'))));
-    outputLines.Add('}}');
-    outputLines.Add('');
-    WriteTerminalContents(e, 0);
-    outputLines.Add(#10);
+    outputLines.add('==' + evBySignature(e, 'FULL') + ' (' + stringFormID(e) + ')==');
+    outputLines.add('{{Transcript|text=');
+    outputLines.add('Welcome to ROBCO Industries (TM) Termlink');
+    outputLines.add(escapeHTML(trim(evBySignature(e, 'WNAM'))));
+    outputLines.add('}}');
+    outputLines.add('');
+    writeTerminalContents(e, 0);
+    outputLines.add(#10);
 end;
 
-function Finalize: integer;
+function finalize: Integer;
 begin
-    CreateDir('dumps/');
-    outputLines.SaveToFile('dumps/TERM.wiki');
+    createDir('dumps/');
+    outputLines.saveToFile('dumps/TERM.wiki');
 end;
 
 
-function WriteTerminalContents(e: IInterface; depth: integer): string;
+function writeTerminalContents(e: IInterface; depth: Integer): String;
 var body: IInterface;
     bodyItem: IInterface;
 
     menu: IInterface;
     menuItem: IInterface;
-    menuItemType: string;
+    menuItemType: String;
 
-    i: integer;
+    i: Integer;
 begin
-    visitHistory.Add(StringFormID(e));
+    visitHistory.add(stringFormID(e));
 
     body := eByPath(e, 'Body Text');
     for i := 0 to eCount(body) - 1 do
     begin
         bodyItem := eByIndex(body, i);
-        outputLines.Add(EscapeHTML(evBySignature(bodyItem, 'BTXT')));
+        outputLines.add(escapeHTML(evBySignature(bodyItem, 'BTXT')));
     end;
 
     menu := eByPath(e, 'Menu Items');
@@ -74,31 +74,31 @@ begin
 
         if (eCount(eByPath(menuItem, 'Conditions')) > 0) then
         begin
-            outputLines.Add('{{Info: The following header is conditional}}');
+            outputLines.add('{{Info: The following header is conditional}}');
         end;
 
         if (menuItemType = 'Display Text') then
         begin
-            outputLines.Add(EscapeHTML(CreateWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
-            outputLines.Add('{{Transcript|text=');
-            outputLines.Add(EscapeHTML(Trim(evBySignature(menuItem, 'UNAM'))));
-            outputLines.Add('}}');
-            outputLines.Add('');
+            outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+            outputLines.add('{{Transcript|text=');
+            outputLines.add(escapeHTML(trim(evBySignature(menuItem, 'UNAM'))));
+            outputLines.add('}}');
+            outputLines.add('');
         end
         else if (menuItemType = 'Submenu - Terminal') then
         begin
-            if (visitHistory.IndexOf(StringFormID(LinksTo(eBySignature(menuItem, 'TNAM')))) >= 0) then
+            if (visitHistory.indexOf(stringFormID(linksTo(eBySignature(menuItem, 'TNAM')))) >= 0) then
             begin
                 if (evBySignature(menuItem, 'RNAM') <> '') then
                 begin
-                    outputLines.Add(EscapeHTML(CreateWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
-                    outputLines.Add(EscapeHTML(Trim(evBySignature(menuItem, 'RNAM'))));
+                    outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+                    outputLines.add(escapeHTML(trim(evBySignature(menuItem, 'RNAM'))));
                 end;
             end
             else
             begin
-                outputLines.Add(EscapeHTML(CreateWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
-                WriteTerminalContents(LinksTo(eBySignature(menuItem, 'TNAM')), depth + 1);
+                outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+                writeTerminalContents(linksTo(eBySignature(menuItem, 'TNAM')), depth + 1);
             end;
         end
         else if (menuItemType = 'Submenu - Return to Top Level') then
@@ -111,18 +111,18 @@ begin
         end
         else if (menuItemType = 'Display Image') then
         begin
-            outputLines.Add('{{Image: ' + evBySignature(menuItem, 'VNAM') + '}}');
+            outputLines.add('{{Image: ' + evBySignature(menuItem, 'VNAM') + '}}');
         end
         else
         begin
-            AddMessage('Warning: Unexpected menu item type `' + menuItemType + '`');
+            addMessage('Warning: Unexpected menu item type `' + menuItemType + '`');
 
-            outputLines.Add(EscapeHTML(CreateWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
-            outputLines.Add('{{Error: Unexpected menu item type}}');
+            outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+            outputLines.add('{{Error: Unexpected menu item type}}');
         end;
     end;
 
-    visitHistory.Delete(visitHistory.Count - 1);
+    visitHistory.delete(visitHistory.count - 1);
 end;
 
 

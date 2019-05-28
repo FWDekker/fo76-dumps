@@ -7,55 +7,55 @@ uses ExportCore,
 var outputLines: TStringList;
 
 
-function Initialize: integer;
+function initialize: Integer;
 begin
-    outputLines := TStringList.Create;
-    outputLines.Add('"Form ID", "Editor ID", "Type", "Value"');
+    outputLines := TStringList.create;
+    outputLines.add('"Form ID", "Editor ID", "Type", "Value"');
 end;
 
-function Process(e: IInterface): integer;
+function process(e: IInterface): Integer;
 begin
-    outputLines.Add(
-        EscapeCsvString(StringFormID(e)) + ', ' +
-        EscapeCsvString(evBySignature(e, 'EDID')) + ', ' +
-        EscapeCsvString(LetterToType(copy(evBySignature(e, 'EDID'), 1, 1))) + ', ' +
-        EscapeCsvString(gev(LastElement(eBySignature(e, 'DATA'))))
+    outputLines.add(
+        escapeCsvString(stringFormID(e)) + ', ' +
+        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
+        escapeCsvString(letterToType(copy(evBySignature(e, 'EDID'), 1, 1))) + ', ' +
+        escapeCsvString(gev(lastElement(eBySignature(e, 'DATA'))))
     );
 end;
 
-function Finalize: integer;
+function finalize: Integer;
 begin
-    CreateDir('dumps/');
-    outputLines.SaveToFile('dumps/GMST.csv');
+    createDir('dumps/');
+    outputLines.saveToFile('dumps/GMST.csv');
 end;
 
 
-function LetterToType(letter: string): string;
+function letterToType(letter: String): String;
 begin
     if (letter = 'b') then
     begin
-        Result := 'boolean';
+        result := 'boolean';
     end
     else if (letter = 'f') then
     begin
-        Result := 'float';
+        result := 'float';
     end
     else if (letter = 'i') then
     begin
-        Result := 'integer';
+        result := 'integer';
     end
     else if (letter = 's') then
     begin
-        Result := 'string';
+        result := 'string';
     end
     else if (letter = 'u') then
     begin
-        Result := 'unsigned integer';
+        result := 'unsigned integer';
     end
     else
     begin
-        AddMessage('<! DUMP ERROR. UNKNOWN TYPE `' + letter + '` !>');
-        Result := '<! DUMP ERROR. UNKNOWN TYPE `' + letter + '` !>';
+        addMessage('<! DUMP ERROR. UNKNOWN TYPE `' + letter + '` !>');
+        result := '<! DUMP ERROR. UNKNOWN TYPE `' + letter + '` !>';
     end;
 end;
 

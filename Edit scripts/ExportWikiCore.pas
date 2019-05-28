@@ -13,9 +13,9 @@ uses ExportCore;
  * @param depth the depth of the section header, where 0 is the default level
  * @return a wiki-style section header
  *)
-function CreateWikiHeader(text: string; depth: integer): string;
+function createWikiHeader(text: String; depth: Integer): String;
 begin
-    Result := RepeatString('=', 2 + depth) + text + RepeatString('=', 2 + depth);
+    result := repeatString('=', 2 + depth) + text + repeatString('=', 2 + depth);
 end;
 
 (**
@@ -24,11 +24,11 @@ end;
  * @param text the text to escape
  * @return an HTML-escaped version of [text]
  *)
-function EscapeHTML(text: string): String;
+function escapeHTML(text: String): String;
 begin
-    Result := text;
-    Result := StringReplace(Result, '<', '&lt;', [rfReplaceAll]);
-    Result := StringReplace(Result, '>', '&gt;', [rfReplaceAll]);
+    result := text;
+    result := stringReplace(result, '<', '&lt;', [rfReplaceAll]);
+    result := stringReplace(result, '>', '&gt;', [rfReplaceAll]);
 end;
 
 (**
@@ -37,12 +37,12 @@ end;
  * @param text the text to escape
  * @return a MediaWiki-escaped version of [text]
  *)
-function EscapeWiki(text: String): String;
+function escapeWiki(text: String): String;
 begin
-    Result := text;
-    Result := StringReplace(Result, '{', '&#123;', [rfReplaceAll]);
-    Result := StringReplace(Result, '|', '&#124;', [rfReplaceAll]);
-    Result := StringReplace(Result, '}', '&#125;', [rfReplaceAll]);
+    result := text;
+    result := stringReplace(result, '{', '&#123;', [rfReplaceAll]);
+    result := stringReplace(result, '|', '&#124;', [rfReplaceAll]);
+    result := stringReplace(result, '}', '&#125;', [rfReplaceAll]);
 end;
 
 

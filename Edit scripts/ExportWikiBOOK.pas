@@ -7,68 +7,68 @@ uses ExportCore,
 var outputLines: TStringList;
 
 
-function Initialize: integer;
+function initialize: Integer;
 begin
-    outputLines := TStringList.Create;
+    outputLines := TStringList.create;
 end;
 
-function Process(e: IInterface): integer;
+function rocess(e: IInterface): Integer;
 begin
-    if (Signature(e) <> 'BOOK') then
+    if (signature(e) <> 'BOOK') then
     begin
-        AddMessage('Warning: ' + Name(e) + ' is not a BOOK');
-        Exit;
+        addMessage('Warning: ' + name(e) + ' is not a BOOK');
+        exit;
     end;
 
-    outputLines.Add('==' + evBySignature(e, 'FULL') + '==');
-    outputLines.Add('Form ID:      ' + StringFormID(e));
-    outputLines.Add('Weight:       ' + evByPath(eBySignature(e, 'DATA'), 'Weight'));
-    outputLines.Add('Value:        ' + evByPath(eBySignature(e, 'DATA'), 'Value'));
-    outputLines.Add('Can be taken: ' + CanBeTakenString(e));
-    outputLines.Add('Transcript:' + #10 + GetBookContents(e));
-    outputLines.Add(#10);
+    outputLines.add('==' + evBySignature(e, 'FULL') + '==');
+    outputLines.add('Form ID:      ' + stringFormID(e));
+    outputLines.add('Weight:       ' + evByPath(eBySignature(e, 'DATA'), 'Weight'));
+    outputLines.add('Value:        ' + evByPath(eBySignature(e, 'DATA'), 'Value'));
+    outputLines.add('Can be taken: ' + canBeTakenString(e));
+    outputLines.add('Transcript:' + #10 + getBookContents(e));
+    outputLines.add(#10);
 end;
 
-function Finalize: integer;
+function finalize: Integer;
 begin
-    CreateDir('dumps/');
-    outputLines.SaveToFile('dumps/BOOK.wiki');
+    createDir('dumps/');
+    outputLines.saveToFile('dumps/BOOK.wiki');
 end;
 
 
-function CanBeTakenString(book: IInterface): string;
-var flags: string;
-    pickUpFlag: string;
+function canBeTakenString(book: IInterface): String;
+var flags: String;
+    pickUpFlag: String;
 begin
     flags := evByPath(eBySignature(book, 'DNAM'), 'Flags');
-    if (Length(flags) = 1) then
+    if (length(flags) = 1) then
     begin
-        Result := 'no';
+        result := 'no';
     end;
 
     pickUpFlag := copy(flags, 2, 1);
     if (pickUpFlag = '0') then
     begin
-        Result := 'yes';
+        result := 'yes';
     end
     else
     begin
-        Result := 'no';
+        result := 'no';
     end;
 end;
 
-function GetBookContents(book: IInterface): string;
-var desc: string;
+function getBookContents(book: IInterface): String;
+var desc: String;
 begin
-    desc := Trim(EscapeWiki(evBySignature(book, 'DESC')));
+    desc := trim(escapeWiki(evBySignature(book, 'DESC')));
 
     if (desc = '') then
     begin
-        Result := 'No transcript';
+        result := 'No transcript';
     end
     else
     begin
-        Result := '' +
+        result := '' +
             '{{Transcript|text=' + #10 +
             desc + #10 +
             '}}';

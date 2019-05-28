@@ -7,81 +7,81 @@ uses ExportCore,
 var outputLines: TStringList;
 
 
-function Initialize: integer;
+function initialize: Integer;
 begin
-    outputLines := TStringList.Create;
+    outputLines := TStringList.create;
 end;
 
-function Process(e: IInterface): integer;
+function process(e: IInterface): Integer;
 begin
-    AddQuest(outputLines, e);
+    addQuest(outputLines, e);
 end;
 
-function Finalize: integer;
+function finalize: Integer;
 begin
-    CreateDir('dumps/');
-    outputLines.SaveToFile('dumps/DIAL.wiki');
+    createDir('dumps/');
+    outputLines.saveToFile('dumps/DIAL.wiki');
 end;
 
 
-procedure AddQuest(output: TStringList; quest: IInterface);
-var linkable: integer;
+procedure addQuest(output: TStringList; quest: IInterface);
+var linkable: Integer;
 
     topics: IInterface;
     topic: IInterface;
-    topicSize: integer;
-    topicHasRowSpan: boolean;
-    previousTopic: integer;
+    topicSize: Integer;
+    topicHasRowSpan: Boolean;
+    previousTopic: Integer;
 
     dialogs: IInterface;
     dialog: IInterface;
-    dialogHasRowSpan: boolean;
-    previousDialog: integer;
+    dialogHasRowSpan: Boolean;
+    previousDialog: Integer;
 
     responses: IInterface;
     response: IInterface;
 
-    i: integer;
+    i: Integer;
 begin
-    if (Signature(quest) <> 'QUST') then
+    if (signature(quest) <> 'QUST') then
     begin
-        Exit;
+        exit;
     end;
 
-    topics := ChildGroup(quest);
+    topics := childGroup(quest);
     if (eCount(topics) = 0) then
     begin
-        Exit;
+        exit;
     end;
 
-    outputLines.Add('==' + evBySignature(quest, 'EDID') + ' (' + StringFormID(quest) + ')==');
-    outputLines.Add('{|class="va-table va-table-full np-table-dialogue"');
-    outputLines.Add('|-');
-    outputLines.Add('! style="width:2%" | #');
-    outputLines.Add('! style="width:8%" | Dialog Topic');
-    outputLines.Add('! style="width:5%" | Form ID');
-    outputLines.Add('! style="width:30%" | Response Text');
-    outputLines.Add('! style="width:30%" | Script Notes');
-    outputLines.Add('');
+    outputLines.add('==' + evBySignature(quest, 'EDID') + ' (' + stringFormID(quest) + ')==');
+    outputLines.add('{|class="va-table va-table-full np-table-dialogue"');
+    outputLines.add('|-');
+    outputLines.add('! style="width:2%" | #');
+    outputLines.add('! style="width:8%" | Dialog Topic');
+    outputLines.add('! style="width:5%" | Form ID');
+    outputLines.add('! style="width:30%" | Response Text');
+    outputLines.add('! style="width:30%" | Script Notes');
+    outputLines.add('');
 
     linkable := 1;
 
     previousTopic := 0;
     while true do
     begin
-        topic := GetElementAfter(topics, previousTopic);
-        if (not Assigned(topic)) then
+        topic := getElementAfter(topics, previousTopic);
+        if (not assigned(topic)) then
         begin
-            Break;
+            break;
         end;
-        previousTopic := FormID(topic);
+        previousTopic := formID(topic);
 
-        if (Signature(topic) <> 'DIAL')  then
+        if (signature(topic) <> 'DIAL')  then
         begin
-            Continue;
+            continue;
         end;
 
-        dialogs := ChildGroup(topic);
+        dialogs := childGroup(topic);
         topicHasRowSpan := false;
         topicSize := 0;
 
@@ -96,12 +96,12 @@ begin
         previousDialog := 0;
         while true do
         begin
-            dialog := GetElementAfter(dialogs, previousDialog);
-            if (not Assigned(dialog)) then
+            dialog := getElementAfter(dialogs, previousDialog);
+            if (not assigned(dialog)) then
             begin
-                Break;
+                break;
             end;
-            previousDialog := FormID(dialog);
+            previousDialog := formID(dialog);
             dialogHasRowSpan := false;
 
             responses := eByPath(dialog, 'Responses');
@@ -109,28 +109,28 @@ begin
             begin
                 response := eByIndex(responses, i);
 
-                outputLines.Add('|-');
-                outputLines.Add('| {{Linkable|' + IntToStr(linkable) + '}}');
+                outputLines.add('|-');
+                outputLines.add('| {{Linkable|' + intToStr(linkable) + '}}');
                 if (not topicHasRowSpan) then
                 begin
-                    outputLines.Add('| rowspan="' + IntToStr(topicSize) + '" | {{ID|' + StringFormID(topic) + '}}');
+                    outputLines.add('| rowspan="' + intToStr(topicSize) + '" | {{ID|' + stringFormID(topic) + '}}');
                     topicHasRowSpan := true;
                 end;
                 if (not dialogHasRowSpan) then
                 begin
                     if (eCount(responses) = 1) then
                     begin
-                        outputLines.Add('| {{ID|' + StringFormID(dialog) + '}}');
+                        outputLines.add('| {{ID|' + stringFormID(dialog) + '}}');
                     end
                     else
                     begin
-                        outputLines.Add('| rowspan="' + IntToStr(eCount(responses)) + '" | {{ID|' + StringFormID(dialog) + '}}');
+                        outputLines.add('| rowspan="' + intToStr(eCount(responses)) + '" | {{ID|' + stringFormID(dialog) + '}}');
                     end;
                     dialogHasRowSpan := true;
                 end;
-                outputLines.Add('| ' + EscapeHTML(Trim(evBySignature(response, 'NAM1'))));
-                outputLines.Add('| ''''' + EscapeHTML(Trim(evBySignature(response, 'NAM2'))) + '''''');
-                outputLines.Add('');
+                outputLines.add('| ' + escapeHTML(trim(evBySignature(response, 'NAM1'))));
+                outputLines.add('| ''''' + escapeHTML(trim(evBySignature(response, 'NAM2'))) + '''''');
+                outputLines.add('');
 
                 linkable := linkable + 1;
             end;
@@ -138,14 +138,14 @@ begin
     end;
 
 
-    outputLines.Add('|}');
-    outputLines.Add(#10);
+    outputLines.add('|}');
+    outputLines.add(#10);
 end;
 
-function GetElementAfter(group: IInterface; previousFormID: integer): IInterface;
-var i: integer;
+function getElementAfter(group: IInterface; previousFormID: Integer): IInterface;
+var i: Integer;
     e: IInterface;
-    nextFormID: integer;
+    nextFormID: Integer;
 begin
     nextFormID := -1;
 
@@ -153,9 +153,9 @@ begin
     begin
         e := eByIndex(group, i);
 
-        if ((FormID(e) > previousFormID) and ((FormID(e) <= nextFormID) or (nextFormId = -1))) then
+        if ((formID(e) > previousFormID) and ((formID(e) <= nextFormID) or (nextFormId = -1))) then
         begin
-            nextFormID := FormID(e);
+            nextFormID := formID(e);
         end;
     end;
 
@@ -163,14 +163,14 @@ begin
     begin
         e := eByIndex(group, i);
 
-        if (FormID(e) = nextFormID) then
+        if (formID(e) = nextFormID) then
         begin
-            Result := e;
-            Exit;
+            result := e;
+            exit;
         end;
     end;
 
-    Result := nil;
+    result := nil;
 end;
 
 

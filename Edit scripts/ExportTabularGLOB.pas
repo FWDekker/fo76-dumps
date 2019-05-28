@@ -7,25 +7,25 @@ uses ExportCore,
 var outputLines: TStringList;
 
 
-function Initialize: integer;
+function initialize: Integer;
 begin
-    outputLines := TStringList.Create;
-    outputLines.Add('"Form ID", "Editor ID", "Value"');
+    outputLines := TStringList.create;
+    outputLines.add('"Form ID", "Editor ID", "Value"');
 end;
 
-function Process(e: IInterface): integer;
+function process(e: IInterface): Integer;
 begin
-    outputLines.Add(
-        EscapeCsvString(StringFormID(e)) + ', ' +
-        EscapeCsvString(evBySignature(e, 'EDID')) + ', ' +
+    outputLines.add(
+        escapeCsvString(stringFormID(e)) + ', ' +
+        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
         evBySignature(e, 'FLTV')
     );
 end;
 
-function Finalize: integer;
+function finalize: Integer;
 begin
-    CreateDir('dumps/');
-    outputLines.SaveToFile('dumps/GLOB.csv');
+    createDir('dumps/');
+    outputLines.saveToFile('dumps/GLOB.csv');
 end;
 
 
