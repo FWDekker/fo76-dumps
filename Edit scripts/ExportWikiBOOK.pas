@@ -12,7 +12,7 @@ begin
     outputLines := TStringList.create;
 end;
 
-function rocess(e: IInterface): Integer;
+function process(e: IInterface): Integer;
 begin
     if signature(e) <> 'BOOK' then begin
         addMessage('Warning: ' + name(e) + ' is not a BOOK. Entry was ignored.');
