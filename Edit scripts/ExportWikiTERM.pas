@@ -17,8 +17,7 @@ end;
 function process(e: IInterface): Integer;
 begin
     if signature(e) <> 'TERM' then begin
-        addMessage('Error: ' + name(e) + ' is not a TERM.');
-        addMessage('Script aborted.');
+        addMessage('Warning: ' + name(e) + ' is not a TERM. Entry was ignored.');
         exit;
     end;
 

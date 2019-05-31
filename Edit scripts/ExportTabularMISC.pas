@@ -15,6 +15,11 @@ end;
 
 function process(e: IInterface): Integer;
 begin
+    if signature(e) <> 'MISC' then begin
+        addMessage('Warning: ' + name(e) + ' is not a MISC. Entry was ignored.');
+        exit;
+    end;
+
     outputLines.add(
         escapeCsvString(stringFormID(e)) + ', ' +
         escapeCsvString(evBySignature(e, 'EDID')) + ', ' +

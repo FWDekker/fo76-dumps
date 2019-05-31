@@ -16,7 +16,7 @@ end;
 function process(e: IInterface): Integer;
 begin
     if signature(e) <> 'NOTE' then begin
-        addMessage('Warning: ' + name(e) + ' is not a NOTE');
+        addMessage('Warning: ' + name(e) + ' is not a NOTE. Entry was ignored.');
         exit;
     end;
 

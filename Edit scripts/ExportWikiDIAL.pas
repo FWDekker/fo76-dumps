@@ -14,6 +14,11 @@ end;
 
 function process(e: IInterface): Integer;
 begin
+    // Filter out nested elements
+    if signature(e) <> 'QUST' then begin
+        exit;
+    end;
+
     addQuest(outputLines, e);
 end;
 

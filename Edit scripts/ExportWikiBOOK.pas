@@ -15,7 +15,7 @@ end;
 function rocess(e: IInterface): Integer;
 begin
     if signature(e) <> 'BOOK' then begin
-        addMessage('Warning: ' + name(e) + ' is not a BOOK');
+        addMessage('Warning: ' + name(e) + ' is not a BOOK. Entry was ignored.');
         exit;
     end;
 

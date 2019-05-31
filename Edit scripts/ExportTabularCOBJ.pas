@@ -17,6 +17,11 @@ function process(e: IInterface): Integer;
 var cnam: IInterface;
     gnam: IInterface;
 begin
+    if signature(e) <> 'COBJ' then begin
+        addMessage('Warning: ' + name(e) + ' is not a COBJ. Entry was ignored.');
+        exit;
+    end;
+
     cnam := linksTo(eBySignature(e, 'CNAM'));
     gnam := linksTo(eBySignature(e, 'GNAM'));
 
