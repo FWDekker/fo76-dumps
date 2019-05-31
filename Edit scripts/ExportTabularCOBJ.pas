@@ -48,7 +48,7 @@ var i: Integer;
     component: IInterface;
 begin
     components := eBySignature(e, 'FVPA');
-    if (eCount(components) = 0) then begin
+    if eCount(components) = 0 then begin
         result := '';
         exit;
     end;

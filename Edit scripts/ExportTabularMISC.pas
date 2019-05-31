@@ -45,7 +45,7 @@ var i: Integer;
     quantity: IInterface;
 begin
     components := eBySignature(e, 'MCQP');
-    if (eCount(components) = 0) then begin
+    if eCount(components) = 0 then begin
         result := '';
         exit;
     end;
@@ -80,12 +80,12 @@ begin
     for i := 0 to eCount(componentQuantities) - 1 do begin
         componentQuantity := eByIndex(componentQuantities, i);
 
-        if (
+        if
             strEquals(
                 quantityName,
                 evBySignature(linksTo(eByName(componentQuantity, 'Scrap Count Keyword')), 'EDID')
             )
-        ) then begin
+        then begin
             result := evByName(componentQuantity, 'Scrap Component Count');
             break;
         end;

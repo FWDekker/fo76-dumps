@@ -43,12 +43,12 @@ var linkable: Integer;
 
     i: Integer;
 begin
-    if (signature(quest) <> 'QUST') then begin
+    if signature(quest) <> 'QUST' then begin
         exit;
     end;
 
     topics := childGroup(quest);
-    if (eCount(topics) = 0) then begin
+    if eCount(topics) = 0 then begin
         exit;
     end;
 
@@ -67,12 +67,12 @@ begin
     previousTopic := 0;
     while true do begin
         topic := getElementAfter(topics, previousTopic);
-        if (not assigned(topic)) then begin
+        if not assigned(topic) then begin
             break;
         end;
         previousTopic := formID(topic);
 
-        if (signature(topic) <> 'DIAL') then begin
+        if signature(topic) <> 'DIAL' then begin
             continue;
         end;
 
@@ -102,12 +102,12 @@ begin
 
                 outputLines.add('|-');
                 outputLines.add('| {{Linkable|' + intToStr(linkable) + '}}');
-                if (not topicHasRowSpan) then begin
+                if not topicHasRowSpan then begin
                     outputLines.add('| rowspan="' + intToStr(topicSize) + '" | {{ID|' + stringFormID(topic) + '}}');
                     topicHasRowSpan := true;
                 end;
-                if (not dialogHasRowSpan) then begin
-                    if (eCount(responses) = 1) then begin
+                if not dialogHasRowSpan then begin
+                    if eCount(responses) = 1 then begin
                         outputLines.add('| {{ID|' + stringFormID(dialog) + '}}');
                     end else begin
                         outputLines.add('| rowspan="'
@@ -139,7 +139,7 @@ begin
     for i := 0 to eCount(group) - 1 do begin
         e := eByIndex(group, i);
 
-        if ((formID(e) > previousFormID) and ((formID(e) <= nextFormID) or (nextFormId = -1))) then begin
+        if (formID(e) > previousFormID) and ((formID(e) <= nextFormID) or (nextFormId = -1)) then begin
             nextFormID := formID(e);
         end;
     end;
@@ -147,7 +147,7 @@ begin
     for i := 0 to eCount(group) - 1 do begin
         e := eByIndex(group, i);
 
-        if (formID(e) = nextFormID) then begin
+        if formID(e) = nextFormID then begin
             result := e;
             exit;
         end;

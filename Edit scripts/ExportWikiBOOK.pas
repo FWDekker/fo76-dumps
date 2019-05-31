@@ -14,7 +14,7 @@ end;
 
 function rocess(e: IInterface): Integer;
 begin
-    if (signature(e) <> 'BOOK') then begin
+    if signature(e) <> 'BOOK' then begin
         addMessage('Warning: ' + name(e) + ' is not a BOOK');
         exit;
     end;
@@ -45,7 +45,7 @@ begin
     end;
 
     pickUpFlag := copy(flags, 2, 1);
-    if (pickUpFlag = '0') then begin
+    if pickUpFlag = '0' then begin
         result := 'yes';
     end else begin
         result := 'no';
@@ -57,7 +57,7 @@ var desc: String;
 begin
     desc := trim(escapeWiki(evBySignature(book, 'DESC')));
 
-    if (desc = '') then begin
+    if desc = '' then begin
         result := 'No transcript';
     end else begin
         result := '' +
