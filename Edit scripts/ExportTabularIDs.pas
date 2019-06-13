@@ -17,13 +17,14 @@ begin
     clearLargeFiles('dumps/IDs.csv');
 
     appendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
-        '"Signature", "Form ID", "Editor ID", "Name", "Keywords"'
+        '"File", "Signature", "Form ID", "Editor ID", "Name", "Keywords"'
     );
 end;
 
 function process(e: IInterface): Integer;
 begin
     appendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
+        escapeCsvString(getFileName(getFile(e))) + ', ' +
         escapeCsvString(signature(e)) + ', ' +
         escapeCsvString(stringFormID(e)) + ', ' +
         escapeCsvString(evBySignature(e, 'EDID')) + ', ' +

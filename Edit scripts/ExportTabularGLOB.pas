@@ -10,7 +10,7 @@ var outputLines: TStringList;
 function initialize: Integer;
 begin
     outputLines := TStringList.create;
-    outputLines.add('"Form ID", "Editor ID", "Value"');
+    outputLines.add('"File", "Form ID", "Editor ID", "Value"');
 end;
 
 function process(e: IInterface): Integer;
@@ -21,6 +21,7 @@ begin
     end;
 
     outputLines.add(
+        escapeCsvString(getFileName(getFile(e))) + ', ' +
         escapeCsvString(stringFormID(e)) + ', ' +
         escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
         evBySignature(e, 'FLTV')

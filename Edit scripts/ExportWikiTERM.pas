@@ -27,7 +27,7 @@ begin
 
     visitHistory.clear();
 
-    outputLines.add('==' + evBySignature(e, 'FULL') + ' (' + stringFormID(e) + ')==');
+    outputLines.add('==[' + getFileName(getFile(e)) + '] ' + evBySignature(e, 'FULL') + ' (' + stringFormID(e) + ')==');
     outputLines.add('{{Transcript|text=');
     outputLines.add('Welcome to ROBCO Industries (TM) Termlink');
     outputLines.add(escapeHTML(trim(evBySignature(e, 'WNAM'))));

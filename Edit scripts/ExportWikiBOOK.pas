@@ -19,7 +19,7 @@ begin
         exit;
     end;
 
-    outputLines.add('==' + evBySignature(e, 'FULL') + '==');
+    outputLines.add('==[' + getFileName(getFile(e)) + '] ' + evBySignature(e, 'FULL') + '==');
     outputLines.add('Form ID:      ' + stringFormID(e));
     outputLines.add('Weight:       ' + evByPath(eBySignature(e, 'DATA'), 'Weight'));
     outputLines.add('Value:        ' + evByPath(eBySignature(e, 'DATA'), 'Value'));

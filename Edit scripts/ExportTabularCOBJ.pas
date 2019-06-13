@@ -10,7 +10,7 @@ var outputLines: TStringList;
 function initialize: Integer;
 begin
     outputLines := TStringList.create;
-    outputLines.add('"Form ID", "Editor ID", "Created item form ID", "Recipe form ID", "Components"');
+    outputLines.add('"File", "Form ID", "Editor ID", "Created item form ID", "Recipe form ID", "Components"');
 end;
 
 function process(e: IInterface): Integer;
@@ -26,6 +26,7 @@ begin
     gnam := linksTo(eBySignature(e, 'GNAM'));
 
     outputLines.add(
+        escapeCsvString(getFileName(getFile(e))) + ', ' +
         escapeCsvString(stringFormID(e)) + ', ' +
         escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
         escapeCsvString(ifThen(not assigned(cnam), '', stringFormID(cnam))) + ', ' +
