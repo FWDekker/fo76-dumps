@@ -57,7 +57,7 @@ begin
         exit;
     end;
 
-    outputLines.add('==[' + getFileName(getFile(e)) + '] ' + evBySignature(quest, 'EDID') + ' (' + stringFormID(quest) + ')==');
+    outputLines.add('==[' + getFileName(getFile(quest)) + '] ' + evBySignature(quest, 'EDID') + ' (' + stringFormID(quest) + ')==');
     outputLines.add('{|class="va-table va-table-full np-table-dialogue"');
     outputLines.add('|-');
     outputLines.add('! style="width:2%" | #');
