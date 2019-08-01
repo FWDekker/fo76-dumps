@@ -1,6 +1,7 @@
 # Fallout 76 data dumps
+[![Latest release version](https://img.shields.io/github/release/FWDekker/fo76-dumps?style=for-the-badge)](https://github.com/FWDekker/fo76-dumps/releases/latest)
+
 This repository contains a number of data dumps of _Fallout 76_ in several formats.
-The dumps have last been updated for version 1.2.1.26 of _Fallout 76_.
 
 ## Files
 The dumps are distributed as attachments to [this repository's releases](https://github.com/FWDekker/fo76-dumps/releases).
