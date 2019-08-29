@@ -243,6 +243,25 @@ begin
 end;
 
 (**
+ * Appends [c] to [s] until [s] is at least [n] characters long.
+ *
+ * If [s] is already longer than [n] characters, [s] is returned unchanged.
+ *
+ * @param c the character to append
+ * @param s the string to append to
+ * @param n the desired string length
+ * @return a string of at least [n] characters that consists of [s] proceeded by copies of [c]
+ *)
+function padRight(c: Char; s: String; n: Size): String;
+begin
+    result := s;
+
+    while length(result) < n do begin
+        result := result + c;
+    end;
+end;
+
+(**
  * Shorthand for `compareStr(a, b) = 0`.
  *)
 function strEquals(a: String; b: String): Boolean;
