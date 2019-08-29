@@ -10,27 +10,31 @@ var outputLines: TStringList;
 function initialize: Integer;
 begin
     outputLines := TStringList.create;
-    outputLines.add('"File", "Form ID", "Editor ID", "Created item form ID", "Recipe form ID", "Components"');
+    outputLines.add('"File", "Form ID", "Editor ID", "Product form ID", "Product editor ID", "Product name", "Recipe form ID", "Recipe editor ID", "Recipe name", "Components"');
 end;
 
 function process(e: IInterface): Integer;
-var cnam: IInterface;
-    gnam: IInterface;
+var product: IInterface;
+    recipe: IInterface;
 begin
     if signature(e) <> 'COBJ' then begin
         addMessage('Warning: ' + name(e) + ' is not a COBJ. Entry was ignored.');
         exit;
     end;
 
-    cnam := linksTo(eBySignature(e, 'CNAM'));
-    gnam := linksTo(eBySignature(e, 'GNAM'));
+    product := linksTo(eBySignature(e, 'CNAM'));
+    recipe := linksTo(eBySignature(e, 'GNAM'));
 
     outputLines.add(
         escapeCsvString(getFileName(getFile(e))) + ', ' +
         escapeCsvString(stringFormID(e)) + ', ' +
         escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
-        escapeCsvString(ifThen(not assigned(cnam), '', stringFormID(cnam))) + ', ' +
-        escapeCsvString(ifThen(not assigned(gnam), '', stringFormID(gnam))) + ', ' +
+        escapeCsvString(ifThen(not assigned(product), '', stringFormID(product))) + ', ' +
+        escapeCsvString(ifThen(not assigned(product), '', evBySignature(product, 'EDID'))) + ', ' +
+        escapeCsvString(ifThen(not assigned(product), '', evBySignature(product, 'FULL'))) + ', ' +
+        escapeCsvString(ifThen(not assigned(recipe), '', stringFormID(recipe))) + ', ' +
+        escapeCsvString(ifThen(not assigned(recipe), '', evBySignature(recipe, 'EDID'))) + ', ' +
+        escapeCsvString(ifThen(not assigned(recipe), '', evBySignature(recipe, 'FULL'))) + ', ' +
         escapeCsvString(getFlatComponentList(e))
     );
 end;
