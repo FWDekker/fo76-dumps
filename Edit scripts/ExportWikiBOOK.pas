@@ -21,6 +21,7 @@ begin
 
     outputLines.add('==[' + getFileName(getFile(e)) + '] ' + evBySignature(e, 'FULL') + '==');
     outputLines.add('Form ID:      ' + stringFormID(e));
+    outputLines.add('Editor ID:    ' + evBySignature(e, 'EDID'));
     outputLines.add('Weight:       ' + evByPath(eBySignature(e, 'DATA'), 'Weight'));
     outputLines.add('Value:        ' + evByPath(eBySignature(e, 'DATA'), 'Value'));
     outputLines.add('Can be taken: ' + canBeTakenString(e));
