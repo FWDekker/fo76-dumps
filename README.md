@@ -17,6 +17,7 @@ Tabular dumps are a simplified sort of dump that contains only the most importan
 |-----------------------------------------------------------------|------------|--------------------------------------------------|
 | [`ExportTabularIDs.pas`](Edit%20scripts/ExportTabularIDs.pas)   | `IDs.csv`  | Form IDs, editor IDs, names, and keywords        |
 | [`ExportTabularCOBJ.pas`](Edit%20scripts/ExportTabularCOBJ.pas) | `COBJ.csv` | Craftable object recipes and components          |
+| [`ExportTabularENTM.pas`](Edit%20scripts/ExportTabularENTM.pas) | `ENTM.csv` | Atomic Shop unlockables                          |
 | [`ExportTabularGLOB.pas`](Edit%20scripts/ExportTabularGLOB.pas) | `GLOB.csv` | Global variables                                 |
 | [`ExportTabularGMST.pas`](Edit%20scripts/ExportTabularGMST.pas) | `GMST.csv` | Game settings                                    |
 | [`ExportTabularMISC.pas`](Edit%20scripts/ExportTabularMISC.pas) | `MISC.csv` | Inventory item weights, values, and scrap yields |

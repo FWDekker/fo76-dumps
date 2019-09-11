@@ -18,4 +18,23 @@ begin
 end;
 
 
+(**
+ * Returns the keywords of [e] as a comma-separated list of editor IDs.
+ *
+ * @param e the element to return the keywords of
+ * @return the keywords of [e] as a comma-separated list of editor IDs
+ *)
+function getFlatKeywordList(e: IInterface): String;
+var i: Integer;
+    keywords: IInterface;
+begin
+    result := ',';
+
+    keywords := eBySignature(eByPath(e, 'Keywords'), 'KWDA');
+    for i := 0 to eCount(keywords) - 1 do begin
+        result := result + evBySignature(linksTo(eByIndex(keywords, i)), 'EDID') + ',';
+    end;
+end;
+
+
 end.

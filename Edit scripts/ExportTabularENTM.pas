@@ -1,41 +1,39 @@
-unit ExportTabularIDs;
+unit ExportTabularENTM;
 
 uses ExportCore,
      ExportTabularCore;
 
 
 var outputLines: TStringList;
-var filePartSize: Integer;
 
 
 function initialize: Integer;
 begin
     outputLines := TStringList.create;
-    filePartSize := 500000;
-
-    createDir('dumps/');
-    clearLargeFiles('dumps/IDs.csv');
-
-    appendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
-        '"File", "Signature", "Form ID", "Editor ID", "Name", "Keywords"'
-    );
+    outputLines.add('"File", "Form ID", "Editor ID", "Name (FULL)", "Name (NNAM)", "Keywords"');
 end;
 
 function process(e: IInterface): Integer;
 begin
-    appendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
+    if signature(e) <> 'ENTM' then begin
+        addMessage('Warning: ' + name(e) + ' is not a ENTM. Entry was ignored.');
+        exit;
+    end;
+
+    outputLines.add(
         escapeCsvString(getFileName(getFile(e))) + ', ' +
-        escapeCsvString(signature(e)) + ', ' +
         escapeCsvString(stringFormID(e)) + ', ' +
         escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
         escapeCsvString(evBySignature(e, 'FULL')) + ', ' +
+        escapeCsvString(evBySignature(e, 'NNAM')) + ', ' +
         escapeCsvString(getFlatKeywordList(e))
     );
 end;
 
 function finalize: Integer;
 begin
-    flushLargeFile('dumps/IDs.csv', outputLines);
+    createDir('dumps/');
+    outputLines.saveToFile('dumps/ENTM.csv');
 end;
 
 
