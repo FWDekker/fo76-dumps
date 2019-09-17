@@ -36,5 +36,77 @@ begin
     end;
 end;
 
+(**
+ * Returns the factions of [e] as a comma-separated list of editor IDs.
+ *
+ * @param e the element to return the factions of
+ * @return the factions of [e] as a comma-separated list of editor IDs
+ *)
+function getFlatFactionList(e: IInterface): String;
+var i: Integer;
+    factions: IInterface;
+    faction: IInterface;
+begin
+    result := ',';
+
+    factions := eByPath(e, 'Factions');
+    for i := 0 to eCount(factions) - 1 do begin
+        faction := eByIndex(factions, i);
+        result := result + evBySignature(linksTo(eByPath(faction, 'Faction')), 'EDID') + ',';
+    end;
+end;
+
+(**
+ * Returns the perks of [e] as a comma-separated list.
+ *
+ * Each perk is expressed as a pair of the perk's editor ID and the perk's rank, separated by an equals sign.
+ *
+ * @param e the element to return the perks of
+ * @return the perks of [e] as a comma-separated list
+ *)
+function getFlatPerkList(e: IInterface): String;
+var i: Integer;
+    perks: IInterface;
+    perk: IInterface;
+begin
+    result := ',';
+
+    perks := eByPath(e, 'Perks');
+    for i := 0 to eCount(perks) - 1 do begin
+        perk := eByIndex(perks, i);
+        result := result + evBySignature(linksTo(eByPath(perk, 'Perk')), 'EDID') + '=' + evByPath(perk, 'Rank') + ',';
+    end;
+end;
+
+(**
+ * Returns the properties of [e] as a comma-separated list.
+ *
+ * Each property is expressed as a pair of the property's editor ID and either the property's value or the property's
+ * curve table's editor ID, separated by an equals sign.
+ *
+ * @param e the element to return the properties of
+ * @return the properties of [e] as a comma-separated list
+ *)
+function getFlatPropertyList(e: IInterface): String;
+var i: Integer;
+    props: IInterface;
+    prop: IInterface;
+    avEdid: String;
+begin
+    result := ',';
+
+    props := eBySignature(e, 'PRPS');
+    for i := 0 to eCount(props) - 1 do begin
+        prop := eByIndex(props, i);
+        avEdid := evBySignature(linksTo(eByPath(prop, 'Actor Value')), 'EDID');
+
+        if assigned(linksTo(eByPath(prop, 'Curve Table'))) then begin
+            result := result + avEdid + '=' + evBySignature(linksTo(eByPath(prop, 'Curve Table')), 'EDID') + ',';
+        end else begin
+            result := result + avEdid + '=' + evByPath(prop, 'Value') + ',';
+        end;
+    end;
+end;
+
 
 end.
