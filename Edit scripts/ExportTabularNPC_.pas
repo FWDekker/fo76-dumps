@@ -4,13 +4,13 @@ uses ExportCore,
      ExportTabularCore;
 
 
-var outputLines: TStringList;
+var ExportTabularNPC__outputLines: TStringList;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
-    outputLines.add('"File", "Form ID", "Editor ID", "Name", "Level", "Factions", "Race", "Attack race", "Class", "Keywords", "Perks", "Properties", "Aggression", "Confidence", "Assistance", "Health curve", "XP curve"');
+    ExportTabularNPC__outputLines := TStringList.create;
+    ExportTabularNPC__outputLines.add('"File", "Form ID", "Editor ID", "Name", "Level", "Factions", "Race", "Attack race", "Class", "Keywords", "Perks", "Properties", "Aggression", "Confidence", "Assistance", "Health curve", "XP curve"');
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -34,7 +34,7 @@ begin
     aidt := eBySignature(npc_, 'AIDT');
     cnam := linksTo(eBySignature(npc_, 'CNAM'));
 
-    outputLines.add(
+    ExportTabularNPC__outputLines.add(
         escapeCsvString(getFileName(getFile(npc_))) + ', ' +
         escapeCsvString(stringFormID(npc_)) + ', ' +
         escapeCsvString(evBySignature(npc_, 'EDID')) + ', ' +
@@ -58,7 +58,7 @@ end;
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/NPC_.csv');
+    ExportTabularNPC__outputLines.saveToFile('dumps/NPC_.csv');
 end;
 
 

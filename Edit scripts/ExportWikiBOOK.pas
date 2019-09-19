@@ -4,12 +4,12 @@ uses ExportCore,
      ExportWikiCore;
 
 
-var outputLines: TStringList;
+var ExportWikiBOOK_outputLines: TStringList;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
+    ExportWikiBOOK_outputLines := TStringList.create;
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -24,20 +24,20 @@ begin
         exit;
     end;
 
-    outputLines.add('==[' + getFileName(getFile(book)) + '] ' + evBySignature(book, 'FULL') + '==');
-    outputLines.add('Form ID:      ' + stringFormID(book));
-    outputLines.add('Editor ID:    ' + evBySignature(book, 'EDID'));
-    outputLines.add('Weight:       ' + evByPath(eBySignature(book, 'DATA'), 'Weight'));
-    outputLines.add('Value:        ' + evByPath(eBySignature(book, 'DATA'), 'Value'));
-    outputLines.add('Can be taken: ' + canBeTakenString(book));
-    outputLines.add('Transcript:' + #10 + getBookContents(book));
-    outputLines.add(#10);
+    ExportWikiBOOK_outputLines.add('==[' + getFileName(getFile(book)) + '] ' + evBySignature(book, 'FULL') + '==');
+    ExportWikiBOOK_outputLines.add('Form ID:      ' + stringFormID(book));
+    ExportWikiBOOK_outputLines.add('Editor ID:    ' + evBySignature(book, 'EDID'));
+    ExportWikiBOOK_outputLines.add('Weight:       ' + evByPath(eBySignature(book, 'DATA'), 'Weight'));
+    ExportWikiBOOK_outputLines.add('Value:        ' + evByPath(eBySignature(book, 'DATA'), 'Value'));
+    ExportWikiBOOK_outputLines.add('Can be taken: ' + canBeTakenString(book));
+    ExportWikiBOOK_outputLines.add('Transcript:' + #10 + getBookContents(book));
+    ExportWikiBOOK_outputLines.add(#10);
 end;
 
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/BOOK.wiki');
+    ExportWikiBOOK_outputLines.saveToFile('dumps/BOOK.wiki');
 end;
 
 

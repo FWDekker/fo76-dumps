@@ -4,19 +4,19 @@ uses ExportCore,
      ExportTabularCore;
 
 
-var outputLines: TStringList;
-var filePartSize: Integer;
+var ExportTabularIDs_outputLines: TStringList;
+var ExportTabularIDs_filePartSize: Integer;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
-    filePartSize := 500000;
+    ExportTabularIDs_outputLines := TStringList.create;
+    ExportTabularIDs_filePartSize := 500000;
 
     createDir('dumps/');
     clearLargeFiles('dumps/IDs.csv');
 
-    appendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
+    appendLargeFile('dumps/IDs.csv', ExportTabularIDs_outputLines, ExportTabularIDs_filePartSize,
         '"File", "Signature", "Form ID", "Editor ID", "Name", "Keywords"'
     );
 end;
@@ -28,7 +28,7 @@ end;
 
 function process(e: IInterface): Integer;
 begin
-    appendLargeFile('dumps/IDs.csv', outputLines, filePartSize,
+    appendLargeFile('dumps/IDs.csv', ExportTabularIDs_outputLines, ExportTabularIDs_filePartSize,
         escapeCsvString(getFileName(getFile(e))) + ', ' +
         escapeCsvString(signature(e)) + ', ' +
         escapeCsvString(stringFormID(e)) + ', ' +
@@ -40,7 +40,7 @@ end;
 
 function finalize: Integer;
 begin
-    flushLargeFile('dumps/IDs.csv', outputLines);
+    flushLargeFile('dumps/IDs.csv', ExportTabularIDs_outputLines);
 end;
 
 

@@ -4,13 +4,13 @@ uses ExportCore,
      ExportTabularCore;
 
 
-var outputLines: TStringList;
+var ExportTabularRACE_outputLines: TStringList;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
-    outputLines.add('"File", "Form ID", "Editor ID", "Name", "Keywords", "Properties"');
+    ExportTabularRACE_outputLines := TStringList.create;
+    ExportTabularRACE_outputLines.add('"File", "Form ID", "Editor ID", "Name", "Keywords", "Properties"');
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -34,7 +34,7 @@ begin
     aidt := eBySignature(race, 'AIDT');
     cnam := linksTo(eBySignature(race, 'CNAM'));
 
-    outputLines.add(
+    ExportTabularRACE_outputLines.add(
         escapeCsvString(getFileName(getFile(race))) + ', ' +
         escapeCsvString(stringFormID(race)) + ', ' +
         escapeCsvString(evBySignature(race, 'EDID')) + ', ' +
@@ -47,7 +47,7 @@ end;
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/RACE.csv');
+    ExportTabularRACE_outputLines.saveToFile('dumps/RACE.csv');
 end;
 
 

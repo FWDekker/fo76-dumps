@@ -4,14 +4,14 @@ uses ExportCore,
      ExportWikiCore;
 
 
-var outputLines: TStringList;
-    visitHistory: TStringList;
+var ExportWikiTERM_outputLines: TStringList;
+    ExportWikiTERM_visitHistory: TStringList;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
-    visitHistory := TStringList.create;
+    ExportWikiTERM_outputLines := TStringList.create;
+    ExportWikiTERM_visitHistory := TStringList.create;
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -30,22 +30,22 @@ begin
         exit;
     end;
 
-    visitHistory.clear();
+    ExportWikiTERM_visitHistory.clear();
 
-    outputLines.add('==[' + getFileName(getFile(term)) + '] ' + evBySignature(term, 'FULL') + ' (' + stringFormID(term) + ')==');
-    outputLines.add('{{Transcript|text=');
-    outputLines.add('Welcome to ROBCO Industries (TM) Termlink');
-    outputLines.add(escapeHTML(trim(evBySignature(term, 'WNAM'))));
-    outputLines.add('}}');
-    outputLines.add('');
+    ExportWikiTERM_outputLines.add('==[' + getFileName(getFile(term)) + '] ' + evBySignature(term, 'FULL') + ' (' + stringFormID(term) + ')==');
+    ExportWikiTERM_outputLines.add('{{Transcript|text=');
+    ExportWikiTERM_outputLines.add('Welcome to ROBCO Industries (TM) Termlink');
+    ExportWikiTERM_outputLines.add(escapeHTML(trim(evBySignature(term, 'WNAM'))));
+    ExportWikiTERM_outputLines.add('}}');
+    ExportWikiTERM_outputLines.add('');
     writeTerminalContents(term, 0);
-    outputLines.add(#10);
+    ExportWikiTERM_outputLines.add(#10);
 end;
 
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/TERM.wiki');
+    ExportWikiTERM_outputLines.saveToFile('dumps/TERM.wiki');
 end;
 
 
@@ -59,12 +59,12 @@ var body: IInterface;
 
     i: Integer;
 begin
-    visitHistory.add(stringFormID(e));
+    ExportWikiTERM_visitHistory.add(stringFormID(e));
 
     body := eByPath(e, 'Body Text');
     for i := 0 to eCount(body) - 1 do begin
         bodyItem := eByIndex(body, i);
-        outputLines.add(escapeHTML(evBySignature(bodyItem, 'BTXT')));
+        ExportWikiTERM_outputLines.add(escapeHTML(evBySignature(bodyItem, 'BTXT')));
     end;
 
     menu := eByPath(e, 'Menu Items');
@@ -73,23 +73,23 @@ begin
         menuItemType := evBySignature(menuItem, 'ANAM');
 
         if eCount(eByPath(menuItem, 'Conditions')) > 0 then begin
-            outputLines.add('{{Info: The following header is conditional}}');
+            ExportWikiTERM_outputLines.add('{{Info: The following header is conditional}}');
         end;
 
         if menuItemType = 'Display Text' then begin
-            outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
-            outputLines.add('{{Transcript|text=');
-            outputLines.add(escapeHTML(trim(evBySignature(menuItem, 'UNAM'))));
-            outputLines.add('}}');
-            outputLines.add('');
+            ExportWikiTERM_outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+            ExportWikiTERM_outputLines.add('{{Transcript|text=');
+            ExportWikiTERM_outputLines.add(escapeHTML(trim(evBySignature(menuItem, 'UNAM'))));
+            ExportWikiTERM_outputLines.add('}}');
+            ExportWikiTERM_outputLines.add('');
         end else if menuItemType = 'Submenu - Terminal' then begin
-            if (visitHistory.indexOf(stringFormID(linksTo(eBySignature(menuItem, 'TNAM')))) >= 0) then begin
+            if (ExportWikiTERM_visitHistory.indexOf(stringFormID(linksTo(eBySignature(menuItem, 'TNAM')))) >= 0) then begin
                 if evBySignature(menuItem, 'RNAM') <> '' then begin
-                    outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
-                    outputLines.add(escapeHTML(trim(evBySignature(menuItem, 'RNAM'))));
+                    ExportWikiTERM_outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+                    ExportWikiTERM_outputLines.add(escapeHTML(trim(evBySignature(menuItem, 'RNAM'))));
                 end;
             end else begin
-                outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+                ExportWikiTERM_outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
                 writeTerminalContents(linksTo(eBySignature(menuItem, 'TNAM')), depth + 1);
             end;
         end else if menuItemType = 'Submenu - Return to Top Level' then begin
@@ -97,16 +97,16 @@ begin
         end else if menuItemType = 'Submenu - Force Redraw' then begin
             // Do nothing
         end else if menuItemType = 'Display Image' then begin
-            outputLines.add('{{Image: ' + evBySignature(menuItem, 'VNAM') + '}}');
+            ExportWikiTERM_outputLines.add('{{Image: ' + evBySignature(menuItem, 'VNAM') + '}}');
         end else begin
             addMessage('Warning: Unexpected menu item type `' + menuItemType + '`');
 
-            outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
-            outputLines.add('{{Error: Unexpected menu item type}}');
+            ExportWikiTERM_outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+            ExportWikiTERM_outputLines.add('{{Error: Unexpected menu item type}}');
         end;
     end;
 
-    visitHistory.delete(visitHistory.count - 1);
+    ExportWikiTERM_visitHistory.delete(ExportWikiTERM_visitHistory.count - 1);
 end;
 
 

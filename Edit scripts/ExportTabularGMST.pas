@@ -4,13 +4,13 @@ uses ExportCore,
      ExportTabularCore;
 
 
-var outputLines: TStringList;
+var ExportTabularGMST_outputLines: TStringList;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
-    outputLines.add('"File", "Form ID", "Editor ID", "Type", "Value"');
+    ExportTabularGMST_outputLines := TStringList.create;
+    ExportTabularGMST_outputLines.add('"File", "Form ID", "Editor ID", "Type", "Value"');
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -25,7 +25,7 @@ begin
         exit;
     end;
 
-    outputLines.add(
+    ExportTabularGMST_outputLines.add(
         escapeCsvString(getFileName(getFile(gmst))) + ', ' +
         escapeCsvString(stringFormID(gmst)) + ', ' +
         escapeCsvString(evBySignature(gmst, 'EDID')) + ', ' +
@@ -37,7 +37,7 @@ end;
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/GMST.csv');
+    ExportTabularGMST_outputLines.saveToFile('dumps/GMST.csv');
 end;
 
 

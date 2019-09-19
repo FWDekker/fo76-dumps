@@ -4,13 +4,13 @@ uses ExportCore,
      ExportTabularCore;
 
 
-var outputLines: TStringList;
+var ExportTabularGLOB_outputLines: TStringList;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
-    outputLines.add('"File", "Form ID", "Editor ID", "Value"');
+    ExportTabularGLOB_outputLines := TStringList.create;
+    ExportTabularGLOB_outputLines.add('"File", "Form ID", "Editor ID", "Value"');
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -25,7 +25,7 @@ begin
         exit;
     end;
 
-    outputLines.add(
+    ExportTabularGLOB_outputLines.add(
         escapeCsvString(getFileName(getFile(glob))) + ', ' +
         escapeCsvString(stringFormID(glob)) + ', ' +
         escapeCsvString(evBySignature(glob, 'EDID')) + ', ' +
@@ -36,7 +36,7 @@ end;
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/GLOB.csv');
+    ExportTabularGLOB_outputLines.saveToFile('dumps/GLOB.csv');
 end;
 
 

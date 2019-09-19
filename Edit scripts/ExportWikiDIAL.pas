@@ -4,12 +4,12 @@ uses ExportCore,
      ExportWikiCore;
 
 
-var outputLines: TStringList;
+var ExportWikiDIAL_outputLines: TStringList;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
+    ExportWikiDIAL_outputLines := TStringList.create;
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -25,13 +25,13 @@ begin
         exit;
     end;
 
-    addQuest(outputLines, e);
+    addQuest(ExportWikiDIAL_outputLines, e);
 end;
 
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/DIAL.wiki');
+    ExportWikiDIAL_outputLines.saveToFile('dumps/DIAL.wiki');
 end;
 
 
@@ -63,15 +63,15 @@ begin
         exit;
     end;
 
-    outputLines.add('==[' + getFileName(getFile(quest)) + '] ' + evBySignature(quest, 'EDID') + ' (' + stringFormID(quest) + ')==');
-    outputLines.add('{|class="va-table va-table-full np-table-dialogue"');
-    outputLines.add('|-');
-    outputLines.add('! style="width:2%" | #');
-    outputLines.add('! style="width:8%" | Dialog Topic');
-    outputLines.add('! style="width:5%" | Form ID');
-    outputLines.add('! style="width:30%" | Response Text');
-    outputLines.add('! style="width:30%" | Script Notes');
-    outputLines.add('');
+    ExportWikiDIAL_outputLines.add('==[' + getFileName(getFile(quest)) + '] ' + evBySignature(quest, 'EDID') + ' (' + stringFormID(quest) + ')==');
+    ExportWikiDIAL_outputLines.add('{|class="va-table va-table-full np-table-dialogue"');
+    ExportWikiDIAL_outputLines.add('|-');
+    ExportWikiDIAL_outputLines.add('! style="width:2%" | #');
+    ExportWikiDIAL_outputLines.add('! style="width:8%" | Dialog Topic');
+    ExportWikiDIAL_outputLines.add('! style="width:5%" | Form ID');
+    ExportWikiDIAL_outputLines.add('! style="width:30%" | Response Text');
+    ExportWikiDIAL_outputLines.add('! style="width:30%" | Script Notes');
+    ExportWikiDIAL_outputLines.add('');
 
     linkable := 1;
 
@@ -111,24 +111,24 @@ begin
             for i := 0 to eCount(responses) - 1 do begin
                 response := eByIndex(responses, i);
 
-                outputLines.add('|-');
-                outputLines.add('| {{Linkable|' + intToStr(linkable) + '}}');
+                ExportWikiDIAL_outputLines.add('|-');
+                ExportWikiDIAL_outputLines.add('| {{Linkable|' + intToStr(linkable) + '}}');
                 if not topicHasRowSpan then begin
-                    outputLines.add('| rowspan="' + intToStr(topicSize) + '" | {{ID|' + stringFormID(topic) + '}}');
+                    ExportWikiDIAL_outputLines.add('| rowspan="' + intToStr(topicSize) + '" | {{ID|' + stringFormID(topic) + '}}');
                     topicHasRowSpan := true;
                 end;
                 if not dialogHasRowSpan then begin
                     if eCount(responses) = 1 then begin
-                        outputLines.add('| {{ID|' + stringFormID(dialog) + '}}');
+                        ExportWikiDIAL_outputLines.add('| {{ID|' + stringFormID(dialog) + '}}');
                     end else begin
-                        outputLines.add('| rowspan="'
+                        ExportWikiDIAL_outputLines.add('| rowspan="'
                             + intToStr(eCount(responses)) + '" | {{ID|' + stringFormID(dialog) + '}}');
                     end;
                     dialogHasRowSpan := true;
                 end;
-                outputLines.add('| ' + escapeHTML(trim(evBySignature(response, 'NAM1'))));
-                outputLines.add('| ''''' + escapeHTML(trim(evBySignature(response, 'NAM2'))) + '''''');
-                outputLines.add('');
+                ExportWikiDIAL_outputLines.add('| ' + escapeHTML(trim(evBySignature(response, 'NAM1'))));
+                ExportWikiDIAL_outputLines.add('| ''''' + escapeHTML(trim(evBySignature(response, 'NAM2'))) + '''''');
+                ExportWikiDIAL_outputLines.add('');
 
                 linkable := linkable + 1;
             end;
@@ -136,8 +136,8 @@ begin
     end;
 
 
-    outputLines.add('|}');
-    outputLines.add(#10);
+    ExportWikiDIAL_outputLines.add('|}');
+    ExportWikiDIAL_outputLines.add(#10);
 end;
 
 function getElementAfter(group: IInterface; previousFormID: Integer): IInterface;

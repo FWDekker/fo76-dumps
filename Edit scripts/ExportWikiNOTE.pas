@@ -4,13 +4,13 @@ uses ExportCore,
      ExportWikiCore;
 
 
-var outputLines: TStringList;
-    lastSpeaker: String;
+var ExportWikiNOTE_outputLines: TStringList;
+    ExportWikiNOTE_lastSpeaker: String;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
+    ExportWikiNOTE_outputLines := TStringList.create;
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -25,20 +25,20 @@ begin
         exit;
     end;
 
-    lastSpeaker := '';
+    ExportWikiNOTE_lastSpeaker := '';
 
-    outputLines.add('==[' + getFileName(getFile(note)) + '] ' + evBySignature(note, 'FULL') + '==');
-    outputLines.add('Form ID:   ' + stringFormID(note));
-    outputLines.add('Editor ID: ' + evBySignature(note, 'EDID'));
-    outputLines.add('Weight:    ' + evByPath(eBySignature(note, 'DATA'), 'Weight'));
-    outputLines.add('Value:     ' + evByPath(eBySignature(note, 'DATA'), 'Value'));
-    outputLines.add('Transcript: ' + #10 + getNoteDialogue(note) + #10 + #10);
+    ExportWikiNOTE_outputLines.add('==[' + getFileName(getFile(note)) + '] ' + evBySignature(note, 'FULL') + '==');
+    ExportWikiNOTE_outputLines.add('Form ID:   ' + stringFormID(note));
+    ExportWikiNOTE_outputLines.add('Editor ID: ' + evBySignature(note, 'EDID'));
+    ExportWikiNOTE_outputLines.add('Weight:    ' + evByPath(eBySignature(note, 'DATA'), 'Weight'));
+    ExportWikiNOTE_outputLines.add('Value:     ' + evByPath(eBySignature(note, 'DATA'), 'Value'));
+    ExportWikiNOTE_outputLines.add('Transcript: ' + #10 + getNoteDialogue(note) + #10 + #10);
 end;
 
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/NOTE.wiki');
+    ExportWikiNOTE_outputLines.saveToFile('dumps/NOTE.wiki');
 end;
 
 
@@ -138,10 +138,10 @@ begin
     if speaker = '' then begin
         speaker := evBySignature(linksTo(eBySignature(eByIndex(childGroup(topic), 0), 'ANAM')), 'EDID');
     end;
-    if (speaker <> '_NPC_NoLines') and (speaker <> lastSpeaker) then begin
+    if (speaker <> '_NPC_NoLines') and (speaker <> ExportWikiNOTE_lastSpeaker) then begin
         result := result + '''''''' + speaker + ''''''': ';
     end;
-    lastSpeaker := speaker;
+    ExportWikiNOTE_lastSpeaker := speaker;
 
     // Add lines of paragraph
     lines := eByPath(eByIndex(childGroup(topic), 0), 'Responses');

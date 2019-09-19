@@ -4,13 +4,13 @@ uses ExportCore,
      ExportTabularCore;
 
 
-var outputLines: TStringList;
+var ExportTabularMISC_outputLines: TStringList;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
-    outputLines.add('"File", "Form ID", "Editor ID", "Item name", "Weight", "Value", "Components"');
+    ExportTabularMISC_outputLines := TStringList.create;
+    ExportTabularMISC_outputLines.add('"File", "Form ID", "Editor ID", "Item name", "Weight", "Value", "Components"');
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -25,7 +25,7 @@ begin
         exit;
     end;
 
-    outputLines.add(
+    ExportTabularMISC_outputLines.add(
         escapeCsvString(getFileName(getFile(misc))) + ', ' +
         escapeCsvString(stringFormID(misc)) + ', ' +
         escapeCsvString(evBySignature(misc, 'EDID')) + ', ' +
@@ -39,7 +39,7 @@ end;
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/MISC.csv');
+    ExportTabularMISC_outputLines.saveToFile('dumps/MISC.csv');
 end;
 
 

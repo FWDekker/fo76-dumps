@@ -4,13 +4,13 @@ uses ExportCore,
      ExportTabularCore;
 
 
-var outputLines: TStringList;
+var ExportTabularCOBJ_outputLines: TStringList;
 
 
 function initialize: Integer;
 begin
-    outputLines := TStringList.create;
-    outputLines.add('"File", "Form ID", "Editor ID", "Product form ID", "Product editor ID", "Product name", "Recipe form ID", "Recipe editor ID", "Recipe name", "Components"');
+    ExportTabularCOBJ_outputLines := TStringList.create;
+    ExportTabularCOBJ_outputLines.add('"File", "Form ID", "Editor ID", "Product form ID", "Product editor ID", "Product name", "Recipe form ID", "Recipe editor ID", "Recipe name", "Components"');
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -30,7 +30,7 @@ begin
     product := linksTo(eBySignature(cobj, 'CNAM'));
     recipe := linksTo(eBySignature(cobj, 'GNAM'));
 
-    outputLines.add(
+    ExportTabularCOBJ_outputLines.add(
         escapeCsvString(getFileName(getFile(cobj))) + ', ' +
         escapeCsvString(stringFormID(cobj)) + ', ' +
         escapeCsvString(evBySignature(cobj, 'EDID')) + ', ' +
@@ -47,7 +47,7 @@ end;
 function finalize: Integer;
 begin
     createDir('dumps/');
-    outputLines.saveToFile('dumps/COBJ.csv');
+    ExportTabularCOBJ_outputLines.saveToFile('dumps/COBJ.csv');
 end;
 
 
