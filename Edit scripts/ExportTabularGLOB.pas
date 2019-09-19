@@ -13,18 +13,23 @@ begin
     outputLines.add('"File", "Form ID", "Editor ID", "Value"');
 end;
 
-function process(e: IInterface): Integer;
+function canProcess(e: IInterface): Boolean;
 begin
-    if signature(e) <> 'GLOB' then begin
-        addMessage('Warning: ' + name(e) + ' is not a GLOB. Entry was ignored.');
+    result := signature(e) = 'GLOB';
+end;
+
+function process(glob: IInterface): Integer;
+begin
+    if not canProcess(glob) then begin
+        addMessage('Warning: ' + name(glob) + ' is not a GLOB. Entry was ignored.');
         exit;
     end;
 
     outputLines.add(
-        escapeCsvString(getFileName(getFile(e))) + ', ' +
-        escapeCsvString(stringFormID(e)) + ', ' +
-        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
-        evBySignature(e, 'FLTV')
+        escapeCsvString(getFileName(getFile(glob))) + ', ' +
+        escapeCsvString(stringFormID(glob)) + ', ' +
+        escapeCsvString(evBySignature(glob, 'EDID')) + ', ' +
+        evBySignature(glob, 'FLTV')
     );
 end;
 

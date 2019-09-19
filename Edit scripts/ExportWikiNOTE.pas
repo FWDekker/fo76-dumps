@@ -13,21 +13,26 @@ begin
     outputLines := TStringList.create;
 end;
 
-function process(e: IInterface): Integer;
+function canProcess(e: IInterface): Boolean;
 begin
-    if signature(e) <> 'NOTE' then begin
-        addMessage('Warning: ' + name(e) + ' is not a NOTE. Entry was ignored.');
+    result := signature(e) = 'NOTE';
+end;
+
+function process(note: IInterface): Integer;
+begin
+    if not canProcess(note) then begin
+        addMessage('Warning: ' + name(note) + ' is not a NOTE. Entry was ignored.');
         exit;
     end;
 
     lastSpeaker := '';
 
-    outputLines.add('==[' + getFileName(getFile(e)) + '] ' + evBySignature(e, 'FULL') + '==');
-    outputLines.add('Form ID:   ' + stringFormID(e));
-    outputLines.add('Editor ID: ' + evBySignature(e, 'EDID'));
-    outputLines.add('Weight:    ' + evByPath(eBySignature(e, 'DATA'), 'Weight'));
-    outputLines.add('Value:     ' + evByPath(eBySignature(e, 'DATA'), 'Value'));
-    outputLines.add('Transcript: ' + #10 + getNoteDialogue(e) + #10 + #10);
+    outputLines.add('==[' + getFileName(getFile(note)) + '] ' + evBySignature(note, 'FULL') + '==');
+    outputLines.add('Form ID:   ' + stringFormID(note));
+    outputLines.add('Editor ID: ' + evBySignature(note, 'EDID'));
+    outputLines.add('Weight:    ' + evByPath(eBySignature(note, 'DATA'), 'Weight'));
+    outputLines.add('Value:     ' + evByPath(eBySignature(note, 'DATA'), 'Value'));
+    outputLines.add('Transcript: ' + #10 + getNoteDialogue(note) + #10 + #10);
 end;
 
 function finalize: Integer;

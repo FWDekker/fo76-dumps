@@ -13,19 +13,24 @@ begin
     outputLines.add('"File", "Form ID", "Editor ID", "Type", "Value"');
 end;
 
-function process(e: IInterface): Integer;
+function canProcess(e: IInterface): Boolean;
 begin
-    if signature(e) <> 'GMST' then begin
-        addMessage('Warning: ' + name(e) + ' is not a GMST. Entry was ignored.');
+    result := signature(e) = 'GMST';
+end;
+
+function process(gmst: IInterface): Integer;
+begin
+    if not canProcess(gmst) then begin
+        addMessage('Warning: ' + name(gmst) + ' is not a GMST. Entry was ignored.');
         exit;
     end;
 
     outputLines.add(
-        escapeCsvString(getFileName(getFile(e))) + ', ' +
-        escapeCsvString(stringFormID(e)) + ', ' +
-        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
-        escapeCsvString(letterToType(copy(evBySignature(e, 'EDID'), 1, 1))) + ', ' +
-        escapeCsvString(gev(lastElement(eBySignature(e, 'DATA'))))
+        escapeCsvString(getFileName(getFile(gmst))) + ', ' +
+        escapeCsvString(stringFormID(gmst)) + ', ' +
+        escapeCsvString(evBySignature(gmst, 'EDID')) + ', ' +
+        escapeCsvString(letterToType(copy(evBySignature(gmst, 'EDID'), 1, 1))) + ', ' +
+        escapeCsvString(gev(lastElement(eBySignature(gmst, 'DATA'))))
     );
 end;
 

@@ -21,6 +21,11 @@ begin
     );
 end;
 
+function canProcess(e: IInterface): Boolean;
+begin
+    result := true;
+end;
+
 function process(e: IInterface): Integer;
 begin
     appendLargeFile('dumps/IDs.csv', outputLines, filePartSize,

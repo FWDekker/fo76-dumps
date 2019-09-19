@@ -13,13 +13,18 @@ begin
     outputLines.add('"File", "Form ID", "Editor ID", "Name", "Level", "Factions", "Race", "Attack race", "Class", "Keywords", "Perks", "Properties", "Aggression", "Confidence", "Assistance", "Health curve", "XP curve"');
 end;
 
+function canProcess(e: IInterface): Boolean;
+begin
+    result := signature(e) = 'NPC_';
+end;
+
 function process(npc_: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if signature(npc_) <> 'NPC_' then begin
+    if not canProcess(npc_) then begin
         addMessage('Warning: ' + name(npc_) + ' is not an NPC_. Entry was ignored.');
         exit;
     end;

@@ -13,21 +13,26 @@ begin
     outputLines.add('"File", "Form ID", "Editor ID", "Item name", "Weight", "Value", "Components"');
 end;
 
-function process(e: IInterface): Integer;
+function canProcess(e: IInterface): Boolean;
 begin
-    if signature(e) <> 'MISC' then begin
-        addMessage('Warning: ' + name(e) + ' is not a MISC. Entry was ignored.');
+    result := signature(e) = 'MISC';
+end;
+
+function process(misc: IInterface): Integer;
+begin
+    if not canProcess(misc) then begin
+        addMessage('Warning: ' + name(misc) + ' is not a MISC. Entry was ignored.');
         exit;
     end;
 
     outputLines.add(
-        escapeCsvString(getFileName(getFile(e))) + ', ' +
-        escapeCsvString(stringFormID(e)) + ', ' +
-        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
-        escapeCsvString(evBySignature(e, 'FULL')) + ', ' +
-        escapeCsvString(evByPath(eBySignature(e, 'DATA'), 'Weight')) + ', ' +
-        escapeCsvString(evByPath(eBySignature(e, 'DATA'), 'Value')) + ', ' +
-        escapeCsvString(getFlatComponentList(e))
+        escapeCsvString(getFileName(getFile(misc))) + ', ' +
+        escapeCsvString(stringFormID(misc)) + ', ' +
+        escapeCsvString(evBySignature(misc, 'EDID')) + ', ' +
+        escapeCsvString(evBySignature(misc, 'FULL')) + ', ' +
+        escapeCsvString(evByPath(eBySignature(misc, 'DATA'), 'Weight')) + ', ' +
+        escapeCsvString(evByPath(eBySignature(misc, 'DATA'), 'Value')) + ', ' +
+        escapeCsvString(getFlatComponentList(misc))
     );
 end;
 

@@ -12,20 +12,25 @@ begin
     outputLines := TStringList.create;
 end;
 
-function process(e: IInterface): Integer;
+function canProcess(e: IInterface): Boolean;
 begin
-    if signature(e) <> 'BOOK' then begin
-        addMessage('Warning: ' + name(e) + ' is not a BOOK. Entry was ignored.');
+    result := signature(e) = 'BOOK';
+end;
+
+function process(book: IInterface): Integer;
+begin
+    if not canProcess(book) then begin
+        addMessage('Warning: ' + name(book) + ' is not a BOOK. Entry was ignored.');
         exit;
     end;
 
-    outputLines.add('==[' + getFileName(getFile(e)) + '] ' + evBySignature(e, 'FULL') + '==');
-    outputLines.add('Form ID:      ' + stringFormID(e));
-    outputLines.add('Editor ID:    ' + evBySignature(e, 'EDID'));
-    outputLines.add('Weight:       ' + evByPath(eBySignature(e, 'DATA'), 'Weight'));
-    outputLines.add('Value:        ' + evByPath(eBySignature(e, 'DATA'), 'Value'));
-    outputLines.add('Can be taken: ' + canBeTakenString(e));
-    outputLines.add('Transcript:' + #10 + getBookContents(e));
+    outputLines.add('==[' + getFileName(getFile(book)) + '] ' + evBySignature(book, 'FULL') + '==');
+    outputLines.add('Form ID:      ' + stringFormID(book));
+    outputLines.add('Editor ID:    ' + evBySignature(book, 'EDID'));
+    outputLines.add('Weight:       ' + evByPath(eBySignature(book, 'DATA'), 'Weight'));
+    outputLines.add('Value:        ' + evByPath(eBySignature(book, 'DATA'), 'Value'));
+    outputLines.add('Can be taken: ' + canBeTakenString(book));
+    outputLines.add('Transcript:' + #10 + getBookContents(book));
     outputLines.add(#10);
 end;
 

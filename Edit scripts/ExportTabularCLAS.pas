@@ -13,13 +13,18 @@ begin
     outputLines.add('"File", "Form ID", "Editor ID", "Name", "Properties"');
 end;
 
+function canProcess(e: IInterface): Boolean;
+begin
+    result := signature(e) = 'CLAS';
+end;
+
 function process(clas: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if signature(clas) <> 'CLAS' then begin
+    if not canProcess(clas) then begin
         addMessage('Warning: ' + name(clas) + ' is not a CLAS. Entry was ignored.');
         exit;
     end;

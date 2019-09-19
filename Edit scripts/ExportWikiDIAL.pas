@@ -12,10 +12,16 @@ begin
     outputLines := TStringList.create;
 end;
 
+function canProcess(e: IInterface): Boolean;
+begin
+    result := signature(e) = 'QUST';
+end;
+
 function process(e: IInterface): Integer;
 begin
-    // Filter out nested elements
-    if signature(e) <> 'QUST' then begin
+    // Filter out non-quest elements and nested elements
+    if not canProcess(xxx) then begin
+        // No warning needed because this is expected behavior
         exit;
     end;
 

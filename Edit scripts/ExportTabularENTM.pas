@@ -13,20 +13,25 @@ begin
     outputLines.add('"File", "Form ID", "Editor ID", "Name (FULL)", "Name (NNAM)", "Keywords"');
 end;
 
-function process(e: IInterface): Integer;
+function canProcess(e: IInterface): Boolean;
 begin
-    if signature(e) <> 'ENTM' then begin
-        addMessage('Warning: ' + name(e) + ' is not a ENTM. Entry was ignored.');
+    result := signature(e) = 'ENTM';
+end;
+
+function process(entm: IInterface): Integer;
+begin
+    if not canProcess(entm) then begin
+        addMessage('Warning: ' + name(entm) + ' is not a ENTM. Entry was ignored.');
         exit;
     end;
 
     outputLines.add(
-        escapeCsvString(getFileName(getFile(e))) + ', ' +
-        escapeCsvString(stringFormID(e)) + ', ' +
-        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
-        escapeCsvString(evBySignature(e, 'FULL')) + ', ' +
-        escapeCsvString(evBySignature(e, 'NNAM')) + ', ' +
-        escapeCsvString(getFlatKeywordList(e))
+        escapeCsvString(getFileName(getFile(entm))) + ', ' +
+        escapeCsvString(stringFormID(entm)) + ', ' +
+        escapeCsvString(evBySignature(entm, 'EDID')) + ', ' +
+        escapeCsvString(evBySignature(entm, 'FULL')) + ', ' +
+        escapeCsvString(evBySignature(entm, 'NNAM')) + ', ' +
+        escapeCsvString(getFlatKeywordList(entm))
     );
 end;
 

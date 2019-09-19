@@ -13,29 +13,34 @@ begin
     outputLines.add('"File", "Form ID", "Editor ID", "Product form ID", "Product editor ID", "Product name", "Recipe form ID", "Recipe editor ID", "Recipe name", "Components"');
 end;
 
-function process(e: IInterface): Integer;
+function canProcess(e: IInterface): Boolean;
+begin
+    result := signature(e) = 'COBJ';
+end;
+
+function process(cobj: IInterface): Integer;
 var product: IInterface;
     recipe: IInterface;
 begin
-    if signature(e) <> 'COBJ' then begin
-        addMessage('Warning: ' + name(e) + ' is not a COBJ. Entry was ignored.');
+    if not canProcess(cobj) then begin
+        addMessage('Warning: ' + name(cobj) + ' is not a COBJ. Entry was ignored.');
         exit;
     end;
 
-    product := linksTo(eBySignature(e, 'CNAM'));
-    recipe := linksTo(eBySignature(e, 'GNAM'));
+    product := linksTo(eBySignature(cobj, 'CNAM'));
+    recipe := linksTo(eBySignature(cobj, 'GNAM'));
 
     outputLines.add(
-        escapeCsvString(getFileName(getFile(e))) + ', ' +
-        escapeCsvString(stringFormID(e)) + ', ' +
-        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
+        escapeCsvString(getFileName(getFile(cobj))) + ', ' +
+        escapeCsvString(stringFormID(cobj)) + ', ' +
+        escapeCsvString(evBySignature(cobj, 'EDID')) + ', ' +
         escapeCsvString(ifThen(not assigned(product), '', stringFormID(product))) + ', ' +
         escapeCsvString(ifThen(not assigned(product), '', evBySignature(product, 'EDID'))) + ', ' +
         escapeCsvString(ifThen(not assigned(product), '', evBySignature(product, 'FULL'))) + ', ' +
         escapeCsvString(ifThen(not assigned(recipe), '', stringFormID(recipe))) + ', ' +
         escapeCsvString(ifThen(not assigned(recipe), '', evBySignature(recipe, 'EDID'))) + ', ' +
         escapeCsvString(ifThen(not assigned(recipe), '', evBySignature(recipe, 'FULL'))) + ', ' +
-        escapeCsvString(getFlatComponentList(e))
+        escapeCsvString(getFlatComponentList(cobj))
     );
 end;
 

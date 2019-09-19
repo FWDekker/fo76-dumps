@@ -14,26 +14,31 @@ begin
     visitHistory := TStringList.create;
 end;
 
-function process(e: IInterface): Integer;
+function canProcess(e: IInterface): Boolean;
 begin
-    if signature(e) <> 'TERM' then begin
-        addMessage('Warning: ' + name(e) + ' is not a TERM. Entry was ignored.');
+    result := signature(e) = 'TERM';
+end;
+
+function process(term: IInterface): Integer;
+begin
+    if not canProcess(term) then begin
+        addMessage('Warning: ' + name(term) + ' is not a TERM. Entry was ignored.');
         exit;
     end;
 
-    if not isReferencedBy(e, 'REFR') then begin
+    if not isReferencedBy(term, 'REFR') then begin
         exit;
     end;
 
     visitHistory.clear();
 
-    outputLines.add('==[' + getFileName(getFile(e)) + '] ' + evBySignature(e, 'FULL') + ' (' + stringFormID(e) + ')==');
+    outputLines.add('==[' + getFileName(getFile(term)) + '] ' + evBySignature(term, 'FULL') + ' (' + stringFormID(term) + ')==');
     outputLines.add('{{Transcript|text=');
     outputLines.add('Welcome to ROBCO Industries (TM) Termlink');
-    outputLines.add(escapeHTML(trim(evBySignature(e, 'WNAM'))));
+    outputLines.add(escapeHTML(trim(evBySignature(term, 'WNAM'))));
     outputLines.add('}}');
     outputLines.add('');
-    writeTerminalContents(e, 0);
+    writeTerminalContents(term, 0);
     outputLines.add(#10);
 end;
 

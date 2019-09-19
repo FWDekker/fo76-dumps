@@ -13,13 +13,18 @@ begin
     outputLines.add('"File", "Form ID", "Editor ID", "Name", "Keywords", "Properties"');
 end;
 
+function canProcess(e: IInterface): Boolean;
+begin
+    result := signature(e) = 'RACE';
+end;
+
 function process(race: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if signature(race) <> 'RACE' then begin
+    if not canProcess(race) then begin
         addMessage('Warning: ' + name(race) + ' is not a RACE. Entry was ignored.');
         exit;
     end;
