@@ -1,0 +1,96 @@
+unit ExportAll;
+
+uses ExportTabularCLAS,
+     ExportTabularCOBJ,
+     ExportTabularENTM,
+     ExportTabularGLOB,
+     ExportTabularGMST,
+     ExportTabularIDs,
+     ExportTabularMISC,
+     ExportTabularNPC_,
+     ExportTabularRACE,
+     ExportWikiBOOK,
+     ExportWikiDIAL,
+     ExportWikiNOTE,
+     ExportWikiTERM;
+
+
+function initialize: Integer;
+begin
+    ExportTabularCLAS.initialize();
+    ExportTabularCOBJ.initialize();
+    ExportTabularENTM.initialize();
+    ExportTabularGLOB.initialize();
+    ExportTabularGMST.initialize();
+    ExportTabularIDs.initialize();
+    ExportTabularMISC.initialize();
+    ExportTabularNPC_.initialize();
+    ExportTabularRACE.initialize();
+    ExportWikiBOOK.initialize();
+    ExportWikiDIAL.initialize();
+    ExportWikiNOTE.initialize();
+    ExportWikiTERM.initialize();
+end;
+
+function process(e: IInterface): Integer;
+begin
+    if ExportTabularCLAS.canProcess(e) then begin
+        ExportTabularCLAS.process(e);
+    end;
+    if ExportTabularCOBJ.canProcess(e) then begin
+        ExportTabularCOBJ.process(e);
+    end;
+    if ExportTabularENTM.canProcess(e) then begin
+        ExportTabularENTM.process(e);
+    end;
+    if ExportTabularGLOB.canProcess(e) then begin
+        ExportTabularGLOB.process(e);
+    end;
+    if ExportTabularGMST.canProcess(e) then begin
+        ExportTabularGMST.process(e);
+    end;
+    if ExportTabularIDs.canProcess(e) then begin
+        ExportTabularIDs.process(e);
+    end;
+    if ExportTabularMISC.canProcess(e) then begin
+        ExportTabularMISC.process(e);
+    end;
+    if ExportTabularNPC_.canProcess(e) then begin
+        ExportTabularNPC_.process(e);
+    end;
+    if ExportTabularRACE.canProcess(e) then begin
+        ExportTabularRACE.process(e);
+    end;
+    if ExportWikiBOOK.canProcess(e) then begin
+        ExportWikiBOOK.process(e);
+    end;
+    if ExportWikiDIAL.canProcess(e) then begin
+        ExportWikiDIAL.process(e);
+    end;
+    if ExportWikiNOTE.canProcess(e) then begin
+        ExportWikiNOTE.process(e);
+    end;
+    if ExportWikiTERM.canProcess(e) then begin
+        ExportWikiTERM.process(e);
+    end;
+end;
+
+function finalize: Integer;
+begin
+    ExportTabularCLAS.finalize();
+    ExportTabularCOBJ.finalize();
+    ExportTabularENTM.finalize();
+    ExportTabularGLOB.finalize();
+    ExportTabularGMST.finalize();
+    ExportTabularIDs.finalize();
+    ExportTabularMISC.finalize();
+    ExportTabularNPC_.finalize();
+    ExportTabularRACE.finalize();
+    ExportWikiBOOK.finalize();
+    ExportWikiDIAL.finalize();
+    ExportWikiNOTE.finalize();
+    ExportWikiTERM.finalize();
+end;
+
+
+end.
