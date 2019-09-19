@@ -32,7 +32,8 @@ begin
 
     ExportWikiTERM_visitHistory.clear();
 
-    ExportWikiTERM_outputLines.add('==[' + getFileName(getFile(term)) + '] ' + evBySignature(term, 'FULL') + ' (' + stringFormID(term) + ')==');
+    ExportWikiTERM_outputLines.add('==[' + getFileName(getFile(term)) + '] ' + evBySignature(term, 'FULL') +
+                                   ' (' + stringFormID(term) + ')==');
     ExportWikiTERM_outputLines.add('{{Transcript|text=');
     ExportWikiTERM_outputLines.add('Welcome to ROBCO Industries (TM) Termlink');
     ExportWikiTERM_outputLines.add(escapeHTML(trim(evBySignature(term, 'WNAM'))));
@@ -83,13 +84,16 @@ begin
             ExportWikiTERM_outputLines.add('}}');
             ExportWikiTERM_outputLines.add('');
         end else if menuItemType = 'Submenu - Terminal' then begin
-            if (ExportWikiTERM_visitHistory.indexOf(stringFormID(linksTo(eBySignature(menuItem, 'TNAM')))) >= 0) then begin
+            if ExportWikiTERM_visitHistory
+                .indexOf(stringFormID(linksTo(eBySignature(menuItem, 'TNAM')))) >= 0 then begin
                 if evBySignature(menuItem, 'RNAM') <> '' then begin
-                    ExportWikiTERM_outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+                    ExportWikiTERM_outputLines
+                        .add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
                     ExportWikiTERM_outputLines.add(escapeHTML(trim(evBySignature(menuItem, 'RNAM'))));
                 end;
             end else begin
-                ExportWikiTERM_outputLines.add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
+                ExportWikiTERM_outputLines
+                    .add(escapeHTML(createWikiHeader(evBySignature(menuItem, 'ITXT'), depth + 1)));
                 writeTerminalContents(linksTo(eBySignature(menuItem, 'TNAM')), depth + 1);
             end;
         end else if menuItemType = 'Submenu - Return to Top Level' then begin

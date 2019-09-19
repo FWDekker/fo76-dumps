@@ -17,15 +17,15 @@ begin
     result := signature(e) = 'QUST';
 end;
 
-function process(e: IInterface): Integer;
+function process(dial: IInterface): Integer;
 begin
     // Filter out non-quest elements and nested elements
-    if not canProcess(xxx) then begin
+    if not canProcess(dial) then begin
         // No warning needed because this is expected behavior
         exit;
     end;
 
-    addQuest(ExportWikiDIAL_outputLines, e);
+    addQuest(ExportWikiDIAL_outputLines, dial);
 end;
 
 function finalize: Integer;
@@ -63,7 +63,8 @@ begin
         exit;
     end;
 
-    ExportWikiDIAL_outputLines.add('==[' + getFileName(getFile(quest)) + '] ' + evBySignature(quest, 'EDID') + ' (' + stringFormID(quest) + ')==');
+    ExportWikiDIAL_outputLines.add('==[' + getFileName(getFile(quest)) + '] ' + evBySignature(quest, 'EDID') +
+                                   ' (' + stringFormID(quest) + ')==');
     ExportWikiDIAL_outputLines.add('{|class="va-table va-table-full np-table-dialogue"');
     ExportWikiDIAL_outputLines.add('|-');
     ExportWikiDIAL_outputLines.add('! style="width:2%" | #');
@@ -101,7 +102,7 @@ begin
         previousDialog := 0;
         while true do begin
             dialog := getElementAfter(dialogs, previousDialog);
-            if (not assigned(dialog)) then begin
+            if not assigned(dialog) then begin
                 break;
             end;
             previousDialog := formID(dialog);
@@ -114,7 +115,8 @@ begin
                 ExportWikiDIAL_outputLines.add('|-');
                 ExportWikiDIAL_outputLines.add('| {{Linkable|' + intToStr(linkable) + '}}');
                 if not topicHasRowSpan then begin
-                    ExportWikiDIAL_outputLines.add('| rowspan="' + intToStr(topicSize) + '" | {{ID|' + stringFormID(topic) + '}}');
+                    ExportWikiDIAL_outputLines.add('| rowspan="' + intToStr(topicSize) + '" | {{ID|' +
+                                                   stringFormID(topic) + '}}');
                     topicHasRowSpan := true;
                 end;
                 if not dialogHasRowSpan then begin

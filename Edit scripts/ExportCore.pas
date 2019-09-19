@@ -169,7 +169,7 @@ end;
  *
  * @param filename the prefix of the file to write to
  * @param lines    the line buffer
- * @see AppendLargeFile
+ * @see appendLargeFile
  *)
 procedure flushLargeFile(filename: String; lines: TStringList);
 begin
@@ -182,7 +182,7 @@ end;
  *
  * @param filename the prefix of the file to find
  * @return the first filename part that does not exist
- * @see AppendLargeFile
+ * @see appendLargeFile
  *)
 function _findFreeLargeFile(filename: String): String;
 var i: Integer;

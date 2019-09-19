@@ -46,7 +46,7 @@ var flags: String;
     pickUpFlag: String;
 begin
     flags := evByPath(eBySignature(book, 'DNAM'), 'Flags');
-    if (length(flags) = 1) then begin
+    if length(flags) = 1 then begin
         result := 'no';
     end;
 

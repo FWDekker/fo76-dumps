@@ -10,7 +10,9 @@ var ExportTabularNPC__outputLines: TStringList;
 function initialize: Integer;
 begin
     ExportTabularNPC__outputLines := TStringList.create;
-    ExportTabularNPC__outputLines.add('"File", "Form ID", "Editor ID", "Name", "Level", "Factions", "Race", "Attack race", "Class", "Keywords", "Perks", "Properties", "Aggression", "Confidence", "Assistance", "Health curve", "XP curve"');
+    ExportTabularNPC__outputLines.add('"File", "Form ID", "Editor ID", "Name", "Level", "Factions", "Race", ' +
+                                      '"Attack race", "Class", "Keywords", "Perks", "Properties", "Aggression", ' +
+                                      '"Confidence", "Assistance", "Health curve", "XP curve"');
 end;
 
 function canProcess(e: IInterface): Boolean;

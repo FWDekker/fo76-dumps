@@ -10,7 +10,9 @@ var ExportTabularCOBJ_outputLines: TStringList;
 function initialize: Integer;
 begin
     ExportTabularCOBJ_outputLines := TStringList.create;
-    ExportTabularCOBJ_outputLines.add('"File", "Form ID", "Editor ID", "Product form ID", "Product editor ID", "Product name", "Recipe form ID", "Recipe editor ID", "Recipe name", "Components"');
+    ExportTabularCOBJ_outputLines.add('"File", "Form ID", "Editor ID", "Product form ID", "Product editor ID", ' +
+                                      '"Product name", "Recipe form ID", "Recipe editor ID", "Recipe name", ' +
+                                      '"Components"');
 end;
 
 function canProcess(e: IInterface): Boolean;
