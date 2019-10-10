@@ -18,6 +18,7 @@ begin
 end;
 
 function process(dial: IInterface): Integer;
+var transcript: String;
 begin
     // Filter out non-quest elements and nested elements
     if not canProcess(dial) then begin
@@ -25,7 +26,10 @@ begin
         exit;
     end;
 
-    addQuest(ExportWikiDIAL_outputLines, dial);
+    transcript := trim(getQuestTranscript(dial));
+    if not (transcript = '') then begin
+        ExportWikiDIAL_outputLines.add(transcript + #10 + #10);
+    end;
 end;
 
 function finalize: Integer;
@@ -35,7 +39,7 @@ begin
 end;
 
 
-procedure addQuest(output: TStringList; quest: IInterface);
+function getQuestTranscript(quest: IInterface): String;
 var linkable: Integer;
 
     topics: IInterface;
@@ -63,16 +67,17 @@ begin
         exit;
     end;
 
-    ExportWikiDIAL_outputLines.add('==[' + getFileName(getFile(quest)) + '] ' + evBySignature(quest, 'EDID') +
-                                   ' (' + stringFormID(quest) + ')==');
-    ExportWikiDIAL_outputLines.add('{|class="va-table va-table-full np-table-dialogue"');
-    ExportWikiDIAL_outputLines.add('|-');
-    ExportWikiDIAL_outputLines.add('! style="width:2%" | #');
-    ExportWikiDIAL_outputLines.add('! style="width:8%" | Dialog Topic');
-    ExportWikiDIAL_outputLines.add('! style="width:5%" | Form ID');
-    ExportWikiDIAL_outputLines.add('! style="width:30%" | Response Text');
-    ExportWikiDIAL_outputLines.add('! style="width:30%" | Script Notes');
-    ExportWikiDIAL_outputLines.add('');
+    result := result
+        + '==[' + getFileName(getFile(quest)) + '] ' + evBySignature(quest, 'EDID')
+            + ' (' + stringFormID(quest) + ')==' + #10
+        + '{|class="va-table va-table-full np-table-dialogue"' + #10
+        + '|-' + #10
+        + '! style="width:2%" | #' + #10
+        + '! style="width:8%" | Dialog Topic' + #10
+        + '! style="width:5%" | Form ID' + #10
+        + '! style="width:30%" | Response Text' + #10
+        + '! style="width:30%" | Script Notes' + #10
+        + #10;
 
     linkable := 1;
 
@@ -112,25 +117,28 @@ begin
             for i := 0 to eCount(responses) - 1 do begin
                 response := eByIndex(responses, i);
 
-                ExportWikiDIAL_outputLines.add('|-');
-                ExportWikiDIAL_outputLines.add('| {{Linkable|' + intToStr(linkable) + '}}');
+                result := result
+                    + '|-' + #10
+                    + '| {{Linkable|' + intToStr(linkable) + '}}' + #10;
                 if not topicHasRowSpan then begin
-                    ExportWikiDIAL_outputLines.add('| rowspan="' + intToStr(topicSize) + '" | {{ID|' +
-                                                   stringFormID(topic) + '}}');
+                    result := result
+                        + '| rowspan="' + intToStr(topicSize) + '" | {{ID|' + stringFormID(topic) + '}}' + #10;
                     topicHasRowSpan := true;
                 end;
                 if not dialogHasRowSpan then begin
                     if eCount(responses) = 1 then begin
-                        ExportWikiDIAL_outputLines.add('| {{ID|' + stringFormID(dialog) + '}}');
+                        result := result + '| {{ID|' + stringFormID(dialog) + '}}' + #10;
                     end else begin
-                        ExportWikiDIAL_outputLines.add('| rowspan="'
-                            + intToStr(eCount(responses)) + '" | {{ID|' + stringFormID(dialog) + '}}');
+                        result := result
+                            + '| rowspan="' + intToStr(eCount(responses))
+                                + '" | {{ID|' + stringFormID(dialog) + '}}' + #10;
                     end;
                     dialogHasRowSpan := true;
                 end;
-                ExportWikiDIAL_outputLines.add('| ' + escapeHTML(trim(evBySignature(response, 'NAM1'))));
-                ExportWikiDIAL_outputLines.add('| ''''' + escapeHTML(trim(evBySignature(response, 'NAM2'))) + '''''');
-                ExportWikiDIAL_outputLines.add('');
+                result := result
+                    + '| ' + escapeHTML(trim(evBySignature(response, 'NAM1'))) + #10
+                    + '| ''''' + escapeHTML(trim(evBySignature(response, 'NAM2'))) + '''''' + #10
+                    + '' + #10;
 
                 linkable := linkable + 1;
             end;
@@ -138,8 +146,7 @@ begin
     end;
 
 
-    ExportWikiDIAL_outputLines.add('|}');
-    ExportWikiDIAL_outputLines.add(#10);
+    result := result + '|}';
 end;
 
 function getElementAfter(group: IInterface; previousFormID: Integer): IInterface;
