@@ -32,7 +32,7 @@ begin
 end;
 
 (**
- * Escapes a selection of MediaWiki symbols.
+ * Escapes a selection of MediaWiki symbols after applying `escapeHTML`.
  *
  * @param text the text to escape
  * @return a MediaWiki-escaped version of [text]
@@ -40,6 +40,7 @@ end;
 function escapeWiki(text: String): String;
 begin
     result := text;
+    result := escapeHTML(text);
     result := stringReplace(result, '{', '&#123;', [rfReplaceAll]);
     result := stringReplace(result, '|', '&#124;', [rfReplaceAll]);
     result := stringReplace(result, '}', '&#125;', [rfReplaceAll]);
