@@ -31,29 +31,29 @@ begin
         exit;
     end;
 
-    acbs := eBySignature(npc_, 'ACBS');
-    rnam := linksTo(eBySignature(npc_, 'RNAM'));
-    aidt := eBySignature(npc_, 'AIDT');
-    cnam := linksTo(eBySignature(npc_, 'CNAM'));
+    acbs := eBySign(npc_, 'ACBS');
+    rnam := linkBySign(npc_, 'RNAM');
+    aidt := eBySign(npc_, 'AIDT');
+    cnam := linkBySign(npc_, 'CNAM');
 
     ExportTabularNPC__outputLines.add(
         escapeCsvString(getFileName(getFile(npc_))) + ', ' +
         escapeCsvString(stringFormID(npc_)) + ', ' +
-        escapeCsvString(evBySignature(npc_, 'EDID')) + ', ' +
-        escapeCsvString(evBySignature(npc_, 'FULL')) + ', ' +
+        escapeCsvString(evBySign(npc_, 'EDID')) + ', ' +
+        escapeCsvString(evBySign(npc_, 'FULL')) + ', ' +
         escapeCsvString(evByPath(acbs, 'Level')) + ', ' +
         escapeCsvString(getFlatFactionList(npc_)) + ', ' +
-        escapeCsvString(evBySignature(npc_, 'RNAM')) + ', ' +
-        escapeCsvString(evBySignature(npc_, 'ATKR')) + ', ' +
-        escapeCsvString(evBySignature(npc_, 'CNAM')) + ', ' +
+        escapeCsvString(evBySign(npc_, 'RNAM')) + ', ' +
+        escapeCsvString(evBySign(npc_, 'ATKR')) + ', ' +
+        escapeCsvString(evBySign(npc_, 'CNAM')) + ', ' +
         escapeCsvString(getFlatKeywordList(npc_)) + ', ' +
         escapeCsvString(getFlatPerkList(npc_)) + ', ' +
         escapeCsvString(getFlatPropertyList(npc_)) + ', ' +
         escapeCsvString(evByPath(aidt, 'Aggression')) + ', ' +
         escapeCsvString(evByPath(aidt, 'Confidence')) + ', ' +
         escapeCsvString(evByPath(aidt, 'Assistance')) + ', ' +
-        escapeCsvString(evBySignature(npc_, 'CVT0')) + ', ' +
-        escapeCsvString(evBySignature(npc_, 'CVT2'))
+        escapeCsvString(evBySign(npc_, 'CVT0')) + ', ' +
+        escapeCsvString(evBySign(npc_, 'CVT2'))
     );
 end;
 

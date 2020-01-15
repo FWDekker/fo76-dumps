@@ -29,19 +29,19 @@ begin
         exit;
     end;
 
-    product := linksTo(eBySignature(cobj, 'CNAM'));
-    recipe := linksTo(eBySignature(cobj, 'GNAM'));
+    product := linkBySign(cobj, 'CNAM');
+    recipe := linkBySign(cobj, 'GNAM');
 
     ExportTabularCOBJ_outputLines.add(
         escapeCsvString(getFileName(getFile(cobj))) + ', ' +
         escapeCsvString(stringFormID(cobj)) + ', ' +
-        escapeCsvString(evBySignature(cobj, 'EDID')) + ', ' +
+        escapeCsvString(evBySign(cobj, 'EDID')) + ', ' +
         escapeCsvString(ifThen(not assigned(product), '', stringFormID(product))) + ', ' +
-        escapeCsvString(ifThen(not assigned(product), '', evBySignature(product, 'EDID'))) + ', ' +
-        escapeCsvString(ifThen(not assigned(product), '', evBySignature(product, 'FULL'))) + ', ' +
+        escapeCsvString(ifThen(not assigned(product), '', evBySign(product, 'EDID'))) + ', ' +
+        escapeCsvString(ifThen(not assigned(product), '', evBySign(product, 'FULL'))) + ', ' +
         escapeCsvString(ifThen(not assigned(recipe), '', stringFormID(recipe))) + ', ' +
-        escapeCsvString(ifThen(not assigned(recipe), '', evBySignature(recipe, 'EDID'))) + ', ' +
-        escapeCsvString(ifThen(not assigned(recipe), '', evBySignature(recipe, 'FULL'))) + ', ' +
+        escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'EDID'))) + ', ' +
+        escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'FULL'))) + ', ' +
         escapeCsvString(getFlatComponentList(cobj))
     );
 end;
@@ -64,17 +64,16 @@ var i: Integer;
     components: IInterface;
     component: IInterface;
 begin
-    components := eBySignature(e, 'FVPA');
+    components := eBySign(e, 'FVPA');
     if eCount(components) = 0 then begin
-        result := '';
-        exit;
+        exit('');
     end;
 
     result := ',';
     for i := 0 to eCount(components) - 1 do begin
         component := eByIndex(components, i);
         result := result
-            + evBySignature(linksTo(eByPath(component, 'Component')), 'EDID')
+            + evBySign(linkByPath(component, 'Component'), 'EDID')
             + ' (' + intToStr(evByPath(component, 'Count')) + '),';
     end;
 end;

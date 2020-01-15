@@ -29,16 +29,16 @@ begin
         exit;
     end;
 
-    acbs := eBySignature(race, 'ACBS');
-    rnam := linksTo(eBySignature(race, 'RNAM'));
-    aidt := eBySignature(race, 'AIDT');
-    cnam := linksTo(eBySignature(race, 'CNAM'));
+    acbs := eBySign(race, 'ACBS');
+    rnam := linkBySign(race, 'RNAM');
+    aidt := eBySign(race, 'AIDT');
+    cnam := linkBySign(race, 'CNAM');
 
     ExportTabularRACE_outputLines.add(
         escapeCsvString(getFileName(getFile(race))) + ', ' +
         escapeCsvString(stringFormID(race)) + ', ' +
-        escapeCsvString(evBySignature(race, 'EDID')) + ', ' +
-        escapeCsvString(evBySignature(race, 'FULL')) + ', ' +
+        escapeCsvString(evBySign(race, 'EDID')) + ', ' +
+        escapeCsvString(evBySign(race, 'FULL')) + ', ' +
         escapeCsvString(getFlatKeywordList(race)) + ', ' +
         escapeCsvString(getFlatPropertyList(race))
     );

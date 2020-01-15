@@ -30,9 +30,9 @@ var i: Integer;
 begin
     result := ',';
 
-    keywords := eBySignature(eByPath(e, 'Keywords'), 'KWDA');
+    keywords := eBySign(eByPath(e, 'Keywords'), 'KWDA');
     for i := 0 to eCount(keywords) - 1 do begin
-        result := result + evBySignature(linksTo(eByIndex(keywords, i)), 'EDID') + ',';
+        result := result + evBySign(linkByIndex(keywords, i), 'EDID') + ',';
     end;
 end;
 
@@ -52,7 +52,7 @@ begin
     factions := eByPath(e, 'Factions');
     for i := 0 to eCount(factions) - 1 do begin
         faction := eByIndex(factions, i);
-        result := result + evBySignature(linksTo(eByPath(faction, 'Faction')), 'EDID') + ',';
+        result := result + evBySign(linkByPath(faction, 'Faction'), 'EDID') + ',';
     end;
 end;
 
@@ -74,7 +74,7 @@ begin
     perks := eByPath(e, 'Perks');
     for i := 0 to eCount(perks) - 1 do begin
         perk := eByIndex(perks, i);
-        result := result + evBySignature(linksTo(eByPath(perk, 'Perk')), 'EDID') + '=' + evByPath(perk, 'Rank') + ',';
+        result := result + evBySign(linkByPath(perk, 'Perk'), 'EDID') + '=' + evByPath(perk, 'Rank') + ',';
     end;
 end;
 
@@ -95,13 +95,13 @@ var i: Integer;
 begin
     result := ',';
 
-    props := eBySignature(e, 'PRPS');
+    props := eBySign(e, 'PRPS');
     for i := 0 to eCount(props) - 1 do begin
         prop := eByIndex(props, i);
-        avEdid := evBySignature(linksTo(eByPath(prop, 'Actor Value')), 'EDID');
+        avEdid := evBySign(linkByPath(prop, 'Actor Value'), 'EDID');
 
-        if assigned(linksTo(eByPath(prop, 'Curve Table'))) then begin
-            result := result + avEdid + '=' + evBySignature(linksTo(eByPath(prop, 'Curve Table')), 'EDID') + ',';
+        if assigned(linkByPath(prop, 'Curve Table')) then begin
+            result := result + avEdid + '=' + evBySign(linkByPath(prop, 'Curve Table'), 'EDID') + ',';
         end else begin
             result := result + avEdid + '=' + evByPath(prop, 'Value') + ',';
         end;

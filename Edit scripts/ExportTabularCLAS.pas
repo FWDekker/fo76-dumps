@@ -29,16 +29,16 @@ begin
         exit;
     end;
 
-    acbs := eBySignature(clas, 'ACBS');
-    rnam := linksTo(eBySignature(clas, 'RNAM'));
-    aidt := eBySignature(clas, 'AIDT');
-    cnam := linksTo(eBySignature(clas, 'CNAM'));
+    acbs := eBySign(clas, 'ACBS');
+    rnam := linkBySign(clas, 'RNAM');
+    aidt := eBySign(clas, 'AIDT');
+    cnam := linkBySign(clas, 'CNAM');
 
     ExportTabularCLAS_outputLines.add(
         escapeCsvString(getFileName(getFile(clas))) + ', ' +
         escapeCsvString(stringFormID(clas)) + ', ' +
-        escapeCsvString(evBySignature(clas, 'EDID')) + ', ' +
-        escapeCsvString(evBySignature(clas, 'FULL')) + ', ' +
+        escapeCsvString(evBySign(clas, 'EDID')) + ', ' +
+        escapeCsvString(evBySign(clas, 'FULL')) + ', ' +
         escapeCsvString(getFlatPropertyList(clas))
     );
 end;

@@ -32,8 +32,8 @@ begin
         escapeCsvString(getFileName(getFile(e))) + ', ' +
         escapeCsvString(signature(e)) + ', ' +
         escapeCsvString(stringFormID(e)) + ', ' +
-        escapeCsvString(evBySignature(e, 'EDID')) + ', ' +
-        escapeCsvString(evBySignature(e, 'FULL')) + ', ' +
+        escapeCsvString(evBySign(e, 'EDID')) + ', ' +
+        escapeCsvString(evBySign(e, 'FULL')) + ', ' +
         escapeCsvString(getFlatKeywordList(e))
     );
 end;

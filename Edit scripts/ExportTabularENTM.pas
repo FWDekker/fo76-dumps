@@ -28,9 +28,9 @@ begin
     ExportTabularENTM_outputLines.add(
         escapeCsvString(getFileName(getFile(entm))) + ', ' +
         escapeCsvString(stringFormID(entm)) + ', ' +
-        escapeCsvString(evBySignature(entm, 'EDID')) + ', ' +
-        escapeCsvString(evBySignature(entm, 'FULL')) + ', ' +
-        escapeCsvString(evBySignature(entm, 'NNAM')) + ', ' +
+        escapeCsvString(evBySign(entm, 'EDID')) + ', ' +
+        escapeCsvString(evBySign(entm, 'FULL')) + ', ' +
+        escapeCsvString(evBySign(entm, 'NNAM')) + ', ' +
         escapeCsvString(getFlatKeywordList(entm))
     );
 end;

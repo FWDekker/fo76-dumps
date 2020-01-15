@@ -28,10 +28,10 @@ begin
     ExportTabularMISC_outputLines.add(
         escapeCsvString(getFileName(getFile(misc))) + ', ' +
         escapeCsvString(stringFormID(misc)) + ', ' +
-        escapeCsvString(evBySignature(misc, 'EDID')) + ', ' +
-        escapeCsvString(evBySignature(misc, 'FULL')) + ', ' +
-        escapeCsvString(evByPath(eBySignature(misc, 'DATA'), 'Weight')) + ', ' +
-        escapeCsvString(evByPath(eBySignature(misc, 'DATA'), 'Value')) + ', ' +
+        escapeCsvString(evBySign(misc, 'EDID')) + ', ' +
+        escapeCsvString(evBySign(misc, 'FULL')) + ', ' +
+        escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Weight')) + ', ' +
+        escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Value')) + ', ' +
         escapeCsvString(getFlatComponentList(misc))
     );
 end;
@@ -55,19 +55,18 @@ var i: Integer;
     component: IInterface;
     quantity: IInterface;
 begin
-    components := eBySignature(e, 'MCQP');
+    components := eBySign(e, 'MCQP');
     if eCount(components) = 0 then begin
-        result := '';
-        exit;
+        exit('');
     end;
 
     result := ',';
     for i := 0 to eCount(components) - 1 do begin
-        component := linksTo(eByName(eByIndex(components, i), 'Component'));
-        quantity := linksTo(eByName(eByIndex(components, i), 'Component Count Keyword'));
+        component := linkByName(eByIndex(components, i), 'Component');
+        quantity := linkByName(eByIndex(components, i), 'Component Count Keyword');
 
         result := result
-            + evBySignature(component, 'EDID')
+            + evBySign(component, 'EDID')
             + ' (' + intToStr(quantityKeywordToValue(component, quantity)) + '),';
     end;
 end;
@@ -85,8 +84,8 @@ var i: Integer;
     componentQuantities: IInterface;
     componentQuantity: IInterface;
 begin
-    quantityName := evBySignature(quantity, 'EDID');
-    componentQuantities := eBySignature(component, 'CVPA');
+    quantityName := evBySign(quantity, 'EDID');
+    componentQuantities := eBySign(component, 'CVPA');
 
     for i := 0 to eCount(componentQuantities) - 1 do begin
         componentQuantity := eByIndex(componentQuantities, i);
@@ -94,7 +93,7 @@ begin
         if
             strEquals(
                 quantityName,
-                evBySignature(linksTo(eByName(componentQuantity, 'Scrap Count Keyword')), 'EDID')
+                evBySign(linkByName(componentQuantity, 'Scrap Count Keyword'), 'EDID')
             )
         then begin
             result := evByName(componentQuantity, 'Scrap Component Count');

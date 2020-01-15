@@ -68,7 +68,7 @@ begin
     end;
 
     result := result
-        + '==[' + getFileName(getFile(quest)) + '] ' + evBySignature(quest, 'EDID')
+        + '==[' + getFileName(getFile(quest)) + '] ' + evBySign(quest, 'EDID')
             + ' (' + stringFormID(quest) + ')==' + #10
         + '{|class="va-table va-table-full np-table-dialogue"' + #10
         + '|-' + #10
@@ -136,8 +136,8 @@ begin
                     dialogHasRowSpan := true;
                 end;
                 result := result
-                    + '| ' + escapeHTML(trim(evBySignature(response, 'NAM1'))) + #10
-                    + '| ''''' + escapeHTML(trim(evBySignature(response, 'NAM2'))) + '''''' + #10
+                    + '| ' + escapeHTML(trim(evBySign(response, 'NAM1'))) + #10
+                    + '| ''''' + escapeHTML(trim(evBySign(response, 'NAM2'))) + '''''' + #10
                     + '' + #10;
 
                 linkable := linkable + 1;
@@ -168,8 +168,7 @@ begin
         e := eByIndex(group, i);
 
         if formID(e) = nextFormID then begin
-            result := e;
-            exit;
+            exit(e);
         end;
     end;
 

@@ -28,8 +28,8 @@ begin
     ExportTabularGLOB_outputLines.add(
         escapeCsvString(getFileName(getFile(glob))) + ', ' +
         escapeCsvString(stringFormID(glob)) + ', ' +
-        escapeCsvString(evBySignature(glob, 'EDID')) + ', ' +
-        evBySignature(glob, 'FLTV')
+        escapeCsvString(evBySign(glob, 'EDID')) + ', ' +
+        evBySign(glob, 'FLTV')
     );
 end;
 

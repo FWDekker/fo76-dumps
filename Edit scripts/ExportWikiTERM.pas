@@ -30,7 +30,7 @@ begin
         exit;
     end;
 
-    header := escapeWiki(trim(evBySignature(term, 'WNAM')));
+    header := escapeWiki(trim(evBySign(term, 'WNAM')));
     if not (header = '') then begin
         header := header + #10;
     end;
@@ -41,7 +41,7 @@ begin
     end;
 
     ExportWikiTERM_outputLines.add(''
-        + '==[' + getFileName(getFile(term)) + '] ' + evBySignature(term, 'FULL')
+        + '==[' + getFileName(getFile(term)) + '] ' + evBySign(term, 'FULL')
             + ' (' + stringFormID(term) + ')==' + #10
         + '{{Transcript|text=' + #10
         + 'Welcome to ROBCO Industries (TM) Termlink' + #10
@@ -79,14 +79,14 @@ begin
         end;
         result := result
             + '{{Transcript|text=' + #10
-            + escapeWiki(trim(evBySignature(bodyItem, 'BTXT'))) + #10
+            + escapeWiki(trim(evBySign(bodyItem, 'BTXT'))) + #10
             + '}}' + #10;
     end;
 
     menu := eByPath(e, 'Menu Items');
     for i := 0 to eCount(menu) - 1 do begin
         menuItem := eByIndex(menu, i);
-        menuItemType := evBySignature(menuItem, 'ANAM');
+        menuItemType := evBySign(menuItem, 'ANAM');
 
         if (menuItemType = 'Submenu - Return to Top Level') or (menuItemType = 'Submenu - Force Redraw') then begin
             continue;
@@ -99,31 +99,31 @@ begin
 
         if menuItemType = 'Display Text' then begin
             result := result
-                + createWikiHeader(escapeWiki(evBySignature(menuItem, 'ITXT')), parents.count) + #10
+                + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), parents.count) + #10
                 + '{{Transcript|text=' + #10
-                + escapeWiki(trim(evBySignature(menuItem, 'UNAM'))) + #10
+                + escapeWiki(trim(evBySign(menuItem, 'UNAM'))) + #10
                 + '}}' + #10;
         end else if menuItemType = 'Submenu - Terminal' then begin
-            if parents.indexOf(stringFormID(linksTo(eBySignature(menuItem, 'TNAM')))) >= 0 then begin
-                if evBySignature(menuItem, 'RNAM') <> '' then begin
+            if parents.indexOf(stringFormID(linkBySign(menuItem, 'TNAM'))) >= 0 then begin
+                if evBySign(menuItem, 'RNAM') <> '' then begin
                     result := result
-                        + createWikiHeader(escapeWiki(evBySignature(menuItem, 'ITXT')), parents.count) + #10
+                        + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), parents.count) + #10
                         + '{{Transcript|text=' + #10
-                        + trim(escapeWiki(evBySignature(menuItem, 'RNAM'))) + #10
+                        + trim(escapeWiki(evBySign(menuItem, 'RNAM'))) + #10
                         + '}}' + #10;
                 end;
             end else begin
                 result := result
-                    + createWikiHeader(escapeWiki(evBySignature(menuItem, 'ITXT')), parents.count) + #10
-                    + trim(getTerminalContents(linksTo(eBySignature(menuItem, 'TNAM')), parents)) + #10;
+                    + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), parents.count) + #10
+                    + trim(getTerminalContents(linkBySign(menuItem, 'TNAM'), parents)) + #10;
             end;
         end else if menuItemType = 'Display Image' then begin
-            result := result + '{{Image: ' + evBySignature(menuItem, 'VNAM') + '}}' + #10;
+            result := result + '{{Image: ' + evBySign(menuItem, 'VNAM') + '}}' + #10;
         end else begin
             addMessage('Warning: Unexpected menu item type `' + menuItemType + '`');
 
             result := result
-                + createWikiHeader(escapeWiki(evBySignature(menuItem, 'ITXT')), parents.count) + #10
+                + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), parents.count) + #10
                 + '{{Error: Unexpected menu item type}}' + #10;
         end;
     end;

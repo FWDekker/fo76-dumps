@@ -28,9 +28,9 @@ begin
     ExportTabularGMST_outputLines.add(
         escapeCsvString(getFileName(getFile(gmst))) + ', ' +
         escapeCsvString(stringFormID(gmst)) + ', ' +
-        escapeCsvString(evBySignature(gmst, 'EDID')) + ', ' +
-        escapeCsvString(letterToType(copy(evBySignature(gmst, 'EDID'), 1, 1))) + ', ' +
-        escapeCsvString(gev(lastElement(eBySignature(gmst, 'DATA'))))
+        escapeCsvString(evBySign(gmst, 'EDID')) + ', ' +
+        escapeCsvString(letterToType(copy(evBySign(gmst, 'EDID'), 1, 1))) + ', ' +
+        escapeCsvString(gev(lastElement(eBySign(gmst, 'DATA'))))
     );
 end;
 

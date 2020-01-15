@@ -22,7 +22,7 @@ end;
 (**
  * Shorthand for [elementBySignature].
  *)
-function eBySignature(e: IwbContainer; sig: String): IwbElement;
+function eBySign(e: IwbContainer; sig: String): IwbElement;
 begin
     result := elementBySignature(e, sig);
 end;
@@ -62,9 +62,9 @@ end;
 (**
  * Shorthand for calling [getEditValue] and [elementBySignature].
  *)
-function evBySignature(e: IInterface; sig: String): String;
+function evBySign(e: IInterface; sig: String): String;
 begin
-    result := gev(eBySignature(e, sig));
+    result := gev(eBySign(e, sig));
 end;
 
 (**
@@ -81,6 +81,46 @@ end;
 function evByName(e: IInterface; nam: String): String;
 begin
     result := gev(eByName(e, nam));
+end;
+
+(**
+ * Shorthand for calling [getEditValue] and [elementByIndex].
+ *)
+function evByIndex(e: IInterface; i: Integer): String;
+begin
+    result := gev(eByIndex(e, i));
+end;
+
+(**
+ * Shorthand for calling [linksTo] and [elementBySignature].
+ *)
+function linkBySign(e: IInterface; sig: String): IInterface;
+begin
+    result := linksTo(eBySign(e, sig));
+end;
+
+(**
+ * Shorthand for calling [linksTo] and [elementByPath].
+ *)
+function linkByPath(e: IInterface; path: String): IInterface;
+begin
+    result := linksTo(eByPath(e, path));
+end;
+
+(**
+ * Shorthand for calling [linksTo] and [elementByName].
+ *)
+function linkByName(e: IInterface; nam: String): IInterface;
+begin
+    result := linksTo(eByName(e, nam));
+end;
+
+(**
+ * Shorthand for calling [linksTo] and [elementByIndex].
+ *)
+function linkByIndex(e: IInterface; i: Integer): IInterface;
+begin
+    result := linksTo(eByIndex(e, i));
 end;
 
 
@@ -117,8 +157,7 @@ begin
 
     for i := 0 to referencedByCount(e) - 1 do begin
         if signature(referencedByIndex(e, i)) = sig then begin
-            result := true;
-            exit;
+            exit(true);
         end;
     end;
 end;
@@ -267,6 +306,31 @@ end;
 function strEquals(a: String; b: String): Boolean;
 begin
     result := compareStr(a, b) = 0;
+end;
+
+(**
+ * Converts a truthy boolean to 'True' and a falsy boolean to 'False'.
+ *
+ * @param bool the bool to convert to a string
+ * @return 'True' if [bool] is true and 'False' if [bool] is false
+ *)
+function boolToStr(bool: Boolean): String;
+begin
+    result := ifThen(bool, 'True', 'False');
+end;
+
+(**
+ * Parses the given string to a float, rounds it, and turns that into a string.
+ *
+ * @param float the float to parse and round
+ * @return a string describing the rounded integer
+ *)
+function parseFloatToInt(float: String): String;
+begin
+    if float = '' then begin
+        exit('');
+    end;
+    result := intToStr(round(strToFloat(float)));
 end;
 
 

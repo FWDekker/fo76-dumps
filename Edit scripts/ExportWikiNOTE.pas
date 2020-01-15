@@ -27,11 +27,11 @@ begin
 
     ExportWikiNOTE_lastSpeaker := '';
 
-    ExportWikiNOTE_outputLines.add('==[' + getFileName(getFile(note)) + '] ' + evBySignature(note, 'FULL') + '==');
+    ExportWikiNOTE_outputLines.add('==[' + getFileName(getFile(note)) + '] ' + evBySign(note, 'FULL') + '==');
     ExportWikiNOTE_outputLines.add('Form ID:   ' + stringFormID(note));
-    ExportWikiNOTE_outputLines.add('Editor ID: ' + evBySignature(note, 'EDID'));
-    ExportWikiNOTE_outputLines.add('Weight:    ' + evByPath(eBySignature(note, 'DATA'), 'Weight'));
-    ExportWikiNOTE_outputLines.add('Value:     ' + evByPath(eBySignature(note, 'DATA'), 'Value'));
+    ExportWikiNOTE_outputLines.add('Editor ID: ' + evBySign(note, 'EDID'));
+    ExportWikiNOTE_outputLines.add('Weight:    ' + evByPath(eBySign(note, 'DATA'), 'Weight'));
+    ExportWikiNOTE_outputLines.add('Value:     ' + evByPath(eBySign(note, 'DATA'), 'Value'));
     ExportWikiNOTE_outputLines.add('Transcript: ' + #10 + getNoteDialogue(note) + #10 + #10);
 end;
 
@@ -53,30 +53,27 @@ var scene: IInterface;
 
     i: Integer;
 begin
-    if evByPath(eBySignature(note, 'SNAM'), 'Terminal') <> '' then begin
-        result := 'This disk shows terminal entries.';
-        exit;
+    if evByPath(eBySign(note, 'SNAM'), 'Terminal') <> '' then begin
+        exit('This disk shows terminal entries.');
     end;
 
-    scene := linksTo(eByPath(eBySignature(note, 'SNAM'), 'Scene'));
+    scene := linkByPath(eBySign(note, 'SNAM'), 'Scene');
     actions := eByPath(scene, 'Actions');
 
     // Find max stage (and validate their values)
     maxStage := 0;
     for i := 0 to eCount(actions) - 1 do begin
-        startStage := strToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
-        endStage := strToInt(evBySignature(eByIndex(actions, i), 'ENAM'));
+        startStage := strToInt(evBySign(eByIndex(actions, i), 'SNAM'));
+        endStage := strToInt(evBySign(eByIndex(actions, i), 'ENAM'));
 
         if startStage < 0 then begin
             addMessage('ERROR - Negative ENAM');
-            result := 'ERROR';
-            exit;
+            exit('ERROR');
         end;
 
         if startStage > endStage then begin
             addMessage('ERROR - ENAM greater than SNAM');
-            result := 'ERROR';
-            exit;
+            exit('ERROR');
         end;
 
         if endStage > maxStage then begin
@@ -92,7 +89,7 @@ begin
 
     // Populate TList
     for i := 0 to eCount(actions) - 1 do begin
-        startStage := strToInt(evBySignature(eByIndex(actions, i), 'SNAM'));
+        startStage := strToInt(evBySign(eByIndex(actions, i), 'SNAM'));
 
         actionList.delete(startStage);
         actionList.insert(startStage, eByIndex(actions, i));
@@ -102,9 +99,9 @@ begin
     result := '{{Transcript|text=' + #10;
 
     for i := 0 to maxStage do begin
-        if evBySignature(objectToElement(actionList.items[i]), 'DATA') <> '' then begin
+        if evBySign(objectToElement(actionList.items[i]), 'DATA') <> '' then begin
             result := result
-                + getTopicDialogue(linksTo(eBySignature(objectToElement(actionList.items[i]), 'DATA')))
+                + getTopicDialogue(linkBySign(objectToElement(actionList.items[i]), 'DATA'))
                 + #10 + #10;
         end;
     end;
@@ -123,20 +120,18 @@ var speaker: String;
 begin
     if signature(topic) <> 'DIAL' then begin
         addMessage('ERROR - Unexpected signature: ' + signature(topic));
-        result := 'ERROR';
-        exit;
+        exit('ERROR');
     end;
 
     if eCount(childGroup(topic)) <> 1 then begin
         addMessage('ERROR - Unexpected no. of children');
-        result := 'ERROR';
-        exit;
+        exit('ERROR');
     end;
 
     // Add speaker at start of paragraph
-    speaker := evBySignature(linksTo(eBySignature(eByIndex(childGroup(topic), 0), 'ANAM')), 'FULL');
+    speaker := evBySign(linkBySign(eByIndex(childGroup(topic), 0), 'ANAM'), 'FULL');
     if speaker = '' then begin
-        speaker := evBySignature(linksTo(eBySignature(eByIndex(childGroup(topic), 0), 'ANAM')), 'EDID');
+        speaker := evBySign(linkBySign(eByIndex(childGroup(topic), 0), 'ANAM'), 'EDID');
     end;
     if (speaker <> '_NPC_NoLines') and (speaker <> ExportWikiNOTE_lastSpeaker) then begin
         result := result + '''''''' + speaker + ''''''': ';
@@ -146,8 +141,8 @@ begin
     // Add lines of paragraph
     lines := eByPath(eByIndex(childGroup(topic), 0), 'Responses');
     for i := 0 to eCount(lines) do begin
-        line := escapeHTML(trim(evBySignature(eByIndex(lines, i), 'NAM1')));
-        comment := escapeHTML(trim(evBySignature(eByIndex(lines, i), 'NAM2')));
+        line := escapeHTML(trim(evBySign(eByIndex(lines, i), 'NAM1')));
+        comment := escapeHTML(trim(evBySign(eByIndex(lines, i), 'NAM2')));
         comment := stringReplace(comment, '"', '&quot;', [rfReplaceAll]);
 
         if trim(comment) = '' then begin
