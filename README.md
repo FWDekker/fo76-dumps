@@ -21,6 +21,7 @@ For more information on how to browse them, check [the wiki page](https://github
 | [`ExportTabularCLAS.pas`](Edit%20scripts/ExportTabularCLAS.pas) | `CLAS.csv` | Class properties                                 |
 | [`ExportTabularCOBJ.pas`](Edit%20scripts/ExportTabularCOBJ.pas) | `COBJ.csv` | Craftable object recipes and components          |
 | [`ExportTabularENTM.pas`](Edit%20scripts/ExportTabularENTM.pas) | `ENTM.csv` | Atomic Shop unlockables                          |
+| [`ExportTabularFACT.pas`](Edit%20scripts/ExportTabularFACT.pas) | `FACT.csv` | Factions and vendors                             |
 | [`ExportTabularGLOB.pas`](Edit%20scripts/ExportTabularGLOB.pas) | `GLOB.csv` | Global variables                                 |
 | [`ExportTabularGMST.pas`](Edit%20scripts/ExportTabularGMST.pas) | `GMST.csv` | Game settings                                    |
 | [`ExportTabularMISC.pas`](Edit%20scripts/ExportTabularMISC.pas) | `MISC.csv` | Inventory item weights, values, and scrap yields |
