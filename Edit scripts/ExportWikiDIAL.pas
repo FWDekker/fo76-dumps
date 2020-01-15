@@ -9,7 +9,7 @@ var ExportWikiDIAL_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportWikiDIAL_outputLines := TStringList.create;
+    ExportWikiDIAL_outputLines := TStringList.create();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -36,6 +36,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportWikiDIAL_outputLines.saveToFile('dumps/DIAL.wiki');
+    ExportWikiDIAL_outputLines.free();
 end;
 
 

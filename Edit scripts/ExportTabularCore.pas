@@ -17,6 +17,27 @@ begin
     result := '"' + result + '"';
 end;
 
+(**
+ * Flattens the string into a JSON array string.
+ *
+ * @param list the list to convert to a JSON array string
+ * @return a JSON-escapes version of [list]
+ *)
+function listToJson(list: TStringList): String;
+var i: Integer;
+begin
+    if list.count = 0 then begin
+        exit('[]');
+    end;
+
+    result := '"' + list[0] + '"';
+    for i := 1 to list.count - 1 do begin
+        result := result + ',"' + list[i] + '"';
+    end;
+
+    result := '[' + result + ']';
+end;
+
 
 (**
  * Returns the keywords of [e] as a comma-separated list of editor IDs.
@@ -27,13 +48,18 @@ end;
 function getFlatKeywordList(e: IInterface): String;
 var i: Integer;
     keywords: IInterface;
+    resultList: TStringList;
 begin
-    result := ',';
+    resultList := TStringList.create();
 
     keywords := eBySign(eByPath(e, 'Keywords'), 'KWDA');
     for i := 0 to eCount(keywords) - 1 do begin
-        result := result + evBySign(linkByIndex(keywords, i), 'EDID') + ',';
+        resultList.add(evBySign(linkByIndex(keywords, i), 'EDID'));
     end;
+
+    resultList.sort();
+    result := listToJson(resultList);
+    resultList.free();
 end;
 
 (**
@@ -46,14 +72,19 @@ function getFlatFactionList(e: IInterface): String;
 var i: Integer;
     factions: IInterface;
     faction: IInterface;
+    resultList: TStringList;
 begin
-    result := ',';
+    resultList := TStringList.create();
 
     factions := eByPath(e, 'Factions');
     for i := 0 to eCount(factions) - 1 do begin
         faction := eByIndex(factions, i);
-        result := result + evBySign(linkByPath(faction, 'Faction'), 'EDID') + ',';
+        resultList.add(evBySign(linkByPath(faction, 'Faction'), 'EDID'));
     end;
+
+    resultList.sort();
+    result := listToJson(resultList);
+    resultList.free();
 end;
 
 (**
@@ -68,14 +99,19 @@ function getFlatPerkList(e: IInterface): String;
 var i: Integer;
     perks: IInterface;
     perk: IInterface;
+    resultList: TStringList;
 begin
-    result := ',';
+    resultList := TStringList.create();
 
     perks := eByPath(e, 'Perks');
     for i := 0 to eCount(perks) - 1 do begin
         perk := eByIndex(perks, i);
-        result := result + evBySign(linkByPath(perk, 'Perk'), 'EDID') + '=' + evByPath(perk, 'Rank') + ',';
+        resultList.add(evBySign(linkByPath(perk, 'Perk'), 'EDID') + '=' + evByPath(perk, 'Rank'));
     end;
+
+    resultList.sort();
+    result := listToJson(resultList);
+    resultList.free();
 end;
 
 (**
@@ -92,8 +128,9 @@ var i: Integer;
     props: IInterface;
     prop: IInterface;
     avEdid: String;
+    resultList: TStringList;
 begin
-    result := ',';
+    resultList := TStringList.create();
 
     props := eBySign(e, 'PRPS');
     for i := 0 to eCount(props) - 1 do begin
@@ -101,11 +138,15 @@ begin
         avEdid := evBySign(linkByPath(prop, 'Actor Value'), 'EDID');
 
         if assigned(linkByPath(prop, 'Curve Table')) then begin
-            result := result + avEdid + '=' + evBySign(linkByPath(prop, 'Curve Table'), 'EDID') + ',';
+            resultList.add(avEdid + '=' + evBySign(linkByPath(prop, 'Curve Table'), 'EDID'));
         end else begin
-            result := result + avEdid + '=' + evByPath(prop, 'Value') + ',';
+            resultList.add(avEdid + '=' + evByPath(prop, 'Value'));
         end;
     end;
+
+    resultList.sort();
+    result := listToJson(resultList);
+    resultList.free();
 end;
 
 

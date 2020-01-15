@@ -9,7 +9,7 @@ var ExportTabularCLAS_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportTabularCLAS_outputLines := TStringList.create;
+    ExportTabularCLAS_outputLines := TStringList.create();
     ExportTabularCLAS_outputLines.add('"File", "Form ID", "Editor ID", "Name", "Properties"');
 end;
 
@@ -35,11 +35,11 @@ begin
     cnam := linkBySign(clas, 'CNAM');
 
     ExportTabularCLAS_outputLines.add(
-        escapeCsvString(getFileName(getFile(clas))) + ', ' +
-        escapeCsvString(stringFormID(clas)) + ', ' +
-        escapeCsvString(evBySign(clas, 'EDID')) + ', ' +
-        escapeCsvString(evBySign(clas, 'FULL')) + ', ' +
-        escapeCsvString(getFlatPropertyList(clas))
+          escapeCsvString(getFileName(getFile(clas))) + ', '
+        + escapeCsvString(stringFormID(clas)) + ', '
+        + escapeCsvString(evBySign(clas, 'EDID')) + ', '
+        + escapeCsvString(evBySign(clas, 'FULL')) + ', '
+        + escapeCsvString(getFlatPropertyList(clas))
     );
 end;
 
@@ -47,6 +47,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularCLAS_outputLines.saveToFile('dumps/CLAS.csv');
+    ExportTabularCLAS_outputLines.free();
 end;
 
 

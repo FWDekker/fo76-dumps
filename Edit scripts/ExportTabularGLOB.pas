@@ -9,7 +9,7 @@ var ExportTabularGLOB_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportTabularGLOB_outputLines := TStringList.create;
+    ExportTabularGLOB_outputLines := TStringList.create();
     ExportTabularGLOB_outputLines.add('"File", "Form ID", "Editor ID", "Value"');
 end;
 
@@ -26,10 +26,10 @@ begin
     end;
 
     ExportTabularGLOB_outputLines.add(
-        escapeCsvString(getFileName(getFile(glob))) + ', ' +
-        escapeCsvString(stringFormID(glob)) + ', ' +
-        escapeCsvString(evBySign(glob, 'EDID')) + ', ' +
-        evBySign(glob, 'FLTV')
+          escapeCsvString(getFileName(getFile(glob))) + ', '
+        + escapeCsvString(stringFormID(glob)) + ', '
+        + escapeCsvString(evBySign(glob, 'EDID')) + ', '
+        + evBySign(glob, 'FLTV')
     );
 end;
 
@@ -37,6 +37,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularGLOB_outputLines.saveToFile('dumps/GLOB.csv');
+    ExportTabularGLOB_outputLines.free();
 end;
 
 

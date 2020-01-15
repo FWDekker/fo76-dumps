@@ -10,7 +10,7 @@ var ExportWikiNOTE_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportWikiNOTE_outputLines := TStringList.create;
+    ExportWikiNOTE_outputLines := TStringList.create();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -39,6 +39,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportWikiNOTE_outputLines.saveToFile('dumps/NOTE.wiki');
+    ExportWikiNOTE_outputLines.free();
 end;
 
 
@@ -82,7 +83,7 @@ begin
     end;
 
     // Allocate TList
-    actionList := TList.create;
+    actionList := TList.create();
     for i := 0 to maxStage do begin
         actionList.add(NULL);
     end;

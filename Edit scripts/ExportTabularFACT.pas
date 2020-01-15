@@ -9,10 +9,11 @@ var ExportTabularFACT_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportTabularFACT_outputLines := TStringList.create;
-    ExportTabularFACT_outputLines.add('"File", "Form ID", "Editor ID", "Relations", "Is vendor", ' +
-                                      '"Refresh rate (days)", "Bottlecap range", "Opening hours (24h clock)", ' +
-                                      '"Buys stolen", "Buys non-stolen", "Buys non-list", "Items"');
+    ExportTabularFACT_outputLines := TStringList.create();
+    ExportTabularFACT_outputLines.add(
+          '"File", "Form ID", "Editor ID", "Relations", "Is vendor", "Refresh rate (days)", "Bottlecap range", '
+        + '"Opening hours (24h clock)", "Buys stolen", "Buys non-stolen", "Buys non-list", "Items"'
+    );
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -41,31 +42,31 @@ begin
     venv := eBySign(fact, 'VENV');
 
     outputString :=
-        escapeCsvString(getFileName(getFile(fact))) + ', ' +
-        escapeCsvString(stringFormID(fact)) + ', ' +
-        escapeCsvString(evBySign(fact, 'EDID')) + ', ' +
-        escapeCsvString(getFlatRelationList(fact)) + ', ';
+          escapeCsvString(getFileName(getFile(fact))) + ', '
+        + escapeCsvString(stringFormID(fact)) + ', '
+        + escapeCsvString(evBySign(fact, 'EDID')) + ', '
+        + escapeCsvString(getFlatRelationList(fact)) + ', ';
 
     if assigned(venc) then begin
-        outputString := outputString +
-            escapeCsvString('True') + ', ' +
-            escapeCsvString(parseFloatToInt(evBySign(venr, 'FLTV'))) + ', ' +
-            escapeCsvString(parseFloatToInt(evBySign(veng, 'NAM5')) + '-' + parseFloatToInt(evBySign(veng, 'NAM6'))) + ', ' +
-            escapeCsvString(evByPath(venv, 'Start Hour') + '-' + evByPath(venv, 'End Hour')) + ', ' +
-            escapeCsvString(evByPath(venv, 'Buys Stolen Items')) + ', ' +
-            escapeCsvString(evByPath(venv, 'Buys NonStolen Items')) + ', ' +
-            escapeCsvString(evByPath(venv, 'Buy/Sell Everything Not In List?')) + ', ' +
-            escapeCsvString(getFlatContainerItemList(linkBySign(linkBySign(fact, 'VENC'), 'NAME'), TStringList.create));
+        outputString := outputString
+            + '"True", '
+            + escapeCsvString(parseFloatToInt(evBySign(venr, 'FLTV'))) + ', '
+            + escapeCsvString(parseFloatToInt(evBySign(veng, 'NAM5')) + '-' + parseFloatToInt(evBySign(veng, 'NAM6'))) + ', '
+            + escapeCsvString(evByPath(venv, 'Start Hour') + '-' + evByPath(venv, 'End Hour')) + ', '
+            + escapeCsvString(evByPath(venv, 'Buys Stolen Items')) + ', '
+            + escapeCsvString(evByPath(venv, 'Buys NonStolen Items')) + ', '
+            + escapeCsvString(evByPath(venv, 'Buy/Sell Everything Not In List?')) + ', '
+            + escapeCsvString(getFlatContainerItemList(linkBySign(linkBySign(fact, 'VENC'), 'NAME')));
     end else begin
-        outputString := outputString +
-            escapeCsvString('False') + ', ' +
-            escapeCsvString('') + ', ' +
-            escapeCsvString('') + ', ' +
-            escapeCsvString('') + ', ' +
-            escapeCsvString('') + ', ' +
-            escapeCsvString('') + ', ' +
-            escapeCsvString('') + ', ' +
-            escapeCsvString('');
+        outputString := outputString
+            + '"False", '
+            + '"", '
+            + '"", '
+            + '"", '
+            + '"", '
+            + '"", '
+            + '"", '
+            + '""';
     end;
 
     ExportTabularFACT_outputLines.add(outputString);
@@ -75,70 +76,102 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularFACT_outputLines.saveToFile('dumps/FACT.csv');
+    ExportTabularFACT_outputLines.free();
 end;
 
 
+(**
+ * Returns a JSON array string of all relations that [fact] has to other factions.
+ *
+ * @param fact the faction to return relations of
+ * @return a JSON array string of all relations that [fact] has to other factions
+ *)
 function getFlatRelationList(fact: IInterface): String;
 var i: Integer;
     relations: IInterface;
     relation: IInterface;
     relationFaction: IInterface;
+    resultList: TStringList;
 begin
-    result := ',';
+    resultList := TStringList.create();
 
     relations := eByPath(fact, 'Relations');
     for i := 0 to eCount(relations) - 1 do begin
         relation := eByIndex(relations, i);
         relationFaction := linksTo(eByPath(relation, 'Faction'));
-        result := result
-            + evBySign(relationFaction, 'EDID')
+        resultList.add(
+              evBySign(relationFaction, 'EDID')
             + ' (' + stringFormID(relationFaction) + ')'
             + ' (' + evByPath(relation, 'Group Combat Reaction') + ')'
-            + ',';
+        );
     end;
+
+    resultList.sort();
+    result := listToJson(resultList);
+    resultList.free();
 end;
 
-
-function getFlatContainerItemList(cont: IInterface; items: TStringList): String;
+(**
+ * Returns a JSON array string of all items in [cont].
+ *
+ * @param cont the container to return all items from
+ * @return a JSON array string of all items in [cont]
+ *)
+function getFlatContainerItemList(cont: IInterface): String;
 var i: Integer;
     entries: IInterface;
     entry: IInterface;
     item: IInterface;
-    leveledItems: TStringList;
+    itemHistory: TStringList;
+    lvliHistory: TStringList;
 begin
-    result := ',';
+    itemHistory := TStringList.create();
+    lvliHistory := TStringList.create();
 
-    leveledItems := TStringList.create;
     entries := eByPath(cont, 'Items');
     for i := 0 to eCount(entries) - 1 do begin
         entry := eBySign(eByIndex(entries, i), 'CNTO');
         item := linkByPath(entry, 'Item');
 
         if signature(item) = 'LVLI' then begin
-            result := result + getFlatLeveledItemList(item, items, leveledItems);
+            addLeveledItemList(lvliHistory, itemHistory, item);
         end else begin
-            result := result + getFlatItem(item, items);
+            addItem(item, itemHistory);
         end;
     end;
+
+    itemHistory.sort();
+    result := listToJson(itemHistory);
+
+    lvliHistory.free();
+    itemHistory.free();
 end;
 
-function getFlatLeveledItemList(lvli: IInterface; items: TStringList; leveledItems: TStringList): String;
+(**
+ * Recursively adds all items in [lvli] to [itemHistory], using [lvliHistory] as a cache to prevent revisiting branches
+ * of the item tree.
+ *
+ * @param lvliHistory a list of the form IDs of leveled items that have already been visited
+ * @param itemHistory the list of items to add all items in [lvli] to
+ * @param lvli        the leveled item to recursively visit
+ *)
+procedure addLeveledItemList(lvliHistory: TStringList; itemHistory: TStringList; lvli: IInterface);
 var i: Integer;
     entries: IInterface;
     entry: IInterface;
     lvlo: IInterface;
     item: IInterface;
 begin
-    if leveledItems.indexOf(stringFormID(lvli)) >= 0 then begin
+    if lvliHistory.indexOf(stringFormID(lvli)) >= 0 then begin
         exit;
     end;
-    leveledItems.add(stringFormID(lvli));
+    lvliHistory.add(stringFormID(lvli));
 
     entries := eByPath(lvli, 'Leveled List Entries');
     for i := 0 to eCount(entries) - 1 do begin
         entry := eByIndex(entries, i);
-
         lvlo := eByIndex(eBySign(entry, 'LVLO'), 0);
+
         if name(lvlo) = 'Base Data' then begin
             item := linkByPath(lvlo, 'Reference');
         end else begin
@@ -146,22 +179,28 @@ begin
         end;
 
         if signature(item) = 'LVLI' then begin
-            result := result + getFlatLeveledItemList(item, items, leveledItems);
+            addLeveledItemList(lvliHistory, itemHistory, item);
         end else begin
-            result := result + getFlatItem(item, items);
+            addItem(itemHistory, item);
         end;
     end;
 end;
 
-function getFlatItem(item: IInterface; items: TStringList): String;
+(**
+ * Adds a string representation of [item] to [itemHistory] if it's not already in there.
+ *
+ * @param itemHistory the list of items to (potentially) add [item] to
+ * @param item        the item to (potentially) add to [itemHistory]
+ *)
+procedure addItem(itemHistory: TStringList; item: IInterface);
+var itemString: String;
 begin
-    if items.indexOf(stringFormID(item)) < 0 then begin
-        items.add(stringFormID(item));
-        result := result
-            + evBySign(item, 'FULL')
-            + ' (' + stringFormID(item) + ')'
-            + ',';
+    itemString := evBySign(item, 'FULL') + ' (' + stringFormID(item) + ')';
+
+    if itemHistory.indexOf(itemString) >= 0 then begin
+        exit;
     end;
+    itemHistory.add(itemString);
 end;
 
 

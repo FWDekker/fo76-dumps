@@ -9,7 +9,7 @@ var ExportWikiBOOK_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportWikiBOOK_outputLines := TStringList.create;
+    ExportWikiBOOK_outputLines := TStringList.create();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -38,6 +38,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportWikiBOOK_outputLines.saveToFile('dumps/BOOK.wiki');
+    ExportWikiBOOK_outputLines.free();
 end;
 
 
@@ -66,10 +67,10 @@ begin
     if desc = '' then begin
         result := 'No transcript';
     end else begin
-        result := '' +
-            '{{Transcript|text=' + #10 +
-            desc + #10 +
-            '}}';
+        result :=
+              '{{Transcript|text=' + #10
+            + desc + #10
+            + '}}';
     end;
 end;
 

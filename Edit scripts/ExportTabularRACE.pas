@@ -9,7 +9,7 @@ var ExportTabularRACE_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportTabularRACE_outputLines := TStringList.create;
+    ExportTabularRACE_outputLines := TStringList.create();
     ExportTabularRACE_outputLines.add('"File", "Form ID", "Editor ID", "Name", "Keywords", "Properties"');
 end;
 
@@ -35,12 +35,12 @@ begin
     cnam := linkBySign(race, 'CNAM');
 
     ExportTabularRACE_outputLines.add(
-        escapeCsvString(getFileName(getFile(race))) + ', ' +
-        escapeCsvString(stringFormID(race)) + ', ' +
-        escapeCsvString(evBySign(race, 'EDID')) + ', ' +
-        escapeCsvString(evBySign(race, 'FULL')) + ', ' +
-        escapeCsvString(getFlatKeywordList(race)) + ', ' +
-        escapeCsvString(getFlatPropertyList(race))
+          escapeCsvString(getFileName(getFile(race))) + ', '
+        + escapeCsvString(stringFormID(race)) + ', '
+        + escapeCsvString(evBySign(race, 'EDID')) + ', '
+        + escapeCsvString(evBySign(race, 'FULL')) + ', '
+        + escapeCsvString(getFlatKeywordList(race)) + ', '
+        + escapeCsvString(getFlatPropertyList(race))
     );
 end;
 
@@ -48,6 +48,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularRACE_outputLines.saveToFile('dumps/RACE.csv');
+    ExportTabularRACE_outputLines.free();
 end;
 
 

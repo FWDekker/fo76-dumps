@@ -217,6 +217,17 @@ begin
 end;
 
 (**
+ * Frees the line buffer [lines] from memory.
+ *
+ * @param lines the line buffer to free
+ * @see appendLargeFile
+ *)
+procedure freeLargeFile(lines: TStringList);
+begin
+    lines.free();
+end;
+
+(**
  * Determines the first filename part that does not exist.
  *
  * @param filename the prefix of the file to find

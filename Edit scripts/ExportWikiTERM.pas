@@ -9,7 +9,7 @@ var ExportWikiTERM_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportWikiTERM_outputLines := TStringList.create;
+    ExportWikiTERM_outputLines := TStringList.create();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -40,9 +40,8 @@ begin
         contents := '' + #10 + contents + #10 + #10;
     end;
 
-    ExportWikiTERM_outputLines.add(''
-        + '==[' + getFileName(getFile(term)) + '] ' + evBySign(term, 'FULL')
-            + ' (' + stringFormID(term) + ')==' + #10
+    ExportWikiTERM_outputLines.add(
+          '==[' + getFileName(getFile(term)) + '] ' + evBySign(term, 'FULL') + ' (' + stringFormID(term) + ')==' + #10
         + '{{Transcript|text=' + #10
         + 'Welcome to ROBCO Industries (TM) Termlink' + #10
         + header
@@ -55,6 +54,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportWikiTERM_outputLines.saveToFile('dumps/TERM.wiki');
+    ExportWikiTERM_outputLines.free();
 end;
 
 

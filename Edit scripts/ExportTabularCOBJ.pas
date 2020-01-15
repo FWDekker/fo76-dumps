@@ -9,10 +9,11 @@ var ExportTabularCOBJ_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportTabularCOBJ_outputLines := TStringList.create;
-    ExportTabularCOBJ_outputLines.add('"File", "Form ID", "Editor ID", "Product form ID", "Product editor ID", ' +
-                                      '"Product name", "Recipe form ID", "Recipe editor ID", "Recipe name", ' +
-                                      '"Components"');
+    ExportTabularCOBJ_outputLines := TStringList.create();
+    ExportTabularCOBJ_outputLines.add(
+          '"File", "Form ID", "Editor ID", "Product form ID", "Product editor ID", "Product name", "Recipe form ID", '
+        + '"Recipe editor ID", "Recipe name", "Components"'
+    );
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -33,16 +34,16 @@ begin
     recipe := linkBySign(cobj, 'GNAM');
 
     ExportTabularCOBJ_outputLines.add(
-        escapeCsvString(getFileName(getFile(cobj))) + ', ' +
-        escapeCsvString(stringFormID(cobj)) + ', ' +
-        escapeCsvString(evBySign(cobj, 'EDID')) + ', ' +
-        escapeCsvString(ifThen(not assigned(product), '', stringFormID(product))) + ', ' +
-        escapeCsvString(ifThen(not assigned(product), '', evBySign(product, 'EDID'))) + ', ' +
-        escapeCsvString(ifThen(not assigned(product), '', evBySign(product, 'FULL'))) + ', ' +
-        escapeCsvString(ifThen(not assigned(recipe), '', stringFormID(recipe))) + ', ' +
-        escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'EDID'))) + ', ' +
-        escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'FULL'))) + ', ' +
-        escapeCsvString(getFlatComponentList(cobj))
+          escapeCsvString(getFileName(getFile(cobj))) + ', '
+        + escapeCsvString(stringFormID(cobj)) + ', '
+        + escapeCsvString(evBySign(cobj, 'EDID')) + ', '
+        + escapeCsvString(ifThen(not assigned(product), '', stringFormID(product))) + ', '
+        + escapeCsvString(ifThen(not assigned(product), '', evBySign(product, 'EDID'))) + ', '
+        + escapeCsvString(ifThen(not assigned(product), '', evBySign(product, 'FULL'))) + ', '
+        + escapeCsvString(ifThen(not assigned(recipe), '', stringFormID(recipe))) + ', '
+        + escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'EDID'))) + ', '
+        + escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'FULL'))) + ', '
+        + escapeCsvString(getFlatComponentList(cobj))
     );
 end;
 
@@ -50,6 +51,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularCOBJ_outputLines.saveToFile('dumps/COBJ.csv');
+    ExportTabularCOBJ_outputLines.free();
 end;
 
 
@@ -63,19 +65,22 @@ function getFlatComponentList(e: IInterface): String;
 var i: Integer;
     components: IInterface;
     component: IInterface;
+    resultList: TStringList;
 begin
-    components := eBySign(e, 'FVPA');
-    if eCount(components) = 0 then begin
-        exit('');
-    end;
+    resultList := TStringList.create();
 
-    result := ',';
+    components := eBySign(e, 'FVPA');
     for i := 0 to eCount(components) - 1 do begin
         component := eByIndex(components, i);
-        result := result
-            + evBySign(linkByPath(component, 'Component'), 'EDID')
-            + ' (' + intToStr(evByPath(component, 'Count')) + '),';
+        resultList.add(
+              evBySign(linkByPath(component, 'Component'), 'EDID')
+            + ' (' + intToStr(evByPath(component, 'Count')) + ')'
+        );
     end;
+
+    resultList.sort();
+    result := listToJson(resultList);
+    resultList.free();
 end;
 
 

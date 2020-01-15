@@ -9,7 +9,7 @@ var ExportTabularENTM_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportTabularENTM_outputLines := TStringList.create;
+    ExportTabularENTM_outputLines := TStringList.create();
     ExportTabularENTM_outputLines.add('"File", "Form ID", "Editor ID", "Name (FULL)", "Name (NNAM)", "Keywords"');
 end;
 
@@ -26,12 +26,12 @@ begin
     end;
 
     ExportTabularENTM_outputLines.add(
-        escapeCsvString(getFileName(getFile(entm))) + ', ' +
-        escapeCsvString(stringFormID(entm)) + ', ' +
-        escapeCsvString(evBySign(entm, 'EDID')) + ', ' +
-        escapeCsvString(evBySign(entm, 'FULL')) + ', ' +
-        escapeCsvString(evBySign(entm, 'NNAM')) + ', ' +
-        escapeCsvString(getFlatKeywordList(entm))
+          escapeCsvString(getFileName(getFile(entm))) + ', '
+        + escapeCsvString(stringFormID(entm)) + ', '
+        + escapeCsvString(evBySign(entm, 'EDID')) + ', '
+        + escapeCsvString(evBySign(entm, 'FULL')) + ', '
+        + escapeCsvString(evBySign(entm, 'NNAM')) + ', '
+        + escapeCsvString(getFlatKeywordList(entm))
     );
 end;
 
@@ -39,6 +39,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularENTM_outputLines.saveToFile('dumps/ENTM.csv');
+    ExportTabularENTM_outputLines.free();
 end;
 
 

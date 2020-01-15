@@ -9,7 +9,7 @@ var ExportTabularMISC_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportTabularMISC_outputLines := TStringList.create;
+    ExportTabularMISC_outputLines := TStringList.create();
     ExportTabularMISC_outputLines.add('"File", "Form ID", "Editor ID", "Item name", "Weight", "Value", "Components"');
 end;
 
@@ -26,13 +26,13 @@ begin
     end;
 
     ExportTabularMISC_outputLines.add(
-        escapeCsvString(getFileName(getFile(misc))) + ', ' +
-        escapeCsvString(stringFormID(misc)) + ', ' +
-        escapeCsvString(evBySign(misc, 'EDID')) + ', ' +
-        escapeCsvString(evBySign(misc, 'FULL')) + ', ' +
-        escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Weight')) + ', ' +
-        escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Value')) + ', ' +
-        escapeCsvString(getFlatComponentList(misc))
+          escapeCsvString(getFileName(getFile(misc))) + ', '
+        + escapeCsvString(stringFormID(misc)) + ', '
+        + escapeCsvString(evBySign(misc, 'EDID')) + ', '
+        + escapeCsvString(evBySign(misc, 'FULL')) + ', '
+        + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Weight')) + ', '
+        + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Value')) + ', '
+        + escapeCsvString(getFlatComponentList(misc))
     );
 end;
 
@@ -40,6 +40,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularMISC_outputLines.saveToFile('dumps/MISC.csv');
+    ExportTabularMISC_outputLines.free();
 end;
 
 
@@ -54,21 +55,24 @@ var i: Integer;
     components: IInterface;
     component: IInterface;
     quantity: IInterface;
+    resultList: TStringList;
 begin
-    components := eBySign(e, 'MCQP');
-    if eCount(components) = 0 then begin
-        exit('');
-    end;
+    resultList := TStringList.create();
 
-    result := ',';
+    components := eBySign(e, 'MCQP');
     for i := 0 to eCount(components) - 1 do begin
         component := linkByName(eByIndex(components, i), 'Component');
         quantity := linkByName(eByIndex(components, i), 'Component Count Keyword');
 
-        result := result
-            + evBySign(component, 'EDID')
-            + ' (' + intToStr(quantityKeywordToValue(component, quantity)) + '),';
+        resultList.add(
+              evBySign(component, 'EDID')
+            + ' (' + intToStr(quantityKeywordToValue(component, quantity)) + ')'
+        );
     end;
+
+    resultList.sort();
+    result := listToJson(resultList);
+    resultList.free();
 end;
 
 (**

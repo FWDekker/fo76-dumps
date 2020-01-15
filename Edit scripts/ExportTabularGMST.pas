@@ -9,7 +9,7 @@ var ExportTabularGMST_outputLines: TStringList;
 
 function initialize: Integer;
 begin
-    ExportTabularGMST_outputLines := TStringList.create;
+    ExportTabularGMST_outputLines := TStringList.create();
     ExportTabularGMST_outputLines.add('"File", "Form ID", "Editor ID", "Type", "Value"');
 end;
 
@@ -26,11 +26,11 @@ begin
     end;
 
     ExportTabularGMST_outputLines.add(
-        escapeCsvString(getFileName(getFile(gmst))) + ', ' +
-        escapeCsvString(stringFormID(gmst)) + ', ' +
-        escapeCsvString(evBySign(gmst, 'EDID')) + ', ' +
-        escapeCsvString(letterToType(copy(evBySign(gmst, 'EDID'), 1, 1))) + ', ' +
-        escapeCsvString(gev(lastElement(eBySign(gmst, 'DATA'))))
+          escapeCsvString(getFileName(getFile(gmst))) + ', '
+        + escapeCsvString(stringFormID(gmst)) + ', '
+        + escapeCsvString(evBySign(gmst, 'EDID')) + ', '
+        + escapeCsvString(letterToType(copy(evBySign(gmst, 'EDID'), 1, 1))) + ', '
+        + escapeCsvString(gev(lastElement(eBySign(gmst, 'DATA'))))
     );
 end;
 
@@ -38,6 +38,7 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularGMST_outputLines.saveToFile('dumps/GMST.csv');
+    ExportTabularGMST_outputLines.free();
 end;
 
 
