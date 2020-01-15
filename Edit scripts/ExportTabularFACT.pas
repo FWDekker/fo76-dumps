@@ -104,29 +104,36 @@ var i: Integer;
     entries: IInterface;
     entry: IInterface;
     item: IInterface;
+    leveledItems: TStringList;
 begin
     result := ',';
 
+    leveledItems := TStringList.create;
     entries := eByPath(cont, 'Items');
     for i := 0 to eCount(entries) - 1 do begin
         entry := eBySign(eByIndex(entries, i), 'CNTO');
         item := linkByPath(entry, 'Item');
 
         if signature(item) = 'LVLI' then begin
-            result := result + getFlatLeveledItemList(item, items);
+            result := result + getFlatLeveledItemList(item, items, leveledItems);
         end else begin
             result := result + getFlatItem(item, items);
         end;
     end;
 end;
 
-function getFlatLeveledItemList(lvli: IInterface; items: TStringList): String;
+function getFlatLeveledItemList(lvli: IInterface; items: TStringList; leveledItems: TStringList): String;
 var i: Integer;
     entries: IInterface;
     entry: IInterface;
     lvlo: IInterface;
     item: IInterface;
 begin
+    if leveledItems.indexOf(stringFormID(lvli)) >= 0 then begin
+        exit;
+    end;
+    leveledItems.add(stringFormID(lvli));
+
     entries := eByPath(lvli, 'Leveled List Entries');
     for i := 0 to eCount(entries) - 1 do begin
         entry := eByIndex(entries, i);
@@ -139,7 +146,7 @@ begin
         end;
 
         if signature(item) = 'LVLI' then begin
-            result := result + getFlatLeveledItemList(item, items);
+            result := result + getFlatLeveledItemList(item, items, leveledItems);
         end else begin
             result := result + getFlatItem(item, items);
         end;
