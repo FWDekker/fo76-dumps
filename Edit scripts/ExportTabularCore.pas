@@ -128,6 +128,7 @@ var i: Integer;
     props: IInterface;
     prop: IInterface;
     avEdid: String;
+    avValue: String;
     resultList: TStringList;
 begin
     resultList := TStringList.create();
@@ -138,10 +139,13 @@ begin
         avEdid := evBySign(linkByPath(prop, 'Actor Value'), 'EDID');
 
         if assigned(linkByPath(prop, 'Curve Table')) then begin
-            resultList.add(avEdid + '=' + evBySign(linkByPath(prop, 'Curve Table'), 'EDID'));
+            avValue := evBySign(linkByPath(prop, 'Curve Table'), 'EDID');
         end else begin
-            resultList.add(avEdid + '=' + evByPath(prop, 'Value'));
+            avValue := evByPath(prop, 'Value');
         end;
+        avValue := floatToStr(strToFloat(avValue)); // Remove unnecessary decimals
+
+        resultList.add(avEdid + '=' + avValue);
     end;
 
     resultList.sort();
