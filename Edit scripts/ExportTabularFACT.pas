@@ -11,8 +11,23 @@ function initialize: Integer;
 begin
     ExportTabularFACT_outputLines := TStringList.create();
     ExportTabularFACT_outputLines.add(
-          '"File", "Form ID", "Editor ID", "Relations", "Is vendor", "Refresh rate (days)", "Bottlecap range", '
-        + '"Opening hours (24h clock)", "Buys stolen", "Buys non-stolen", "Buys non-list", "Items"'
+            '"File"'                // Name of the originating ESM
+        + ', "Form ID"'             // Form ID
+        + ', "Editor ID"'           // Editor ID
+        + ', "Name"'                // Full name
+        + ', "Relations"'           // Sorted JSON array
+        + ', "Is vendor"'           // `True` if and only if this is a vendor faction
+        + ', "Refresh rate (days)"' // If vendor, the number of days after which the inventory is refreshed
+        + ', "Bottlecap range"'     // If vendor, the number of bottlecaps owned by the faction, formatted as
+                                    // `[minimum value]-[maximum value]`
+        + ', "Opening hours"'       // Hours of the day at which the vendors are available for trading, formatted as
+                                    // `[earliest hour]-[latest hour]`; both times in 24h format
+        + ', "Buys stolen"'         // `True` if and only if vendors of this faction buy stolen items
+        + ', "Buys non-stolen"'     // `True` if and only if vendors of this faction buy non-stolen items
+        + ', "Buys non-list"'       // `True` if and only if vendors of this faction buy items that are not on
+                                    // their list
+        + ', "Items"'               // Sorted JSON array of items for sale by vendors of this faction. Each item is
+                                    // formatted as `[full name] ([form id])`
     );
 end;
 

@@ -10,7 +10,16 @@ var ExportTabularMISC_outputLines: TStringList;
 function initialize: Integer;
 begin
     ExportTabularMISC_outputLines := TStringList.create();
-    ExportTabularMISC_outputLines.add('"File", "Form ID", "Editor ID", "Item name", "Weight", "Value", "Components"');
+    ExportTabularMISC_outputLines.add(
+            '"File"'       // Name of the originating ESM
+        + ', "Form ID"'    // Form ID
+        + ', "Editor ID"'  // Editor ID
+        + ', "Name"'       // Full name
+        + ', "Weight"'     // Item weight in pounds
+        + ', "Value"'      // Item value in bottlecaps
+        + ', "Components"' // Sorted JSON array of the components needed to craft. Each component is formatted as
+                           // `[component editor id] ([amount])`
+    );
 end;
 
 function canProcess(e: IInterface): Boolean;

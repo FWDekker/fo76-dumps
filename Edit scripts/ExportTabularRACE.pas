@@ -10,7 +10,14 @@ var ExportTabularRACE_outputLines: TStringList;
 function initialize: Integer;
 begin
     ExportTabularRACE_outputLines := TStringList.create();
-    ExportTabularRACE_outputLines.add('"File", "Form ID", "Editor ID", "Name", "Keywords", "Properties"');
+    ExportTabularRACE_outputLines.add(
+            '"File"'       // Name of the originating ESM
+        + ', "Form ID"'    // Form ID
+        + ', "Editor ID"'  // Editor ID
+        + ', "Name"'       // Full name
+        + ', "Keywords"'   // Sorted JSON array of keywords. Each keyword is represented by its editor ID
+        + ', "Properties"' // Sorted JSON array of properties. Each property is formatted as `[editor id]=[value]`
+    );
 end;
 
 function canProcess(e: IInterface): Boolean;

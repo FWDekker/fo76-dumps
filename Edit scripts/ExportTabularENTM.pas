@@ -10,7 +10,14 @@ var ExportTabularENTM_outputLines: TStringList;
 function initialize: Integer;
 begin
     ExportTabularENTM_outputLines := TStringList.create();
-    ExportTabularENTM_outputLines.add('"File", "Form ID", "Editor ID", "Name (FULL)", "Name (NNAM)", "Keywords"');
+    ExportTabularENTM_outputLines.add(
+            '"File"'        // Name of the originating ESM
+        + ', "Form ID"'     // Form ID
+        + ', "Editor ID"'   // Editor ID
+        + ', "Name (FULL)"' // Full name
+        + ', "Name (NNAM)"' // Shortened name
+        + ', "Keywords"'    // Sorted JSON array of keywords. Each keyword is represented by its editor ID
+    );
 end;
 
 function canProcess(e: IInterface): Boolean;

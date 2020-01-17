@@ -10,7 +10,13 @@ var ExportTabularCLAS_outputLines: TStringList;
 function initialize: Integer;
 begin
     ExportTabularCLAS_outputLines := TStringList.create();
-    ExportTabularCLAS_outputLines.add('"File", "Form ID", "Editor ID", "Name", "Properties"');
+    ExportTabularCLAS_outputLines.add(
+            '"File"'       // Name of the originating ESM
+        + ', "Form ID"'    // Form ID
+        + ', "Editor ID"'  // Editor ID
+        + ', "Name"'       // Full name
+        + ', "Properties"' // Sorted JSON array of properties. Each property is formatted as `[key]=[value]`
+    );
 end;
 
 function canProcess(e: IInterface): Boolean;

@@ -10,7 +10,13 @@ var ExportTabularGMST_outputLines: TStringList;
 function initialize: Integer;
 begin
     ExportTabularGMST_outputLines := TStringList.create();
-    ExportTabularGMST_outputLines.add('"File", "Form ID", "Editor ID", "Type", "Value"');
+    ExportTabularGMST_outputLines.add(
+            '"File"'      // Name of the originating ESM
+        + ', "Form ID"'   // Form ID
+        + ', "Editor ID"' // Editor ID
+        + ', "Type"'      // Type of value, such as `string` or `float`
+        + ', "Value"'     // Value of the settings
+    );
 end;
 
 function canProcess(e: IInterface): Boolean;

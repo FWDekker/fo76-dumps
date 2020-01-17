@@ -11,8 +11,17 @@ function initialize: Integer;
 begin
     ExportTabularCOBJ_outputLines := TStringList.create();
     ExportTabularCOBJ_outputLines.add(
-          '"File", "Form ID", "Editor ID", "Product form ID", "Product editor ID", "Product name", "Recipe form ID", '
-        + '"Recipe editor ID", "Recipe name", "Components"'
+            '"File"'              // Name of the originating ESM
+        + ', "Form ID"'           // Form ID
+        + ', "Editor ID"'         // Editor ID
+        + ', "Product form ID"'   // Form ID of the product, or an empty string if there is no product
+        + ', "Product editor ID"' // Editor ID of the product, or an empty string if there is no product
+        + ', "Product name"'      // Full name of the product, or an empty string if there is no product
+        + ', "Recipe form ID"'    // Form ID of the recipe, or an empty string if there is no recipe
+        + ', "Recipe editor ID"'  // Editor ID of the recipe, or an empty string if there is no recipe
+        + ', "Recipe name"'       // Full name of the recipe, or an empty string if there is no recipe
+        + ', "Components"'        // Sorted JSON array of the components needed to craft. Each component is formatted as
+                                  // `[editor id] ([amount])`
     );
 end;
 

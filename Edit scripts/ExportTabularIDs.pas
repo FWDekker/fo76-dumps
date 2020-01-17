@@ -17,7 +17,12 @@ begin
     clearLargeFiles('dumps/IDs.csv');
 
     appendLargeFile('dumps/IDs.csv', ExportTabularIDs_outputLines, ExportTabularIDs_filePartSize,
-        '"File", "Signature", "Form ID", "Editor ID", "Name", "Keywords"'
+            '"File"'      // Name of the originating ESM
+        + ', "Signature"' // Signature
+        + ', "Form ID"'   // Form ID
+        + ', "Editor ID"' // Editor ID
+        + ', "Name"'      // Full name
+        + ', "Keywords"'  // Sorted JSON array of keywords. Each keyword is represented by its editor ID
     );
 end;
 

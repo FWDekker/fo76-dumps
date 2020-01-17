@@ -11,8 +11,23 @@ function initialize: Integer;
 begin
     ExportTabularNPC__outputLines := TStringList.create();
     ExportTabularNPC__outputLines.add(
-          '"File", "Form ID", "Editor ID", "Name", "Level", "Factions", "Race", "Attack race", "Class", "Keywords", '
-        + '"Perks", "Properties", "Aggression", "Confidence", "Assistance", "Health curve", "XP curve"'
+            '"File"'         // Name of the originating ESM
+        + ', "Form ID"'      // Form ID
+        + ', "Editor ID"'    // Editor ID
+        + ', "Name"'         // Full name
+        + ', "Level"'        //
+        + ', "Factions"'     // Sorted JSON array of factions. Each faction is represented by its editor ID
+        + ', "Race"'         // Race, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
+        + ', "Attack race"'  // Attack race, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
+        + ', "Class"'        // Class, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
+        + ', "Keywords"'     // Sorted JSON array of keywords. Each keyword is represented by its editor ID
+        + ', "Perks"'        // Sorted JSON array of perks. Each perk is formatted as `[editor id]=[value]`
+        + ', "Properties"'   // Sorted JSON array of properties. Each property is formatted as `[editor id]=[value]`
+        + ', "Aggression"'   // AI aggression level as a string
+        + ', "Confidence"'   // AI confidence level as a string
+        + ', "Assistance"'   // AI assistance level as a string
+        + ', "Health curve"' // The health curve, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
+        + ', "XP curve"'     // The XP curve, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
     );
 end;
 
