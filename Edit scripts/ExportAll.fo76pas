@@ -3,6 +3,7 @@ unit ExportAll;
 uses ExportTabularCLAS,
      ExportTabularCOBJ,
      ExportTabularENTM,
+     ExportTabularFACT,
      ExportTabularGLOB,
      ExportTabularGMST,
      ExportTabularIDs,
@@ -20,6 +21,7 @@ begin
     ExportTabularCLAS.initialize();
     ExportTabularCOBJ.initialize();
     ExportTabularENTM.initialize();
+    ExportTabularFACT.initialize();
     ExportTabularGLOB.initialize();
     ExportTabularGMST.initialize();
     ExportTabularIDs.initialize();
@@ -42,6 +44,9 @@ begin
     end;
     if ExportTabularENTM.canProcess(e) then begin
         ExportTabularENTM.process(e);
+    end;
+    if ExportTabularFACT.canProcess(e) then begin
+        ExportTabularFACT.process(e);
     end;
     if ExportTabularGLOB.canProcess(e) then begin
         ExportTabularGLOB.process(e);
@@ -80,6 +85,7 @@ begin
     ExportTabularCLAS.finalize();
     ExportTabularCOBJ.finalize();
     ExportTabularENTM.finalize();
+    ExportTabularFACT.finalize();
     ExportTabularGLOB.finalize();
     ExportTabularGMST.finalize();
     ExportTabularIDs.finalize();

@@ -1,4 +1,4 @@
-unit Exp_ExportTabularFACT;
+unit ExportTabularFACT;
 
 uses ExportCore,
      ExportTabularCore;
@@ -60,6 +60,7 @@ begin
           escapeCsvString(getFileName(getFile(fact))) + ', '
         + escapeCsvString(stringFormID(fact)) + ', '
         + escapeCsvString(evBySign(fact, 'EDID')) + ', '
+        + escapeCsvString(evBySign(fact, 'FULL')) + ', '
         + escapeCsvString(getFlatRelationList(fact)) + ', ';
 
     if assigned(venc) then begin
@@ -151,7 +152,7 @@ begin
         if signature(item) = 'LVLI' then begin
             addLeveledItemList(lvliHistory, itemHistory, item);
         end else begin
-            addItem(item, itemHistory);
+            addItem(itemHistory, item);
         end;
     end;
 

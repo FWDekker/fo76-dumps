@@ -55,7 +55,8 @@ var scene: IInterface;
     i: Integer;
 begin
     if evByPath(eBySign(note, 'SNAM'), 'Terminal') <> '' then begin
-        exit('This disk shows terminal entries.');
+        result := 'This disk shows terminal entries.';
+        exit;
     end;
 
     scene := linkByPath(eBySign(note, 'SNAM'), 'Scene');
@@ -69,12 +70,14 @@ begin
 
         if startStage < 0 then begin
             addMessage('ERROR - Negative ENAM');
-            exit('ERROR');
+            result := 'ERROR';
+            exit;
         end;
 
         if startStage > endStage then begin
             addMessage('ERROR - ENAM greater than SNAM');
-            exit('ERROR');
+            result := 'ERROR';
+            exit;
         end;
 
         if endStage > maxStage then begin
@@ -121,12 +124,14 @@ var speaker: String;
 begin
     if signature(topic) <> 'DIAL' then begin
         addMessage('ERROR - Unexpected signature: ' + signature(topic));
-        exit('ERROR');
+        result := 'ERROR';
+        exit;
     end;
 
     if eCount(childGroup(topic)) <> 1 then begin
         addMessage('ERROR - Unexpected no. of children');
-        exit('ERROR');
+        result := 'ERROR';
+        exit;
     end;
 
     // Add speaker at start of paragraph

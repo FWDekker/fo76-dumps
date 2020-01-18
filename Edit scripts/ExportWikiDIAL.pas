@@ -169,7 +169,8 @@ begin
         e := eByIndex(group, i);
 
         if formID(e) = nextFormID then begin
-            exit(e);
+            result := e;
+            exit;
         end;
     end;
 

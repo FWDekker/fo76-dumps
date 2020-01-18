@@ -27,7 +27,8 @@ function listToJson(list: TStringList): String;
 var i: Integer;
 begin
     if list.count = 0 then begin
-        exit('[]');
+        result := '[]';
+        exit;
     end;
 
     result := '"' + list[0] + '"';
@@ -143,7 +144,9 @@ begin
         end else begin
             avValue := evByPath(prop, 'Value');
         end;
-        avValue := floatToStr(strToFloat(avValue)); // Remove unnecessary decimals
+        try
+            avValue := floatToStr(strToFloat(avValue)); // Remove unnecessary decimals
+        except end;
 
         resultList.add(avEdid + '=' + avValue);
     end;

@@ -157,7 +157,8 @@ begin
 
     for i := 0 to referencedByCount(e) - 1 do begin
         if signature(referencedByIndex(e, i)) = sig then begin
-            exit(true);
+            result := true;
+            exit;
         end;
     end;
 end;
@@ -339,7 +340,8 @@ end;
 function parseFloatToInt(float: String): String;
 begin
     if float = '' then begin
-        exit('');
+        result := '';
+        exit;
     end;
     result := intToStr(round(strToFloat(float)));
 end;
