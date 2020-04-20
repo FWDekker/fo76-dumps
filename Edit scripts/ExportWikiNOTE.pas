@@ -73,13 +73,13 @@ begin
 
         if startStage < 0 then begin
             addMessage('ERROR - Negative ENAM');
-            result := 'ERROR';
+            result := '<! DUMP ERROR: NEGATIVE ENAM >';
             exit;
         end;
 
         if startStage > endStage then begin
             addMessage('ERROR - ENAM greater than SNAM');
-            result := 'ERROR';
+            result := '<! DUMP ERROR: ENAM GREATER THAN SNAM >';
             exit;
         end;
 
@@ -127,14 +127,19 @@ var speaker: String;
 begin
     if signature(topic) <> 'DIAL' then begin
         addMessage('ERROR - Unexpected signature: ' + signature(topic));
-        result := 'ERROR';
+        result := '<! DUMP ERROR: UNEXPECTED SIGNATURE `' + signature(topic) + '`>';
+        exit;
+    end;
+
+    if eCount(childGroup(topic)) = 0 then begin
+        addMessage('ERROR - Topic has 0 children');
+        result := '<! DUMP ERROR: TOPIC HAS 0 CHILDREN >';
         exit;
     end;
 
     if eCount(childGroup(topic)) <> 1 then begin
-        addMessage('ERROR - Unexpected no. of children');
-        result := 'ERROR';
-        exit;
+        addMessage('WARNING - Topic has too many children');
+        result := '<! DUMP WARNING: MANUALLY CHECK `DIAL:' + stringFormID(topic) + '` FOR CUT CONTENT LINES >' + #10;
     end;
 
     // Add speaker at start of paragraph
