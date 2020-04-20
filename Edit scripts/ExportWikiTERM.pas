@@ -26,10 +26,6 @@ begin
         exit;
     end;
 
-    if not isReferencedBy(term, 'REFR') then begin
-        exit;
-    end;
-
     header := escapeWiki(trim(evBySign(term, 'WNAM')));
     if not (header = '') then begin
         header := header + #10;

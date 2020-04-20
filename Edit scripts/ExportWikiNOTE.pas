@@ -55,7 +55,10 @@ var scene: IInterface;
     i: Integer;
 begin
     if evByPath(eBySign(note, 'SNAM'), 'Terminal') <> '' then begin
-        result := 'This disk shows terminal entries.';
+        result := ''
+            + 'This disk shows terminal entries from `TERM:'
+            + stringFormID(linkByPath(eBySign(note, 'SNAM'), 'Terminal'))
+            + '`.';
         exit;
     end;
 
