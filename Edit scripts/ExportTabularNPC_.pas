@@ -15,19 +15,24 @@ begin
         + ', "Form ID"'      // Form ID
         + ', "Editor ID"'    // Editor ID
         + ', "Name"'         // Full name
-        + ', "Level"'        //
+        + ', "Name (short)"' // Short name
+        + ', "Level"'        // Level
         + ', "Factions"'     // Sorted JSON array of factions. Each faction is represented by its editor ID
-        + ', "Race"'         // Race, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
-        + ', "Attack race"'  // Attack race, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
-        + ', "Class"'        // Class, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
+        + ', "Race"'         // Race, formatted as `<editor id> "<full name>" [<signature>:<form id>]`
+        + ', "Attack race"'  // Attack race, formatted as `<editor id> "<full name>" [<signature>:<form id>]`
+        + ', "Class"'        // Class, formatted as `<editor id> "<full name>" [<signature>:<form id>]`
         + ', "Keywords"'     // Sorted JSON array of keywords. Each keyword is represented by its editor ID
-        + ', "Perks"'        // Sorted JSON array of perks. Each perk is formatted as `[editor id]=[value]`
-        + ', "Properties"'   // Sorted JSON array of properties. Each property is formatted as `[editor id]=[value]`
+        + ', "Perks"'        // Sorted JSON array of perks. Each perk is formatted as `<editor id>=[value]`
+        + ', "Properties"'   // Sorted JSON array of properties. Each property is formatted as `<editor id>=[value]`
         + ', "Aggression"'   // AI aggression level as a string
         + ', "Confidence"'   // AI confidence level as a string
         + ', "Assistance"'   // AI assistance level as a string
-        + ', "Health curve"' // The health curve, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
-        + ', "XP curve"'     // The XP curve, formatted as `[editor id] "[full name]" \[[signature]:[form id]\]`
+        + ', "Health curve"' // Health curve, formatted as `<editor id> [<signature>:<form id>]`
+        + ', "XP curve"'     // XP curve, formatted as `<editor id> [<signature>:<form id>]`
+        + ', "Voice type"'   // Voice type, formatted as `<editor id> "<full name>" [<signature>:<form id>]`
+        + ', "Hair color"'   // Hair color, formatted as `<editor id> "<full name>" [<signature>:<form id>]`
+        + ', "Head parts"'   // Sorted JSON array of head parts. Each part is formatted as
+                             // `<editor id> "<full name>" [<signature>:<form id>]`
     );
 end;
 
@@ -57,6 +62,7 @@ begin
         + escapeCsvString(stringFormID(npc_)) + ', '
         + escapeCsvString(evBySign(npc_, 'EDID')) + ', '
         + escapeCsvString(evBySign(npc_, 'FULL')) + ', '
+        + escapeCsvString(evBySign(npc_, 'SHRT')) + ', '
         + escapeCsvString(evByPath(acbs, 'Level')) + ', '
         + escapeCsvString(getFlatFactionList(npc_)) + ', '
         + escapeCsvString(evBySign(npc_, 'RNAM')) + ', '
@@ -69,7 +75,10 @@ begin
         + escapeCsvString(evByPath(aidt, 'Confidence')) + ', '
         + escapeCsvString(evByPath(aidt, 'Assistance')) + ', '
         + escapeCsvString(evBySign(npc_, 'CVT0')) + ', '
-        + escapeCsvString(evBySign(npc_, 'CVT2'))
+        + escapeCsvString(evBySign(npc_, 'CVT2')) + ', '
+        + escapeCsvString(evBySign(npc_, 'VTCK')) + ', '
+        + escapeCsvString(evBySign(npc_, 'HCLF')) + ', '
+        + escapeCsvString(getFlatChildList(eByPath(npc_, 'Head Parts')))
     );
 end;
 

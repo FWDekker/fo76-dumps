@@ -7,7 +7,7 @@ unit ExportTabularCore;
 (**
  * Escapes [text] by escaping quotes and then surrounding it with quotes.
  *
- * @param the text to escape
+ * @param text the text to escape
  * @return a CSV-escaped version of [text]
  *)
 function escapeCsvString(text: String): String;
@@ -15,6 +15,17 @@ begin
     result := text;
     result := stringReplace(result, '"', '""', [rfReplaceAll]);
     result := '"' + result + '"';
+end;
+
+(**
+ * Escapes all double quotes in [text] by putting a backslash in front of them.
+ *
+ * @param text the text to escape
+ * @return a quote-escaped version of [text]
+ *)
+function escapeQuotes(text: String): String;
+begin
+    result := stringReplace(text, '"', '\"', [rfReplaceAll]);
 end;
 
 (**
@@ -149,6 +160,29 @@ begin
         except end;
 
         resultList.add(avEdid + '=' + avValue);
+    end;
+
+    resultList.sort();
+    result := listToJson(resultList);
+    resultList.free();
+end;
+
+(**
+ * Returns the (iterable) children of [list] as a comma-separated list.
+ *
+ * Each child is simply converted to a string.
+ *
+ * @param e the element to return the children of
+ * @return the children of [list] as a comma-separated list
+ *)
+function getFlatChildList(list: IInterface): String;
+var i: Integer;
+    resultList: TStringList;
+begin
+    resultList := TStringList.create();
+
+    for i := 0 to eCount(list) - 1 do begin
+        resultList.add(escapeQuotes(evByIndex(list, i)));
     end;
 
     resultList.sort();
