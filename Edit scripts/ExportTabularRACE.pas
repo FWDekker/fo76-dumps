@@ -1,7 +1,8 @@
 unit ExportTabularRACE;
 
 uses ExportCore,
-     ExportTabularCore;
+     ExportTabularCore,
+     ExportFlatList;
 
 
 var ExportTabularRACE_outputLines: TStringList;

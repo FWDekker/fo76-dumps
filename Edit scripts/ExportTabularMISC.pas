@@ -1,7 +1,8 @@
 unit ExportTabularMISC;
 
 uses ExportCore,
-     ExportTabularCore;
+     ExportTabularCore,
+     ExportFlatList;
 
 
 var ExportTabularMISC_outputLines: TStringList;

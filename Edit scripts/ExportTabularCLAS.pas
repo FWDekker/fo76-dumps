@@ -1,7 +1,8 @@
 unit ExportTabularCLAS;
 
 uses ExportCore,
-     ExportTabularCore;
+     ExportTabularCore,
+     ExportFlatList;
 
 
 var ExportTabularCLAS_outputLines: TStringList;

@@ -1,7 +1,8 @@
 unit ExportTabularENTM;
 
 uses ExportCore,
-     ExportTabularCore;
+     ExportTabularCore,
+     ExportFlatList;
 
 
 var ExportTabularENTM_outputLines: TStringList;

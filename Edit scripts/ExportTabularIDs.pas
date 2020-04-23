@@ -1,7 +1,9 @@
 unit ExportTabularIDs;
 
 uses ExportCore,
-     ExportTabularCore;
+     ExportTabularCore,
+     ExportFlatList,
+     ExportLargeFile;
 
 
 var ExportTabularIDs_outputLines: TStringList;

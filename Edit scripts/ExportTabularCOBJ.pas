@@ -1,7 +1,8 @@
 unit ExportTabularCOBJ;
 
 uses ExportCore,
-     ExportTabularCore;
+     ExportTabularCore,
+     ExportFlatList;
 
 
 var ExportTabularCOBJ_outputLines: TStringList;
@@ -61,35 +62,6 @@ begin
     createDir('dumps/');
     ExportTabularCOBJ_outputLines.saveToFile('dumps/COBJ.csv');
     ExportTabularCOBJ_outputLines.free();
-end;
-
-
-(**
- * Returns the components of [e] as a comma-separated list of editor IDs and counts.
- *
- * @param e the element to return the components of
- * @return the components of [e] as a comma-separated list of editor IDs and counts
- *)
-function getFlatComponentList(e: IInterface): String;
-var i: Integer;
-    components: IInterface;
-    component: IInterface;
-    resultList: TStringList;
-begin
-    resultList := TStringList.create();
-
-    components := eBySign(e, 'FVPA');
-    for i := 0 to eCount(components) - 1 do begin
-        component := eByIndex(components, i);
-        resultList.add(
-              evBySign(linkByPath(component, 'Component'), 'EDID')
-            + ' (' + intToStr(evByPath(component, 'Count')) + ')'
-        );
-    end;
-
-    resultList.sort();
-    result := listToJson(resultList);
-    resultList.free();
 end;
 
 

@@ -1,7 +1,8 @@
 unit ExportTabularNPC_;
 
 uses ExportCore,
-     ExportTabularCore;
+     ExportTabularCore,
+     ExportFlatList;
 
 
 var ExportTabularNPC__outputLines: TStringList;
