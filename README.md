@@ -18,6 +18,7 @@ For more information on how to browse them, check [the wiki page](https://github
 | Dump script                                                     | Filename   | Description                                      |
 |-----------------------------------------------------------------|------------|--------------------------------------------------|
 | [`ExportTabularIDs.pas`](Edit%20scripts/ExportTabularIDs.pas)   | `IDs.csv`  | Form IDs, editor IDs, names, and keywords        |
+| [`ExportTabularARMO.pas`](Edit%20scripts/ExportTabularARMO.pas) | `ARMO.csv` | Armor and clothing                               |
 | [`ExportTabularCLAS.pas`](Edit%20scripts/ExportTabularCLAS.pas) | `CLAS.csv` | Class properties                                 |
 | [`ExportTabularCOBJ.pas`](Edit%20scripts/ExportTabularCOBJ.pas) | `COBJ.csv` | Craftable object recipes and components          |
 | [`ExportTabularENTM.pas`](Edit%20scripts/ExportTabularENTM.pas) | `ENTM.csv` | Atomic Shop unlockables                          |
@@ -26,6 +27,7 @@ For more information on how to browse them, check [the wiki page](https://github
 | [`ExportTabularGMST.pas`](Edit%20scripts/ExportTabularGMST.pas) | `GMST.csv` | Game settings                                    |
 | [`ExportTabularMISC.pas`](Edit%20scripts/ExportTabularMISC.pas) | `MISC.csv` | Inventory item weights, values, and scrap yields |
 | [`ExportTabularNPC_.pas`](Edit%20scripts/ExportTabularNPC_.pas) | `NPC_.csv` | NPC factions, keywords, stats, etc.              |
+| [`ExportTabularOTFT.pas`](Edit%20scripts/ExportTabularOTFT.pas) | `OTFT.csv` | Outfits                                          |
 | [`ExportTabularRACE.pas`](Edit%20scripts/ExportTabularRACE.pas) | `RACE.csv` | Race keywords and properties                     |
 
   </p>

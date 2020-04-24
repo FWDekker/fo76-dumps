@@ -1,6 +1,7 @@
 unit ExportAll;
 
-uses ExportTabularCLAS,
+uses ExportTabularARMO,
+     ExportTabularCLAS,
      ExportTabularCOBJ,
      ExportTabularENTM,
      ExportTabularFACT,
@@ -9,6 +10,7 @@ uses ExportTabularCLAS,
      ExportTabularIDs,
      ExportTabularMISC,
      ExportTabularNPC_,
+     ExportTabularOTFT,
      ExportTabularRACE,
      ExportWikiBOOK,
      ExportWikiDIAL,
@@ -18,6 +20,7 @@ uses ExportTabularCLAS,
 
 function initialize: Integer;
 begin
+    ExportTabularARMO.initialize();
     ExportTabularCLAS.initialize();
     ExportTabularCOBJ.initialize();
     ExportTabularENTM.initialize();
@@ -27,6 +30,7 @@ begin
     ExportTabularIDs.initialize();
     ExportTabularMISC.initialize();
     ExportTabularNPC_.initialize();
+    ExportTabularOTFT.initialize();
     ExportTabularRACE.initialize();
     ExportWikiBOOK.initialize();
     ExportWikiDIAL.initialize();
@@ -36,6 +40,9 @@ end;
 
 function process(e: IInterface): Integer;
 begin
+    if ExportTabularARMO.canProcess(e) then begin
+        ExportTabularARMO.process(e);
+    end;
     if ExportTabularCLAS.canProcess(e) then begin
         ExportTabularCLAS.process(e);
     end;
@@ -63,6 +70,9 @@ begin
     if ExportTabularNPC_.canProcess(e) then begin
         ExportTabularNPC_.process(e);
     end;
+    if ExportTabularOTFT.canProcess(e) then begin
+        ExportTabularOTFT.process(e);
+    end;
     if ExportTabularRACE.canProcess(e) then begin
         ExportTabularRACE.process(e);
     end;
@@ -82,6 +92,7 @@ end;
 
 function finalize: Integer;
 begin
+    ExportTabularARMO.finalize();
     ExportTabularCLAS.finalize();
     ExportTabularCOBJ.finalize();
     ExportTabularENTM.finalize();
@@ -91,6 +102,7 @@ begin
     ExportTabularIDs.finalize();
     ExportTabularMISC.finalize();
     ExportTabularNPC_.finalize();
+    ExportTabularOTFT.finalize();
     ExportTabularRACE.finalize();
     ExportWikiBOOK.finalize();
     ExportWikiDIAL.finalize();
