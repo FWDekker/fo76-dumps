@@ -17,6 +17,7 @@ begin
         + ', "Editor ID"'   // Editor ID
         + ', "Name (FULL)"' // Full name
         + ', "Name (NNAM)"' // Shortened name
+        + ', "Description"' // Description
         + ', "Keywords"'    // Sorted JSON array of keywords. Each keyword is represented by its editor ID
     );
 end;
@@ -39,6 +40,7 @@ begin
         + escapeCsvString(evBySign(entm, 'EDID')) + ', '
         + escapeCsvString(evBySign(entm, 'FULL')) + ', '
         + escapeCsvString(evBySign(entm, 'NNAM')) + ', '
+        + escapeCsvString(evBySign(entm, 'DESC')) + ', '
         + escapeCsvString(getFlatKeywordList(entm))
     );
 end;
