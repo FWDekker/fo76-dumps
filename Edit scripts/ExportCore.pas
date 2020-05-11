@@ -235,6 +235,19 @@ begin
 end;
 
 (**
+ * Returns an empty string if the given string is empty, or surrounds it with the given prefix and suffix otherwise.
+ *
+ * @param string the string to surround with the prefix and suffix
+ * @param prefix the string to put in front
+ * @param suffix the string to put at the end
+ * @return an empty string if the given string is empty, or surrounds it with the given prefix and suffix otherwise
+ *)
+function surroundIfNotEmpty(string: String; prefix: String; suffix: String): String;
+begin
+    result := ifThen(string = '', '', prefix + string + suffix);
+end;
+
+(**
  * Converts a truthy boolean to 'True' and a falsy boolean to 'False'.
  *
  * @param bool the bool to convert to a string
