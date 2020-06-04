@@ -18,10 +18,10 @@ begin
         + ', "Name"'                 // Full name
         + ', "Leveled List"'         // Leveled list
     );
-	
-	
-	ExportTabularLOC_outputLines := initializeLocationTabular();
-	
+    
+    
+    ExportTabularLOC_outputLines := initializeLocationTabular();
+    
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -38,22 +38,22 @@ begin
     end;
 
     data := eBySign(lvli, 'DATA');
-	//debugPrint(evBySign(lvli, 'LVLF'));
-	//debugPrint(evByName(lvli, 'Leveled List Entries'));
+    //debugPrint(evBySign(lvli, 'LVLF'));
+    //debugPrint(evByName(lvli, 'Leveled List Entries'));
     ExportTabularLVLI_outputLines.add(
-		  escapeCsvString(getFileName(getFile(lvli))) + ', '
+          escapeCsvString(getFileName(getFile(lvli))) + ', '
         + escapeCsvString(stringFormID(lvli)) + ', '
         + escapeCsvString(evBySign(lvli, 'EDID')) + ', '
         + escapeCsvString(evBySign(lvli, 'FULL')) + ', '
-		//https://github.com/fireundubh/xedit-scripts/blob/master/all/Relevel%20Leveled%20Lists.pas
-		+ escapeCsvString(getFlatLeveledList(lvli))
+        //https://github.com/fireundubh/xedit-scripts/blob/master/all/Relevel%20Leveled%20Lists.pas
+        + escapeCsvString(getFlatLeveledList(lvli))
    
     );
-	
-	ExportTabularLOC_outputLines.AddStrings(
-		getLocationData(lvli)
-	);
-	
+    
+    ExportTabularLOC_outputLines.AddStrings(
+        getLocationData(lvli)
+    );
+    
 end;
 
 
@@ -62,8 +62,8 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularLVLI_outputLines.saveToFile('dumps/LVLI.csv');
-	ExportTabularLOC_outputLines.saveToFile('dumps/LVLILOC.csv');
-	ExportTabularLOC_outputLines.free();
+    ExportTabularLOC_outputLines.saveToFile('dumps/LVLILOC.csv');
+    ExportTabularLOC_outputLines.free();
     ExportTabularLVLI_outputLines.free();
 end;
 

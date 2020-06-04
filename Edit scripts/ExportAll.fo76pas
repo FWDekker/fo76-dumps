@@ -5,16 +5,16 @@ uses ExportTabularARMO,
      ExportTabularCOBJ,
      ExportTabularENTM,
      ExportTabularFACT,
-	 ExportTabularFLORA,
+     ExportTabularFLORA,
      ExportTabularGLOB,
      ExportTabularGMST,
      ExportTabularIDs,
-	 ExportTabularLVLI,
+     ExportTabularLVLI,
      ExportTabularMISC,
      ExportTabularNPC_,
      ExportTabularOTFT,
      ExportTabularRACE,
-	 ExportTabularWEAP,
+     ExportTabularWEAP,
      ExportWikiBOOK,
      ExportWikiDIAL,
      ExportWikiNOTE,
@@ -28,16 +28,16 @@ begin
     ExportTabularCOBJ.initialize();
     ExportTabularENTM.initialize();
     ExportTabularFACT.initialize();
-	ExportTabularFLORA.initialize();
+    ExportTabularFLORA.initialize();
     ExportTabularGLOB.initialize();
     ExportTabularGMST.initialize();
     ExportTabularIDs.initialize();
-	ExportTabularLVLI.initialize();
+    ExportTabularLVLI.initialize();
     ExportTabularMISC.initialize();
     ExportTabularNPC_.initialize();
     ExportTabularOTFT.initialize();
     ExportTabularRACE.initialize();
-	ExportTabularWEAP.initialize();
+    ExportTabularWEAP.initialize();
     ExportWikiBOOK.initialize();
     ExportWikiDIAL.initialize();
     ExportWikiNOTE.initialize();
@@ -61,7 +61,7 @@ begin
     if ExportTabularFACT.canProcess(e) then begin
         ExportTabularFACT.process(e);
     end;
-	if ExportTabularFLORA.canProcess(e) then begin
+    if ExportTabularFLORA.canProcess(e) then begin
         ExportTabularFLORA.process(e);
     end;
     if ExportTabularGLOB.canProcess(e) then begin
@@ -73,7 +73,7 @@ begin
     if ExportTabularIDs.canProcess(e) then begin
         ExportTabularIDs.process(e);
     end;
-	if ExportTabularLVLI.canProcess(e) then begin
+    if ExportTabularLVLI.canProcess(e) then begin
         ExportTabularLVLI.process(e);
     end;
     if ExportTabularMISC.canProcess(e) then begin
@@ -88,7 +88,7 @@ begin
     if ExportTabularRACE.canProcess(e) then begin
         ExportTabularRACE.process(e);
     end;
-	if ExportTabularWEAP.canProcess(e) then begin
+    if ExportTabularWEAP.canProcess(e) then begin
         ExportTabularWEAP.process(e);
     end;
     if ExportWikiBOOK.canProcess(e) then begin
@@ -112,16 +112,16 @@ begin
     ExportTabularCOBJ.finalize();
     ExportTabularENTM.finalize();
     ExportTabularFACT.finalize();
-	ExportTabularFLORA.finalize();
+    ExportTabularFLORA.finalize();
     ExportTabularGLOB.finalize();
     ExportTabularGMST.finalize();
     ExportTabularIDs.finalize();
-	ExportTabularLVLI.finalize();
+    ExportTabularLVLI.finalize();
     ExportTabularMISC.finalize();
     ExportTabularNPC_.finalize();
     ExportTabularOTFT.finalize();
     ExportTabularRACE.finalize();
-	ExportTabularWEAP.finalize();
+    ExportTabularWEAP.finalize();
     ExportWikiBOOK.finalize();
     ExportWikiDIAL.finalize();
     ExportWikiNOTE.finalize();

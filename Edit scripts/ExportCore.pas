@@ -263,13 +263,13 @@ end;
 function getReferenceByIndexAndSig(e: IInterface; i: Integer; sig: String): IwbElement;
 var ref: IwbElement;
 begin
-	ref := referencedByIndex(e, i);
-	if signature(ref) = sig then begin
-		result := ref;
-		exit;
-	end;
+    ref := referencedByIndex(e, i);
+    if signature(ref) = sig then begin
+        result := ref;
+        exit;
+    end;
 end;
-	
+    
 function getLocationData(e: IInterface): TStringList;
 var ExportTabularLOC_outputLines: TStringList;
 var ref: IwbElement;
@@ -279,77 +279,77 @@ var data: IInterface;
 var cell: IInterface;
 var worldspace: IInterface;
 begin
-	ExportTabularLOC_outputLines := TStringList.create();
-	
-	for i := 0 to referencedByCount(e) - 1 do begin
-		
-		ref := getReferenceByIndexAndSig(e,i,'REFR');
-		
-		if isRefLocation(ref) then begin
-			// we only want the ones in the Appalachia worldspace
-			data := ElementBySignature(ref, 'DATA');
-			
-			ExportTabularLOC_outputLines.add(
-				  escapeCsvString(getFileName(getFile(ref))) + ', '
-				+ escapeCsvString(stringFormID(ref)) + ', '
-				+ escapeCsvString(evBySign(e, 'EDID')) + ', '
-				+ escapeCsvString(evBySign(e, 'FULL')) + ', '
-				+ escapeCsvString(evBySign(ref, 'XLYR')) + ', '
-				+ escapeCsvString(gev(ElementByName(ref, 'Cell'))) + ', '
-				+ escapeCsvString(vec3ToString(ElementByName(data,'Position'))) + ', '
-				+ escapeCsvString(vec3ToString(ElementByName(data,'Rotation')))
-			);
-		end;
-	end;
-	
-	result := ExportTabularLOC_outputLines;
-end;	
+    ExportTabularLOC_outputLines := TStringList.create();
+    
+    for i := 0 to referencedByCount(e) - 1 do begin
+        
+        ref := getReferenceByIndexAndSig(e,i,'REFR');
+        
+        if isRefLocation(ref) then begin
+            // we only want the ones in the Appalachia worldspace
+            data := ElementBySignature(ref, 'DATA');
+            
+            ExportTabularLOC_outputLines.add(
+                  escapeCsvString(getFileName(getFile(ref))) + ', '
+                + escapeCsvString(stringFormID(ref)) + ', '
+                + escapeCsvString(evBySign(e, 'EDID')) + ', '
+                + escapeCsvString(evBySign(e, 'FULL')) + ', '
+                + escapeCsvString(evBySign(ref, 'XLYR')) + ', '
+                + escapeCsvString(gev(ElementByName(ref, 'Cell'))) + ', '
+                + escapeCsvString(vec3ToString(ElementByName(data,'Position'))) + ', '
+                + escapeCsvString(vec3ToString(ElementByName(data,'Rotation')))
+            );
+        end;
+    end;
+    
+    result := ExportTabularLOC_outputLines;
+end;    
 
 function initializeLocationTabular(): TStringList;
 var ExportTabularLOC_outputLines: TStringList;
 begin
-	ExportTabularLOC_outputLines := TStringList.create();
-	ExportTabularLOC_outputLines.add(
+    ExportTabularLOC_outputLines := TStringList.create();
+    ExportTabularLOC_outputLines.add(
             '"File"'                 // Name of the originating ESM
         + ', "Form ID"'              // Form ID
         + ', "Editor ID"'            // Editor ID of item
         + ', "Name"'                 // Full name of item
         + ', "Layer"'                // Layer the reference is linked to
-		+ ', "Cell"'                 // World Cell
-		+ ', "Position"'             // Vector3 Position
-		+ ', "Rotation"'             // Vector3 Rotation        
+        + ', "Cell"'                 // World Cell
+        + ', "Position"'             // Vector3 Position
+        + ', "Rotation"'             // Vector3 Rotation        
     );
-	result := ExportTabularLOC_outputLines;
+    result := ExportTabularLOC_outputLines;
 end;
 
 function vec3ToString(e: IInterface): String;
 begin
-	result := gev(ElementByName(e,'X')) + ':' + gev(ElementByName(e,'Y')) + ':' + gev(ElementByName(e,'Z'));
+    result := gev(ElementByName(e,'X')) + ':' + gev(ElementByName(e,'Y')) + ':' + gev(ElementByName(e,'Z'));
 end;
 
 function debugPrint(e: IInterface):  Boolean;
 var i: Integer;
 var ei: IwbElement;
 begin
-	for i := 0 to ElementCount(e) - 1 do begin
-		ei := ElementByIndex(e,i);
-		addMessage('Found: ' + name(ei) + ' sig: ' + Signature(ei) + ' name: ' + gev(ei));
-		
-	end;
-	result := True;
+    for i := 0 to ElementCount(e) - 1 do begin
+        ei := ElementByIndex(e,i);
+        addMessage('Found: ' + name(ei) + ' sig: ' + Signature(ei) + ' name: ' + gev(ei));
+        
+    end;
+    result := True;
 end;
 
 function isRefLocation(e: IInterface): Boolean;
 var data: IInterface;
 begin
-	result := false;
+    result := false;
 
-	data := eBySign(e, 'DATA');
-	if (signature(e) = 'REFR') AND ElementExists(data,'Position') then begin
-		result := True;
-		exit;
-	end;
-	
+    data := eBySign(e, 'DATA');
+    if (signature(e) = 'REFR') AND ElementExists(data,'Position') then begin
+        result := True;
+        exit;
+    end;
+    
 end;
 
     

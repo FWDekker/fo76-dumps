@@ -19,10 +19,10 @@ begin
         + ', "Ingredient"'               // Item weight in pounds
         + ', "Keywords"'             // Sorted JSON array of keywords. Each keyword is represented by its editor ID
     );
-	
-	
-	ExportTabularLOC_outputLines := initializeLocationTabular();
-	
+    
+    
+    ExportTabularLOC_outputLines := initializeLocationTabular();
+    
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -41,18 +41,18 @@ begin
     data := eBySign(flora, 'DATA');
 
     ExportTabularFLORA_outputLines.add(
-		  escapeCsvString(getFileName(getFile(flora))) + ', '
+          escapeCsvString(getFileName(getFile(flora))) + ', '
         + escapeCsvString(stringFormID(flora)) + ', '
         + escapeCsvString(evBySign(flora, 'EDID')) + ', '
         + escapeCsvString(evBySign(flora, 'FULL')) + ', '
         + escapeCsvString(evByName(flora, 'PFIG')) + ', '
         + escapeCsvString(getFlatKeywordList(flora))
     );
-	
-	ExportTabularLOC_outputLines.AddStrings(
-		getLocationData(flora)
-	);
-	
+    
+    ExportTabularLOC_outputLines.AddStrings(
+        getLocationData(flora)
+    );
+    
 end;
 
 
@@ -61,8 +61,8 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularFLORA_outputLines.saveToFile('dumps/FLORA.csv');
-	ExportTabularLOC_outputLines.saveToFile('dumps/FLORALOC.csv');
-	ExportTabularLOC_outputLines.free();
+    ExportTabularLOC_outputLines.saveToFile('dumps/FLORALOC.csv');
+    ExportTabularLOC_outputLines.free();
     ExportTabularFLORA_outputLines.free();
 end;
 

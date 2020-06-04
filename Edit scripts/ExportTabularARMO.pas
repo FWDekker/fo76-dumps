@@ -29,10 +29,10 @@ begin
         + ', "Equip slots"'          // Sorted JSON array of equipment slots used by the armor
         + ', "Keywords"'             // Sorted JSON array of keywords. Each keyword is represented by its editor ID
     );
-	
-	
-	ExportTabularLOC_outputLines := initializeLocationTabular();
-	
+    
+    
+    ExportTabularLOC_outputLines := initializeLocationTabular();
+    
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -51,12 +51,12 @@ begin
     data := eBySign(armo, 'DATA');
 
     ExportTabularARMO_outputLines.add(
-		  escapeCsvString(getFileName(getFile(armo))) + ', '
+          escapeCsvString(getFileName(getFile(armo))) + ', '
         + escapeCsvString(stringFormID(armo)) + ', '
         + escapeCsvString(evBySign(armo, 'EDID')) + ', '
         + escapeCsvString(evBySign(armo, 'FULL')) + ', '
         + escapeCsvString(evByName(data, 'Weight')) + ', '
-		+ escapeCsvString(evByName(data, 'Value')) + ', '
+        + escapeCsvString(evByName(data, 'Value')) + ', '
         + escapeCsvString(evByName(data, 'Health')) + ', '
         + escapeCsvString(evBySign(armo, 'RNAM')) + ', '
         + escapeCsvString(getFlatChildList(eBySign(armo, 'EILV'))) + ','
@@ -68,11 +68,11 @@ begin
         + escapeCsvString(getFlatChildNameList(eByIndex(eBySign(armo, 'BOD2'), 0))) + ', '
         + escapeCsvString(getFlatKeywordList(armo))
     );
-	
-	ExportTabularLOC_outputLines.AddStrings(
-		getLocationData(armo)
-	);
-	
+    
+    ExportTabularLOC_outputLines.AddStrings(
+        getLocationData(armo)
+    );
+    
 end;
 
 
@@ -81,8 +81,8 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularARMO_outputLines.saveToFile('dumps/ARMO.csv');
-	ExportTabularLOC_outputLines.saveToFile('dumps/ARMOLOC.csv');
-	ExportTabularLOC_outputLines.free();
+    ExportTabularLOC_outputLines.saveToFile('dumps/ARMOLOC.csv');
+    ExportTabularLOC_outputLines.free();
     ExportTabularARMO_outputLines.free();
 end;
 

@@ -21,7 +21,7 @@ begin
         + ', "Components"' // Sorted JSON array of the components needed to craft. Each component is formatted as
                            // `[component editor id] ([amount])`
     );
-	ExportTabularLOC_outputLines := initializeLocationTabular();
+    ExportTabularLOC_outputLines := initializeLocationTabular();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -45,19 +45,19 @@ begin
         + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Value')) + ', '
         + escapeCsvString(getFlatComponentList(misc))
     );
-	
-	ExportTabularLOC_outputLines.AddStrings(
-		getLocationData(misc)
-	);
-	
+    
+    ExportTabularLOC_outputLines.AddStrings(
+        getLocationData(misc)
+    );
+    
 end;
 
 function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularMISC_outputLines.saveToFile('dumps/MISC.csv');
-	ExportTabularLOC_outputLines.saveToFile('dumps/MISCLOC.csv');
-	ExportTabularLOC_outputLines.free();
+    ExportTabularLOC_outputLines.saveToFile('dumps/MISCLOC.csv');
+    ExportTabularLOC_outputLines.free();
     ExportTabularMISC_outputLines.free();
 end;
 

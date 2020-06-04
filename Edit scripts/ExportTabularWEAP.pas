@@ -29,10 +29,10 @@ begin
         + ', "Equip slots"'          // Sorted JSON array of equipment slots used by the weapr
         + ', "Keywords"'             // Sorted JSON array of keywords. Each keyword is represented by its editor ID
     );
-	
-	
-	ExportTabularLOC_outputLines := initializeLocationTabular();
-	
+    
+    
+    ExportTabularLOC_outputLines := initializeLocationTabular();
+    
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -51,12 +51,12 @@ begin
     data := eBySign(weap, 'DATA');
 
     ExportTabularWEAP_outputLines.add(
-		  escapeCsvString(getFileName(getFile(weap))) + ', '
+          escapeCsvString(getFileName(getFile(weap))) + ', '
         + escapeCsvString(stringFormID(weap)) + ', '
         + escapeCsvString(evBySign(weap, 'EDID')) + ', '
         + escapeCsvString(evBySign(weap, 'FULL')) + ', '
         + escapeCsvString(evByName(data, 'Weight')) + ', '
-		+ escapeCsvString(evByName(data, 'Value')) + ', '
+        + escapeCsvString(evByName(data, 'Value')) + ', '
         + escapeCsvString(evByName(data, 'Health')) + ', '
         + escapeCsvString(evBySign(weap, 'RNAM')) + ', '
         + escapeCsvString(getFlatChildList(eBySign(weap, 'EILV'))) + ','
@@ -68,11 +68,11 @@ begin
         + escapeCsvString(getFlatChildNameList(eByIndex(eBySign(weap, 'BOD2'), 0))) + ', '
         + escapeCsvString(getFlatKeywordList(weap))
     );
-	
-	ExportTabularLOC_outputLines.AddStrings(
-		getLocationData(weap)
-	);
-	
+    
+    ExportTabularLOC_outputLines.AddStrings(
+        getLocationData(weap)
+    );
+    
 end;
 
 
@@ -81,8 +81,8 @@ function finalize: Integer;
 begin
     createDir('dumps/');
     ExportTabularWEAP_outputLines.saveToFile('dumps/WEAP.csv');
-	ExportTabularLOC_outputLines.saveToFile('dumps/WEAPLOC.csv');
-	ExportTabularLOC_outputLines.free();
+    ExportTabularLOC_outputLines.saveToFile('dumps/WEAPLOC.csv');
+    ExportTabularLOC_outputLines.free();
     ExportTabularWEAP_outputLines.free();
 end;
 
