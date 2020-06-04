@@ -4,6 +4,36 @@
 unit ExportFlatList;
 
 
+(**
+ * Returns the leveled list entries of [e] as a comma-separated list of editor IDs.
+ *
+ * @param e the element to return the keywords of
+ * @return the entries of [e] as a comma-separated list
+ *)
+function getFlatLeveledList(e: IInterface): String;
+var i: Integer;
+    reference, quantity, level, entry, entries: IInterface;
+    resultList: TStringList;
+	
+begin
+    resultList := TStringList.create();
+
+    entries := ElementByName(e, 'Leveled List Entries');
+	
+    for i := 0 to eCount(entries) - 1 do begin
+		entry := ElementBySignature(ElementByIndex(entries, i), 'LVLO');
+		reference := ElementByName(entry, 'Reference');
+		level := ElementBySignature(ElementByIndex(entries, i), 'LVLV');
+		quantity := ElementBySignature(ElementByIndex(entries, i), 'LVIV');
+		
+        resultList.add(gev(reference) + ':' + gev(level) + ':' + gev(quantity));
+		
+    end;
+
+    resultList.sort();
+    result := listToJson(resultList);
+    resultList.free();
+end;
 
 (**
  * Returns the keywords of [e] as a comma-separated list of editor IDs.
