@@ -91,6 +91,7 @@ begin
 end;
 
 function finalize: Integer;
+var ExportAll_outputLines: TStringList;
 begin
     ExportTabularARMO.finalize();
     ExportTabularCLAS.finalize();
@@ -108,6 +109,12 @@ begin
     ExportWikiDIAL.finalize();
     ExportWikiNOTE.finalize();
     ExportWikiTERM.finalize();
+
+    createDir('dumps/');
+    ExportAll_outputLines := TStringList.create();
+    ExportAll_outputLines.add('Done');
+    ExportAll_outputLines.saveToFile('dumps/_done.txt');
+    ExportAll_outputLines.free();
 end;
 
 
