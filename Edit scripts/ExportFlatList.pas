@@ -84,7 +84,7 @@ end;
 (**
  * Returns the perks of [e] as a comma-separated list.
  *
- * Each perk is expressed as a pair of the perk's editor ID and the perk's rank, separated by an equals sign.
+ * Each perk is expressed as the perk's editor ID.
  *
  * @param e  the element to return the perks of
  * @return the perks of [e] as a comma-separated list
@@ -100,7 +100,7 @@ begin
     perks := eByPath(e, 'Perks');
     for i := 0 to eCount(perks) - 1 do begin
         perk := eByIndex(perks, i);
-        resultList.add(evBySign(linkByPath(perk, 'Perk'), 'EDID') + '=' + evByPath(perk, 'Rank'));
+        resultList.add(evBySign(linkByPath(perk, 'Perk'), 'EDID'));
     end;
 
     resultList.sort();
