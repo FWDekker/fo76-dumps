@@ -2,7 +2,7 @@ unit ExportTabularCOBJ;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularCOBJ_outputLines: TStringList;
@@ -53,7 +53,7 @@ begin
         + escapeCsvString(ifThen(not assigned(recipe), '', stringFormID(recipe))) + ', '
         + escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'EDID'))) + ', '
         + escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'FULL'))) + ', '
-        + escapeCsvString(getFlatComponentList(cobj))
+        + escapeCsvString(getJsonComponentArray(cobj))
     );
 end;
 

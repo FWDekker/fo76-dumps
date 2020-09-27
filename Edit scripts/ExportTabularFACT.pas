@@ -2,7 +2,7 @@ unit ExportTabularFACT;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularFACT_outputLines: TStringList;

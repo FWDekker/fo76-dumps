@@ -2,7 +2,7 @@ unit ExportTabularMISC;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularMISC_outputLines: TStringList;
@@ -42,7 +42,7 @@ begin
         + escapeCsvString(evBySign(misc, 'FULL')) + ', '
         + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Weight')) + ', '
         + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Value')) + ', '
-        + escapeCsvString(getFlatComponentList(misc))
+        + escapeCsvString(getJsonComponentArray(misc))
     );
 end;
 
@@ -60,7 +60,7 @@ end;
  * @param e  the element to return the components of
  * @return the components of [e] as a comma-separated list of editor IDs and counts
  *)
-function getFlatComponentList(e: IInterface): String;
+function getJsonComponentArray(e: IInterface): String;
 var i: Integer;
     components: IInterface;
     component: IInterface;

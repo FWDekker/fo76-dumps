@@ -2,7 +2,7 @@ unit ExportTabularENTM;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularENTM_outputLines: TStringList;
@@ -47,8 +47,8 @@ begin
         + escapeCsvString(evBySign(entm, 'DESC')) + ', '
         + escapeCsvString(evBySign(entm, 'ETIP')) + ', '
         + escapeCsvString(evBySign(entm, 'ETDI')) + ', '
-        + escapeCsvString(getFlatChildList(eByName(entm, 'Storefront Confirm Image List'))) + ', '
-        + escapeCsvString(getFlatKeywordList(entm))
+        + escapeCsvString(getJsonChildArray(eByName(entm, 'Storefront Confirm Image List'))) + ', '
+        + escapeCsvString(getJsonKeywordArray(entm))
     );
 end;
 

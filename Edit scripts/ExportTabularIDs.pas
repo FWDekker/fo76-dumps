@@ -2,7 +2,7 @@ unit ExportTabularIDs;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList,
+     ExportJson,
      ExportLargeFile;
 
 
@@ -43,7 +43,7 @@ begin
         + escapeCsvString(stringFormID(e)) + ', '
         + escapeCsvString(evBySign(e, 'EDID')) + ', '
         + escapeCsvString(evBySign(e, 'FULL')) + ', '
-        + escapeCsvString(getFlatKeywordList(e))
+        + escapeCsvString(getJsonKeywordArray(e))
     );
 end;
 

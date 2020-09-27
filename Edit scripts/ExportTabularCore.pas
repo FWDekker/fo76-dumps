@@ -28,27 +28,5 @@ begin
     result := stringReplace(text, '"', '\"', [rfReplaceAll]);
 end;
 
-(**
- * Flattens the string into a JSON array string.
- *
- * @param list  the list to convert to a JSON array string
- * @return a JSON-escapes version of [list]
- *)
-function listToJson(list: TStringList): String;
-var i: Integer;
-begin
-    if list.count = 0 then begin
-        result := '[]';
-        exit;
-    end;
-
-    result := '"' + list[0] + '"';
-    for i := 1 to list.count - 1 do begin
-        result := result + ',"' + list[i] + '"';
-    end;
-
-    result := '[' + result + ']';
-end;
-
 
 end.

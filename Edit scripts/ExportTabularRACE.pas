@@ -2,7 +2,7 @@ unit ExportTabularRACE;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularRACE_outputLines: TStringList;
@@ -47,8 +47,8 @@ begin
         + escapeCsvString(stringFormID(race)) + ', '
         + escapeCsvString(evBySign(race, 'EDID')) + ', '
         + escapeCsvString(evBySign(race, 'FULL')) + ', '
-        + escapeCsvString(getFlatKeywordList(race)) + ', '
-        + escapeCsvString(getFlatPropertyList(race))
+        + escapeCsvString(getJsonKeywordArray(race)) + ', '
+        + escapeCsvString(getJsonPropertyArray(race))
     );
 end;
 

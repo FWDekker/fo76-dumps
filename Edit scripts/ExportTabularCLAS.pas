@@ -2,7 +2,7 @@ unit ExportTabularCLAS;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularCLAS_outputLines: TStringList;
@@ -46,7 +46,7 @@ begin
         + escapeCsvString(stringFormID(clas)) + ', '
         + escapeCsvString(evBySign(clas, 'EDID')) + ', '
         + escapeCsvString(evBySign(clas, 'FULL')) + ', '
-        + escapeCsvString(getFlatPropertyList(clas))
+        + escapeCsvString(getJsonPropertyArray(clas))
     );
 end;
 
