@@ -5,14 +5,16 @@ uses ExportCore,
      ExportLargeFile;
 
 
-var ExportWikiTERM_outputLines: TStringList;
-var ExportWikiTERM_filePartSize: Integer;
+var ExportWikiTERM_buffer: TStringList;
+var ExportWikiTERM_size: Integer;
+var ExportWikiTERM_maxSize: Integer;
 
 
 function initialize: Integer;
 begin
-    ExportWikiTERM_outputLines := TStringList.create();
-    ExportWikiTERM_filePartSize := 500000;
+    ExportWikiTERM_buffer := TStringList.create();
+    ExportWikiTERM_size := 0;
+    ExportWikiTERM_maxSize := 10000000;
 
     createDir('dumps/');
     clearLargeFiles('dumps/TERM.wiki');
@@ -42,7 +44,7 @@ begin
         contents := '' + #10 + contents + #10 + #10;
     end;
 
-    appendLargeFile('dumps/TERM.wiki', ExportWikiTERM_outputLines, ExportWikiTERM_filePartSize,
+    appendLargeFile('dumps/TERM.wiki', ExportWikiTERM_buffer, ExportWikiTERM_size, ExportWikiTERM_maxSize,
           '==[' + getFileName(getFile(term)) + '] ' + evBySign(term, 'FULL') + ' (' + stringFormID(term) + ')==' + #10
         + '{{Transcript|text=' + #10
         + 'Welcome to ROBCO Industries (TM) Termlink' + #10
@@ -54,8 +56,8 @@ end;
 
 function finalize: Integer;
 begin
-    flushLargeFile('dumps/TERM.wiki', ExportWikiTERM_outputLines);
-    freeLargeFile(ExportWikiTERM_outputLines);
+    flushLargeFile('dumps/TERM.wiki', ExportWikiTERM_buffer);
+    freeLargeFile(ExportWikiTERM_buffer);
 end;
 
 

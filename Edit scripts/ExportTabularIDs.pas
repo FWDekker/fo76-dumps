@@ -6,19 +6,21 @@ uses ExportCore,
      ExportLargeFile;
 
 
-var ExportTabularIDs_outputLines: TStringList;
-var ExportTabularIDs_filePartSize: Integer;
+var ExportTabularIDs_buffer: TStringList;
+var ExportTabularIDs_size: Integer;
+var ExportTabularIDs_maxSize: Integer;
 
 
 function initialize: Integer;
 begin
-    ExportTabularIDs_outputLines := TStringList.create();
-    ExportTabularIDs_filePartSize := 500000;
+    ExportTabularIDs_buffer := TStringList.create();
+    ExportTabularIDs_size := 0;
+    ExportTabularIDs_maxSize := 10000000;
 
     createDir('dumps/');
     clearLargeFiles('dumps/IDs.csv');
 
-    appendLargeFile('dumps/IDs.csv', ExportTabularIDs_outputLines, ExportTabularIDs_filePartSize,
+    appendLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer, ExportTabularIDs_size, ExportTabularIDs_maxSize,
             '"File"'      // Name of the originating ESM
         + ', "Signature"' // Signature
         + ', "Form ID"'   // Form ID
@@ -35,7 +37,7 @@ end;
 
 function process(e: IInterface): Integer;
 begin
-    appendLargeFile('dumps/IDs.csv', ExportTabularIDs_outputLines, ExportTabularIDs_filePartSize,
+    appendLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer, ExportTabularIDs_size, ExportTabularIDs_maxSize,
           escapeCsvString(getFileName(getFile(e))) + ', '
         + escapeCsvString(signature(e)) + ', '
         + escapeCsvString(stringFormID(e)) + ', '
@@ -47,8 +49,8 @@ end;
 
 function finalize: Integer;
 begin
-    flushLargeFile('dumps/IDs.csv', ExportTabularIDs_outputLines);
-    freeLargeFile(ExportTabularIDs_outputLines);
+    flushLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer);
+    freeLargeFile(ExportTabularIDs_buffer);
 end;
 
 
