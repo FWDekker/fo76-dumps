@@ -107,24 +107,34 @@ function getJsonRelationArray(fact: IInterface): String;
 var i: Integer;
     relations: IInterface;
     relation: IInterface;
+    relationKeys: TStringList;
+    relationValues: TStringList;
     relationFaction: IInterface;
     resultList: TStringList;
 begin
     resultList := TStringList.create();
+    relationKeys := TStringList.create();
+    relationValues := TStringList.create();
+
+    relationKeys.add('Faction');
+    relationKeys.add('Reaction');
 
     relations := eByPath(fact, 'Relations');
     for i := 0 to eCount(relations) - 1 do begin
         relation := eByIndex(relations, i);
         relationFaction := linksTo(eByPath(relation, 'Faction'));
-        resultList.add(
-              evBySign(relationFaction, 'EDID')
-            + ' (' + stringFormID(relationFaction) + ')'
-            + ' (' + evByPath(relation, 'Group Combat Reaction') + ')'
-        );
+
+        relationValues.clear();
+        relationValues.add(evByPath(relation, 'Faction'));
+        relationValues.add(evByPath(relation, 'Group Combat Reaction'));
+        resultList.add(listsToJsonObject(relationKeys, relationValues, false));
     end;
 
     resultList.sort();
-    result := stringListToJsonArray(resultList);
+    result := listToJsonArray(resultList);
+
+    relationValues.free();
+    relationKeys.free();
     resultList.free();
 end;
 
