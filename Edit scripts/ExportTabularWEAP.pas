@@ -8,31 +8,30 @@ uses ExportCore,
 var ExportTabularWEAP_outputLines: TStringList;
 var ExportTabularLOC_outputLines: TStringList;
 
-function initialize: Integer;
+
+function initialize(): Integer;
 begin
     ExportTabularWEAP_outputLines := TStringList.create();
     ExportTabularWEAP_outputLines.add(
-            '"File"'                 // Name of the originating ESM
-        + ', "Form ID"'              // Form ID
-        + ', "Editor ID"'            // Editor ID
-        + ', "Name"'                 // Full name
-        + ', "Weight"'               // Item weight in pounds
-        + ', "Value"'                // Item value in bottlecaps
-        + ', "Health"'               // Item health in points
-        + ', "Race"'                 // The race that can wear this weapr
-        + ', "Levels"'               // Sorted JSON array of possible weapr levels
-        + ', "DR curve"'             // Damage Resistance curve
-        + ', "Durability min curve"' // Min durability curve
-        + ', "Durability max curve"' // Max durability curve
-        + ', "Condition dmg curve"'  // Condition damage scale factor curve
-        + ', "Attach slots"'         // Sorted JSON array of attachment slots available to the weapr
-        + ', "Equip slots"'          // Sorted JSON array of equipment slots used by the weapr
-        + ', "Keywords"'             // Sorted JSON array of keywords. Each keyword is represented by its editor ID
+            '"File"'                  // Name of the originating ESM
+        + ', "Form ID"'               // Form ID
+        + ', "Editor ID"'             // Editor ID
+        + ', "Name"'                  // Full name
+        + ', "Weight"'                // Item weight in pounds
+        + ', "Value"'                 // Item value in bottlecaps
+        + ', "Health"'                // Item health in points
+        + ', "Race"'                  // Race that can equip this weapon
+        + ', "Levels"'                // Sorted JSON array of possible weapon levels
+        + ', "DR curve"'              // Damage Resistance curve
+        + ', "Durability min curve"'  // Min durability curve
+        + ', "Durability max curve"'  // Max durability curve
+        + ', "Condition dmg curve"'   // Condition damage scale factor curve
+        + ', "Attach slots"'          // Sorted JSON array of attachment slots available to the weapon
+        + ', "Equip slots"'           // Sorted JSON array of equipment slots used by the weapon
+        + ', "Keywords"'              // Sorted JSON array of keywords. Each keyword is represented by its editor ID
     );
-    
-    
+
     ExportTabularLOC_outputLines := initializeLocationTabular();
-    
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -44,7 +43,7 @@ function process(weap: IInterface): Integer;
 var data: IInterface;
 begin
     if not canProcess(weap) then begin
-        addMessage('Warning: ' + name(weap) + ' is not a WEAP. Entry was ignored.');
+        addWarning(name(weap) + ' is not a WEAP. Entry was ignored.');
         exit;
     end;
 
@@ -59,25 +58,20 @@ begin
         + escapeCsvString(evByName(data, 'Value')) + ', '
         + escapeCsvString(evByName(data, 'Health')) + ', '
         + escapeCsvString(evBySign(weap, 'RNAM')) + ', '
-        + escapeCsvString(getFlatChildList(eBySign(weap, 'EILV'))) + ','
+        + escapeCsvString(getJsonChildArray(eBySign(weap, 'EILV'))) + ','
         + escapeCsvString(evBySign(weap, 'CVT0')) + ','
         + escapeCsvString(evBySign(weap, 'CVT1')) + ','
         + escapeCsvString(evBySign(weap, 'CVT3')) + ','
         + escapeCsvString(evBySign(weap, 'CVT2')) + ','
-        + escapeCsvString(getFlatChildList(eBySign(weap, 'APPR'))) + ','
-        + escapeCsvString(getFlatChildNameList(eByIndex(eBySign(weap, 'BOD2'), 0))) + ', '
-        + escapeCsvString(getFlatKeywordList(weap))
+        + escapeCsvString(getJsonChildArray(eBySign(weap, 'APPR'))) + ','
+        + escapeCsvString(getJsonChildNameArray(eByIndex(eBySign(weap, 'BOD2'), 0))) + ', '
+        + escapeCsvString(getJsonKeywordArray(weap))
     );
-    
-    ExportTabularLOC_outputLines.AddStrings(
-        getLocationData(weap)
-    );
-    
+
+    ExportTabularLOC_outputLines.AddStrings(getLocationData(weap));
 end;
 
-
-
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularWEAP_outputLines.saveToFile('dumps/WEAP.csv');

@@ -12,11 +12,11 @@ function initialize: Integer;
 begin
     ExportTabularCLAS_outputLines := TStringList.create();
     ExportTabularCLAS_outputLines.add(
-            '"File"'       // Name of the originating ESM
-        + ', "Form ID"'    // Form ID
-        + ', "Editor ID"'  // Editor ID
-        + ', "Name"'       // Full name
-        + ', "Properties"' // Sorted JSON array of properties. Each property is formatted as `[key]=[value]`
+            '"File"'        // Name of the originating ESM
+        + ', "Form ID"'     // Form ID
+        + ', "Editor ID"'   // Editor ID
+        + ', "Name"'        // Full name
+        + ', "Properties"'  // Sorted JSON object of properties
     );
 end;
 
@@ -46,7 +46,7 @@ begin
         + escapeCsvString(stringFormID(clas)) + ', '
         + escapeCsvString(evBySign(clas, 'EDID')) + ', '
         + escapeCsvString(evBySign(clas, 'FULL')) + ', '
-        + escapeCsvString(getJsonPropertyArray(clas))
+        + escapeCsvString(getJsonPropertyObject(clas))
     );
 end;
 

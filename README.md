@@ -23,12 +23,15 @@ For more information on how to browse them, check [the wiki page](https://github
 | [`ExportTabularCOBJ.pas`](Edit%20scripts/ExportTabularCOBJ.pas) | `COBJ.csv` | Craftable object recipes and components          |
 | [`ExportTabularENTM.pas`](Edit%20scripts/ExportTabularENTM.pas) | `ENTM.csv` | Atomic Shop unlockables                          |
 | [`ExportTabularFACT.pas`](Edit%20scripts/ExportTabularFACT.pas) | `FACT.csv` | Factions and vendors                             |
+| [`ExportTabularFLOR.pas`](Edit%20scripts/ExportTabularFLOR.pas) | `FLOR.csv` | Harvestable plants                               |
 | [`ExportTabularGLOB.pas`](Edit%20scripts/ExportTabularGLOB.pas) | `GLOB.csv` | Global variables                                 |
 | [`ExportTabularGMST.pas`](Edit%20scripts/ExportTabularGMST.pas) | `GMST.csv` | Game settings                                    |
+| [`ExportTabularLVLI.pas`](Edit%20scripts/ExportTabularLVLI.pas) | `LVLI.csv` | Leveled lists                                    |
 | [`ExportTabularMISC.pas`](Edit%20scripts/ExportTabularMISC.pas) | `MISC.csv` | Inventory item weights, values, and scrap yields |
 | [`ExportTabularNPC_.pas`](Edit%20scripts/ExportTabularNPC_.pas) | `NPC_.csv` | NPC factions, keywords, stats, etc.              |
 | [`ExportTabularOTFT.pas`](Edit%20scripts/ExportTabularOTFT.pas) | `OTFT.csv` | Outfits                                          |
 | [`ExportTabularRACE.pas`](Edit%20scripts/ExportTabularRACE.pas) | `RACE.csv` | Race keywords and properties                     |
+| [`ExportTabularWEAP.pas`](Edit%20scripts/ExportTabularWEAP.pas) | `WEAP.csv` | Weapons                                          |
 
   </p>
 </details>

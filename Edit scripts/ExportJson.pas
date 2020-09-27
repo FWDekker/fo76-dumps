@@ -57,7 +57,7 @@ function stringListToJsonArray(list: TStringList): String;
 var i: Integer;
 begin
     for i := 0 to list.count - 1 do begin
-        list[i] = '"' + escapeQuotes(list[i]) + '"';
+        list[i] := '"' + escapeQuotes(list[i]) + '"';
     end;
     result := listToJsonArray(list);
 end;

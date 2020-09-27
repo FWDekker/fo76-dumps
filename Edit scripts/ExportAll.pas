@@ -8,13 +8,16 @@ uses ExportTabularARMO,
      ExportTabularCOBJ,
      ExportTabularENTM,
      ExportTabularFACT,
+     ExportTabularFLOR,
      ExportTabularGLOB,
      ExportTabularGMST,
      ExportTabularIDs,
+     ExportTabularLVLI,
      ExportTabularMISC,
      ExportTabularNPC_,
      ExportTabularOTFT,
      ExportTabularRACE,
+     ExportTabularWEAP,
      ExportWikiBOOK,
      ExportWikiDIAL,
      ExportWikiNOTE,
@@ -42,18 +45,21 @@ begin
         form.caption := 'Select dump scripts';
 
         clb := TCheckListBox(form.findComponent('CheckListBox1'));
-        clb.items.add('IDs.csv');
         clb.items.add('ARMO.csv');
         clb.items.add('CLAS.csv');
         clb.items.add('COBJ.csv');
         clb.items.add('ENTM.csv');
         clb.items.add('FACT.csv');
+        clb.items.add('FLOR.csv');
         clb.items.add('GLOB.csv');
         clb.items.add('GMST.csv');
+        clb.items.add('IDs.csv');
+        clb.items.add('LVLI.csv');
         clb.items.add('MISC.csv');
         clb.items.add('NPC_.csv');
         clb.items.add('OTFT.csv');
         clb.items.add('RACE.csv');
+        clb.items.add('WEAP.csv');
         clb.items.add('BOOK.wiki');
         clb.items.add('DIAL.wiki');
         clb.items.add('NOTE.wiki');
@@ -111,6 +117,9 @@ begin
     if _hasSelectedDump('FACT.csv') then begin
         ExportTabularFACT.initialize();
     end;
+    if _hasSelectedDump('FLOR.csv') then begin
+        ExportTabularFLOR.initialize();
+    end;
     if _hasSelectedDump('GLOB.csv') then begin
         ExportTabularGLOB.initialize();
     end;
@@ -119,6 +128,9 @@ begin
     end;
     if _hasSelectedDump('IDs.csv') then begin
         ExportTabularIDs.initialize();
+    end;
+    if _hasSelectedDump('LVLI.csv') then begin
+        ExportTabularLVLI.initialize();
     end;
     if _hasSelectedDump('MISC.csv') then begin
         ExportTabularMISC.initialize();
@@ -131,6 +143,9 @@ begin
     end;
     if _hasSelectedDump('RACE.csv') then begin
         ExportTabularRACE.initialize();
+    end;
+    if _hasSelectedDump('WEAP.csv') then begin
+        ExportTabularWEAP.initialize();
     end;
     if _hasSelectedDump('BOOK.wiki') then begin
         ExportWikiBOOK.initialize();
@@ -163,6 +178,9 @@ begin
     if _hasSelectedDump('FACT.csv') and ExportTabularFACT.canProcess(e) then begin
         ExportTabularFACT.process(e);
     end;
+    if _hasSelectedDump('FLOR.csv') and ExportTabularFLOR.canProcess(e) then begin
+        ExportTabularFLOR.process(e);
+    end;
     if _hasSelectedDump('GLOB.csv') and ExportTabularGLOB.canProcess(e) then begin
         ExportTabularGLOB.process(e);
     end;
@@ -171,6 +189,9 @@ begin
     end;
     if _hasSelectedDump('IDs.csv') and ExportTabularIDs.canProcess(e) then begin
         ExportTabularIDs.process(e);
+    end;
+    if _hasSelectedDump('LVLI.csv') and ExportTabularLVLI.canProcess(e) then begin
+        ExportTabularLVLI.process(e);
     end;
     if _hasSelectedDump('MISC.csv') and ExportTabularMISC.canProcess(e) then begin
         ExportTabularMISC.process(e);
@@ -183,6 +204,9 @@ begin
     end;
     if _hasSelectedDump('RACE.csv') and ExportTabularRACE.canProcess(e) then begin
         ExportTabularRACE.process(e);
+    end;
+    if _hasSelectedDump('WEAP.csv') and ExportTabularWEAP.canProcess(e) then begin
+        ExportTabularWEAP.process(e);
     end;
     if _hasSelectedDump('BOOK.wiki') and ExportWikiBOOK.canProcess(e) then begin
         ExportWikiBOOK.process(e);
@@ -216,6 +240,9 @@ begin
     if _hasSelectedDump('FACT.csv') then begin
         ExportTabularFACT.finalize();
     end;
+    if _hasSelectedDump('FLOR.csv') then begin
+        ExportTabularFLOR.finalize();
+    end;
     if _hasSelectedDump('GLOB.csv') then begin
         ExportTabularGLOB.finalize();
     end;
@@ -224,6 +251,9 @@ begin
     end;
     if _hasSelectedDump('IDs.csv') then begin
         ExportTabularIDs.finalize();
+    end;
+    if _hasSelectedDump('LVLI.csv') then begin
+        ExportTabularLVLI.finalize();
     end;
     if _hasSelectedDump('MISC.csv') then begin
         ExportTabularMISC.finalize();
@@ -236,6 +266,9 @@ begin
     end;
     if _hasSelectedDump('RACE.csv') then begin
         ExportTabularRACE.finalize();
+    end;
+    if _hasSelectedDump('WEAP.csv') then begin
+        ExportTabularWEAP.finalize();
     end;
     if _hasSelectedDump('BOOK.wiki') then begin
         ExportWikiBOOK.finalize();

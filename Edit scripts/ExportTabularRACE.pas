@@ -12,12 +12,12 @@ function initialize: Integer;
 begin
     ExportTabularRACE_outputLines := TStringList.create();
     ExportTabularRACE_outputLines.add(
-            '"File"'       // Name of the originating ESM
-        + ', "Form ID"'    // Form ID
-        + ', "Editor ID"'  // Editor ID
-        + ', "Name"'       // Full name
-        + ', "Keywords"'   // Sorted JSON array of keywords. Each keyword is represented by its editor ID
-        + ', "Properties"' // Sorted JSON array of properties. Each property is formatted as `[editor id]=[value]`
+            '"File"'        // Name of the originating ESM
+        + ', "Form ID"'     // Form ID
+        + ', "Editor ID"'   // Editor ID
+        + ', "Name"'        // Full name
+        + ', "Keywords"'    // Sorted JSON array of keywords. Each keyword is represented by its editor ID
+        + ', "Properties"'  // Sorted JSON object of properties
     );
 end;
 
@@ -48,7 +48,7 @@ begin
         + escapeCsvString(evBySign(race, 'EDID')) + ', '
         + escapeCsvString(evBySign(race, 'FULL')) + ', '
         + escapeCsvString(getJsonKeywordArray(race)) + ', '
-        + escapeCsvString(getJsonPropertyArray(race))
+        + escapeCsvString(getJsonPropertyObject(race))
     );
 end;
 

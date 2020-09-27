@@ -53,7 +53,7 @@ function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularLVLI_outputLines.saveToFile('dumps/LVLI.csv');
-    ExportTabularLOC_outputLines.saveToFile('dumps/LVLILOC.csv');
+    ExportTabularLOC_outputLines.saveToFile('dumps/LVLI_LOC.csv');
     ExportTabularLOC_outputLines.free();
     ExportTabularLVLI_outputLines.free();
 end;
