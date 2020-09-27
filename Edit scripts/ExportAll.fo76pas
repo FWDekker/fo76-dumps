@@ -1,120 +1,24 @@
-unit ExportAll;
+(**
+ * Exposes `ExportAll` to be run by double-clicking it.
+ *)
+unit ExportAllX;
 
-uses ExportTabularARMO,
-     ExportTabularCLAS,
-     ExportTabularCOBJ,
-     ExportTabularENTM,
-     ExportTabularFACT,
-     ExportTabularGLOB,
-     ExportTabularGMST,
-     ExportTabularIDs,
-     ExportTabularMISC,
-     ExportTabularNPC_,
-     ExportTabularOTFT,
-     ExportTabularRACE,
-     ExportWikiBOOK,
-     ExportWikiDIAL,
-     ExportWikiNOTE,
-     ExportWikiTERM;
+uses ExportAll;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
-    ExportTabularARMO.initialize();
-    ExportTabularCLAS.initialize();
-    ExportTabularCOBJ.initialize();
-    ExportTabularENTM.initialize();
-    ExportTabularFACT.initialize();
-    ExportTabularGLOB.initialize();
-    ExportTabularGMST.initialize();
-    ExportTabularIDs.initialize();
-    ExportTabularMISC.initialize();
-    ExportTabularNPC_.initialize();
-    ExportTabularOTFT.initialize();
-    ExportTabularRACE.initialize();
-    ExportWikiBOOK.initialize();
-    ExportWikiDIAL.initialize();
-    ExportWikiNOTE.initialize();
-    ExportWikiTERM.initialize();
+    ExportAll.initialize();
 end;
 
 function process(e: IInterface): Integer;
 begin
-    if ExportTabularARMO.canProcess(e) then begin
-        ExportTabularARMO.process(e);
-    end;
-    if ExportTabularCLAS.canProcess(e) then begin
-        ExportTabularCLAS.process(e);
-    end;
-    if ExportTabularCOBJ.canProcess(e) then begin
-        ExportTabularCOBJ.process(e);
-    end;
-    if ExportTabularENTM.canProcess(e) then begin
-        ExportTabularENTM.process(e);
-    end;
-    if ExportTabularFACT.canProcess(e) then begin
-        ExportTabularFACT.process(e);
-    end;
-    if ExportTabularGLOB.canProcess(e) then begin
-        ExportTabularGLOB.process(e);
-    end;
-    if ExportTabularGMST.canProcess(e) then begin
-        ExportTabularGMST.process(e);
-    end;
-    if ExportTabularIDs.canProcess(e) then begin
-        ExportTabularIDs.process(e);
-    end;
-    if ExportTabularMISC.canProcess(e) then begin
-        ExportTabularMISC.process(e);
-    end;
-    if ExportTabularNPC_.canProcess(e) then begin
-        ExportTabularNPC_.process(e);
-    end;
-    if ExportTabularOTFT.canProcess(e) then begin
-        ExportTabularOTFT.process(e);
-    end;
-    if ExportTabularRACE.canProcess(e) then begin
-        ExportTabularRACE.process(e);
-    end;
-    if ExportWikiBOOK.canProcess(e) then begin
-        ExportWikiBOOK.process(e);
-    end;
-    if ExportWikiDIAL.canProcess(e) then begin
-        ExportWikiDIAL.process(e);
-    end;
-    if ExportWikiNOTE.canProcess(e) then begin
-        ExportWikiNOTE.process(e);
-    end;
-    if ExportWikiTERM.canProcess(e) then begin
-        ExportWikiTERM.process(e);
-    end;
+    ExportAll.process(e);
 end;
 
-function finalize: Integer;
-var ExportAll_outputLines: TStringList;
+function finalize(): Integer;
 begin
-    ExportTabularARMO.finalize();
-    ExportTabularCLAS.finalize();
-    ExportTabularCOBJ.finalize();
-    ExportTabularENTM.finalize();
-    ExportTabularFACT.finalize();
-    ExportTabularGLOB.finalize();
-    ExportTabularGMST.finalize();
-    ExportTabularIDs.finalize();
-    ExportTabularMISC.finalize();
-    ExportTabularNPC_.finalize();
-    ExportTabularOTFT.finalize();
-    ExportTabularRACE.finalize();
-    ExportWikiBOOK.finalize();
-    ExportWikiDIAL.finalize();
-    ExportWikiNOTE.finalize();
-    ExportWikiTERM.finalize();
-
-    createDir('dumps/');
-    ExportAll_outputLines := TStringList.create();
-    ExportAll_outputLines.add('Done');
-    ExportAll_outputLines.saveToFile('dumps/_done.txt');
-    ExportAll_outputLines.free();
+    ExportAll.finalize();
 end;
 
 

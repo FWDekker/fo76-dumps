@@ -51,10 +51,6 @@ end;
  *)
 procedure flushLargeFile(filename: String; buffer: TStringList; var size: Integer);
 begin
-    if buffer.count = 0 then begin
-        exit;
-    end;
-
     buffer.saveToFile(_findFreeLargeFile(filename));
     buffer.clear();
     size := 0;
