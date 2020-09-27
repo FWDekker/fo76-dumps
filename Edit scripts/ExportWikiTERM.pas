@@ -56,7 +56,7 @@ end;
 
 function finalize: Integer;
 begin
-    flushLargeFile('dumps/TERM.wiki', ExportWikiTERM_buffer);
+    flushLargeFile('dumps/TERM.wiki', ExportWikiTERM_buffer, ExportWikiTERM_size);
     freeLargeFile(ExportWikiTERM_buffer);
 end;
 

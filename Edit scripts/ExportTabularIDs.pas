@@ -49,7 +49,7 @@ end;
 
 function finalize: Integer;
 begin
-    flushLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer);
+    flushLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer, ExportTabularIDs_size);
     freeLargeFile(ExportTabularIDs_buffer);
 end;
 

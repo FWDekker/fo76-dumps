@@ -49,7 +49,7 @@ end;
  * @param size     the current size of the buffer; updated automatically by this function
  * @see appendLargeFile
  *)
-procedure flushLargeFile(filename: String; buffer: TStringList, var size: Integer);
+procedure flushLargeFile(filename: String; buffer: TStringList; var size: Integer);
 begin
     if buffer.count = 0 then begin
         exit;
