@@ -9,8 +9,8 @@ uses ExportCore;
 (**
  * Returns a wiki-style section header.
  *
- * @param text  the name of the section header
- * @param depth the depth of the section header, where 0 is the default level
+ * @param text   the name of the section header
+ * @param depth  the depth of the section header, where 0 is the default level
  * @return a wiki-style section header
  *)
 function createWikiHeader(text: String; depth: Integer): String;
@@ -21,7 +21,7 @@ end;
 (**
  * Escapes a selection of HTML symbols.
  *
- * @param text the text to escape
+ * @param text  the text to escape
  * @return an HTML-escaped version of [text]
  *)
 function escapeHTML(text: String): String;
@@ -34,7 +34,7 @@ end;
 (**
  * Escapes a selection of MediaWiki symbols after applying `escapeHTML`.
  *
- * @param text the text to escape
+ * @param text  the text to escape
  * @return a MediaWiki-escaped version of [text]
  *)
 function escapeWiki(text: String): String;

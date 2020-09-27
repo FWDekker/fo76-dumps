@@ -68,7 +68,7 @@ begin
         exit;
     end;
 
-    result := result
+    result := ''
         + '==[' + getFileName(getFile(quest)) + '] ' + evBySign(quest, 'EDID')
             + ' (' + stringFormID(quest) + ')==' + #10
         + '{|class="va-table va-table-full np-table-dialogue"' + #10
@@ -138,7 +138,7 @@ begin
                 end;
                 result := result
                     + '| ' + escapeHTML(trim(evBySign(response, 'NAM1'))) + #10
-                    + '| ''''' + escapeHTML(trim(evBySign(response, 'NAM2'))) + '''''' + #10
+                    + '| ' + surroundIfNotEmpty(escapeHTML(trim(evBySign(response, 'NAM2'))), '''''', '''''') + #10
                     + '' + #10;
 
                 linkable := linkable + 1;

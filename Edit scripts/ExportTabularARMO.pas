@@ -2,7 +2,7 @@ unit ExportTabularARMO;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularARMO_outputLines: TStringList;
@@ -44,7 +44,7 @@ function process(armo: IInterface): Integer;
 var data: IInterface;
 begin
     if not canProcess(armo) then begin
-        addMessage('Warning: ' + name(armo) + ' is not a ARMO. Entry was ignored.');
+        addWarning(name(armo) + ' is not an ARMO. Entry was ignored.');
         exit;
     end;
 
@@ -59,14 +59,14 @@ begin
         + escapeCsvString(evByName(data, 'Value')) + ', '
         + escapeCsvString(evByName(data, 'Health')) + ', '
         + escapeCsvString(evBySign(armo, 'RNAM')) + ', '
-        + escapeCsvString(getFlatChildList(eBySign(armo, 'EILV'))) + ','
+        + escapeCsvString(getJsonChildArray(eBySign(armo, 'EILV'))) + ','
         + escapeCsvString(evBySign(armo, 'CVT0')) + ','
         + escapeCsvString(evBySign(armo, 'CVT1')) + ','
         + escapeCsvString(evBySign(armo, 'CVT3')) + ','
         + escapeCsvString(evBySign(armo, 'CVT2')) + ','
-        + escapeCsvString(getFlatChildList(eBySign(armo, 'APPR'))) + ','
-        + escapeCsvString(getFlatChildNameList(eByIndex(eBySign(armo, 'BOD2'), 0))) + ', '
-        + escapeCsvString(getFlatKeywordList(armo))
+        + escapeCsvString(getJsonChildArray(eBySign(armo, 'APPR'))) + ','
+        + escapeCsvString(getJsonChildNameArray(eByIndex(eBySign(armo, 'BOD2'), 0))) + ', '
+        + escapeCsvString(getJsonKeywordArray(armo))
     );
     
     ExportTabularLOC_outputLines.AddStrings(

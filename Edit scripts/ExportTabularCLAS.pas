@@ -2,7 +2,7 @@ unit ExportTabularCLAS;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularCLAS_outputLines: TStringList;
@@ -32,7 +32,7 @@ var acbs: IInterface;
     cnam: IInterface;
 begin
     if not canProcess(clas) then begin
-        addMessage('Warning: ' + name(clas) + ' is not a CLAS. Entry was ignored.');
+        addWarning(name(clas) + ' is not a CLAS. Entry was ignored.');
         exit;
     end;
 
@@ -46,7 +46,7 @@ begin
         + escapeCsvString(stringFormID(clas)) + ', '
         + escapeCsvString(evBySign(clas, 'EDID')) + ', '
         + escapeCsvString(evBySign(clas, 'FULL')) + ', '
-        + escapeCsvString(getFlatPropertyList(clas))
+        + escapeCsvString(getJsonPropertyArray(clas))
     );
 end;
 

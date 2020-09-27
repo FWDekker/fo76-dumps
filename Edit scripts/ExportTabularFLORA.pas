@@ -2,7 +2,7 @@ unit ExportTabularFLORA;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularFLORA_outputLines: TStringList;

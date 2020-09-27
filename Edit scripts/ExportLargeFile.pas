@@ -8,7 +8,7 @@ unit ExportLargeFile;
 (**
  * Deletes files `[filename].001` through `[filename].999`.
  *
- * @param filename the prefix of the files to delete
+ * @param filename  the prefix of the files to delete
  *)
 procedure clearLargeFiles(filename: String);
 var i: Integer;
@@ -19,53 +19,58 @@ begin
 end;
 
 (**
- * Appends [text] to [filename] while using [lines] as a buffer to write in chunks of [maxSize] lines.
+ * Appends [text] to [filename] while using [buffer] to write in chunks of [maxSize] lines.
  *
  * The first chunk is written to `[filename].001`, the second to `[filename].002`, and so on.
  *
- * @param filename the prefix of the file to write to
- * @param lines    the line buffer
- * @param maxSize  the maximum size of a chunk before the buffer should be flushed
- * @param text     the new line to add
+ * @param filename  the prefix of the file to write to
+ * @param buffer    the line buffer
+ * @param size      the current size of the buffer; updated automatically by this function
+ * @param maxSize   the maximum size of a chunk in bytes before the buffer should be flushed
+ * @param text      the new line to add
  *)
-procedure appendLargeFile(filename: String; lines: TStringList; maxSize: Integer; text: String);
+procedure appendLargeFile(filename: String; buffer: TStringList; var size: Integer; maxSize: Integer; text: String);
 begin
-    lines.add(text);
+    buffer.add(text);
+    size := size + length(text) + 1;
 
-    if lines.count >= maxSize then begin
-        lines.saveToFile(_findFreeLargeFile(filename));
-        lines.clear();
+    if size >= maxSize then begin
+        buffer.saveToFile(_findFreeLargeFile(filename));
+        buffer.clear();
+        size := 0;
     end;
 end;
 
 (**
- * Flushes the line buffer [lines] to a [filename] part even if the buffer is not file.
+ * Flushes [buffer] to a [filename] part even if the buffer is not full.
  *
- * @param filename the prefix of the file to write to
- * @param lines    the line buffer
+ * @param filename  the prefix of the file to write to
+ * @param buffer    the line buffer
+ * @param size      the current size of the buffer; updated automatically by this function
  * @see appendLargeFile
  *)
-procedure flushLargeFile(filename: String; lines: TStringList);
+procedure flushLargeFile(filename: String; buffer: TStringList; var size: Integer);
 begin
-    lines.saveToFile(_findFreeLargeFile(filename));
-    lines.clear();
+    buffer.saveToFile(_findFreeLargeFile(filename));
+    buffer.clear();
+    size := 0;
 end;
 
 (**
- * Frees the line buffer [lines] from memory.
+ * Frees the line buffer [buffer] from memory.
  *
- * @param lines the line buffer to free
+ * @param buffer  the line buffer to free
  * @see appendLargeFile
  *)
-procedure freeLargeFile(lines: TStringList);
+procedure freeLargeFile(buffer: TStringList);
 begin
-    lines.free();
+    buffer.free();
 end;
 
 (**
  * Determines the first filename part that does not exist.
  *
- * @param filename the prefix of the file to find
+ * @param filename  the prefix of the file to find
  * @return the first filename part that does not exist
  * @see appendLargeFile
  *)

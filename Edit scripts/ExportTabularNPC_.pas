@@ -2,7 +2,7 @@ unit ExportTabularNPC_;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularNPC__outputLines: TStringList;
@@ -50,7 +50,7 @@ var acbs: IInterface;
     cnam: IInterface;
 begin
     if not canProcess(npc_) then begin
-        addMessage('Warning: ' + name(npc_) + ' is not an NPC_. Entry was ignored.');
+        addWarning(name(npc_) + ' is not an NPC_. Entry was ignored.');
         exit;
     end;
 
@@ -66,13 +66,13 @@ begin
         + escapeCsvString(evBySign(npc_, 'FULL')) + ', '
         + escapeCsvString(evBySign(npc_, 'SHRT')) + ', '
         + escapeCsvString(evByPath(acbs, 'Level')) + ', '
-        + escapeCsvString(getFlatFactionList(npc_)) + ', '
+        + escapeCsvString(getJsonFactionArray(npc_)) + ', '
         + escapeCsvString(evBySign(npc_, 'RNAM')) + ', '
         + escapeCsvString(evBySign(npc_, 'ATKR')) + ', '
         + escapeCsvString(evBySign(npc_, 'CNAM')) + ', '
-        + escapeCsvString(getFlatKeywordList(npc_)) + ', '
-        + escapeCsvString(getFlatPerkList(npc_)) + ', '
-        + escapeCsvString(getFlatPropertyList(npc_)) + ', '
+        + escapeCsvString(getJsonKeywordArray(npc_)) + ', '
+        + escapeCsvString(getJsonPerkArray(npc_)) + ', '
+        + escapeCsvString(getJsonPropertyObject(npc_)) + ', '
         + escapeCsvString(evByPath(aidt, 'Aggression')) + ', '
         + escapeCsvString(evByPath(aidt, 'Confidence')) + ', '
         + escapeCsvString(evByPath(aidt, 'Assistance')) + ', '
@@ -81,7 +81,7 @@ begin
         + escapeCsvString(evBySign(npc_, 'DOFT')) + ', '
         + escapeCsvString(evBySign(npc_, 'VTCK')) + ', '
         + escapeCsvString(evBySign(npc_, 'HCLF')) + ', '
-        + escapeCsvString(getFlatChildList(eByPath(npc_, 'Head Parts')))
+        + escapeCsvString(getJsonChildArray(eByPath(npc_, 'Head Parts')))
     );
 end;
 

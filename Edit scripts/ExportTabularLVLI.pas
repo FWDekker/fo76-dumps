@@ -2,7 +2,7 @@ unit ExportTabularLVLI;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularLVLI_outputLines: TStringList;
@@ -46,7 +46,7 @@ begin
         + escapeCsvString(evBySign(lvli, 'EDID')) + ', '
         + escapeCsvString(evBySign(lvli, 'FULL')) + ', '
         //https://github.com/fireundubh/xedit-scripts/blob/master/all/Relevel%20Leveled%20Lists.pas
-        + escapeCsvString(getFlatLeveledList(lvli))
+        + escapeCsvString(getJsonLeveledListArray(lvli))
    
     );
     

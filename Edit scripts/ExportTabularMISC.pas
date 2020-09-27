@@ -2,7 +2,7 @@ unit ExportTabularMISC;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularMISC_outputLines: TStringList;
@@ -32,7 +32,7 @@ end;
 function process(misc: IInterface): Integer;
 begin
     if not canProcess(misc) then begin
-        addMessage('Warning: ' + name(misc) + ' is not a MISC. Entry was ignored.');
+        addWarning(name(misc) + ' is not a MISC. Entry was ignored.');
         exit;
     end;
 
@@ -43,7 +43,7 @@ begin
         + escapeCsvString(evBySign(misc, 'FULL')) + ', '
         + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Weight')) + ', '
         + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Value')) + ', '
-        + escapeCsvString(getFlatComponentList(misc))
+        + escapeCsvString(getJsonComponentArray(misc))
     );
     
     ExportTabularLOC_outputLines.AddStrings(
@@ -65,10 +65,10 @@ end;
 (**
  * Returns the components of [e] as a comma-separated list of editor IDs and counts.
  *
- * @param e the element to return the components of
+ * @param e  the element to return the components of
  * @return the components of [e] as a comma-separated list of editor IDs and counts
  *)
-function getFlatComponentList(e: IInterface): String;
+function getJsonComponentArray(e: IInterface): String;
 var i: Integer;
     components: IInterface;
     component: IInterface;
@@ -96,8 +96,8 @@ end;
 (**
  * Returns the number of items the quantity keyword [quantity] signifies for [component].
  *
- * @param component the component to look up the quantity in
- * @param quantity  the quantity keyword to look up in [component]
+ * @param component  the component to look up the quantity in
+ * @param quantity   the quantity keyword to look up in [component]
  * @return the number of items the quantity keyword [quantity] signifies for [component]
  *)
 function quantityKeywordToValue(component: IInterface; quantity: IInterface): Integer;

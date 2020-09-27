@@ -2,7 +2,7 @@ unit ExportTabularRACE;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularRACE_outputLines: TStringList;
@@ -33,7 +33,7 @@ var acbs: IInterface;
     cnam: IInterface;
 begin
     if not canProcess(race) then begin
-        addMessage('Warning: ' + name(race) + ' is not a RACE. Entry was ignored.');
+        addWarning(name(race) + ' is not a RACE. Entry was ignored.');
         exit;
     end;
 
@@ -47,8 +47,8 @@ begin
         + escapeCsvString(stringFormID(race)) + ', '
         + escapeCsvString(evBySign(race, 'EDID')) + ', '
         + escapeCsvString(evBySign(race, 'FULL')) + ', '
-        + escapeCsvString(getFlatKeywordList(race)) + ', '
-        + escapeCsvString(getFlatPropertyList(race))
+        + escapeCsvString(getJsonKeywordArray(race)) + ', '
+        + escapeCsvString(getJsonPropertyArray(race))
     );
 end;
 

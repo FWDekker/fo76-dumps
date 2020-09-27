@@ -2,7 +2,7 @@ unit ExportTabularCOBJ;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularCOBJ_outputLines: TStringList;
@@ -36,7 +36,7 @@ var product: IInterface;
     recipe: IInterface;
 begin
     if not canProcess(cobj) then begin
-        addMessage('Warning: ' + name(cobj) + ' is not a COBJ. Entry was ignored.');
+        addWarning(name(cobj) + ' is not a COBJ. Entry was ignored.');
         exit;
     end;
 
@@ -53,7 +53,7 @@ begin
         + escapeCsvString(ifThen(not assigned(recipe), '', stringFormID(recipe))) + ', '
         + escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'EDID'))) + ', '
         + escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'FULL'))) + ', '
-        + escapeCsvString(getFlatComponentList(cobj))
+        + escapeCsvString(getJsonComponentArray(cobj))
     );
 end;
 

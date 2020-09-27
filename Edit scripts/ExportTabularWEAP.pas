@@ -2,7 +2,7 @@ unit ExportTabularWEAP;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularWEAP_outputLines: TStringList;

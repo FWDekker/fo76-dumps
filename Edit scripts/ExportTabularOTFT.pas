@@ -2,7 +2,7 @@ unit ExportTabularOTFT;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularOTFT_outputLines: TStringList;
@@ -31,7 +31,7 @@ var acbs: IInterface;
     cnam: IInterface;
 begin
     if not canProcess(otft) then begin
-        addMessage('Warning: ' + name(otft) + ' is not a OTFT. Entry was ignored.');
+        addWarning(name(otft) + ' is not an OTFT. Entry was ignored.');
         exit;
     end;
 
@@ -39,7 +39,7 @@ begin
           escapeCsvString(getFileName(getFile(otft))) + ', '
         + escapeCsvString(stringFormID(otft)) + ', '
         + escapeCsvString(evBySign(otft, 'EDID')) + ', '
-        + escapeCsvString(getFlatChildList(eBySign(otft, 'INAM')))
+        + escapeCsvString(getJsonChildArray(eBySign(otft, 'INAM')))
     );
 end;
 

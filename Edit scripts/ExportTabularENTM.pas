@@ -2,7 +2,7 @@ unit ExportTabularENTM;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportFlatList;
+     ExportJson;
 
 
 var ExportTabularENTM_outputLines: TStringList;
@@ -12,13 +12,17 @@ function initialize: Integer;
 begin
     ExportTabularENTM_outputLines := TStringList.create();
     ExportTabularENTM_outputLines.add(
-            '"File"'        // Name of the originating ESM
-        + ', "Form ID"'     // Form ID
-        + ', "Editor ID"'   // Editor ID
-        + ', "Name (FULL)"' // Full name
-        + ', "Name (NNAM)"' // Shortened name
-        + ', "Description"' // Description
-        + ', "Keywords"'    // Sorted JSON array of keywords. Each keyword is represented by its editor ID
+            '"File"'                           // Name of the originating ESM
+        + ', "Form ID"'                        // Form ID
+        + ', "Editor ID"'                      // Editor ID
+        + ', "Name (FULL)"'                    // Full name
+        + ', "Name (NNAM)"'                    // Shortened name
+        + ', "Description"'                    // Description
+        + ', "Storefront image path"'          // Path to where images are located
+        + ', "Storefront image preview"'       // File name of preview image
+        + ', "Storefront confirm image list"'  // Sorted JSON array of file names
+        + ', "Keywords"'                       // Sorted JSON array of keywords. Each keyword is represented by its
+                                               // editor ID
     );
 end;
 
@@ -30,7 +34,7 @@ end;
 function process(entm: IInterface): Integer;
 begin
     if not canProcess(entm) then begin
-        addMessage('Warning: ' + name(entm) + ' is not a ENTM. Entry was ignored.');
+        addWarning(name(entm) + ' is not an ENTM. Entry was ignored.');
         exit;
     end;
 
@@ -41,7 +45,10 @@ begin
         + escapeCsvString(evBySign(entm, 'FULL')) + ', '
         + escapeCsvString(evBySign(entm, 'NNAM')) + ', '
         + escapeCsvString(evBySign(entm, 'DESC')) + ', '
-        + escapeCsvString(getFlatKeywordList(entm))
+        + escapeCsvString(evBySign(entm, 'ETIP')) + ', '
+        + escapeCsvString(evBySign(entm, 'ETDI')) + ', '
+        + escapeCsvString(getJsonChildArray(eByName(entm, 'Storefront Confirm Image List'))) + ', '
+        + escapeCsvString(getJsonKeywordArray(entm))
     );
 end;
 

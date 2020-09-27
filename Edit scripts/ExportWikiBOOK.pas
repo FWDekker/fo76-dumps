@@ -20,7 +20,7 @@ end;
 function process(book: IInterface): Integer;
 begin
     if not canProcess(book) then begin
-        addMessage('Warning: ' + name(book) + ' is not a BOOK. Entry was ignored.');
+        addWarning(name(book) + ' is not a BOOK. Entry was ignored.');
         exit;
     end;
 
