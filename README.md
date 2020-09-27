@@ -69,7 +69,7 @@ For more information on the optimal procedure, see [the wiki page on generating 
 * Questions can be asked on [my Fallout Wiki talk page](https://fallout.fandom.com/wiki/User_talk:FDekker) or by emailing me.
 
 ## Credits
-* [AYF](https://fallout.fandom.com/wiki/User:AllYourFavorites), for regularly reminding me to create new dumps!
+* [AYF](https://fallout.fandom.com/wiki/User:AllYourFavorites), for regularly reminding me to create new dumps.
 * [Wully616](https://github.com/Wully616), for [his contributions](https://github.com/FWDekker/fo76-dumps/pull/20) to dumping location data.
 
 ## Copyright

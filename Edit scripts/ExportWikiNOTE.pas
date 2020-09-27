@@ -8,7 +8,7 @@ var ExportWikiNOTE_outputLines: TStringList;
     ExportWikiNOTE_lastSpeaker: String;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportWikiNOTE_outputLines := TStringList.create();
 end;
@@ -35,7 +35,7 @@ begin
     ExportWikiNOTE_outputLines.add('Transcript: ' + #10 + getNoteDialogue(note) + #10 + #10);
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportWikiNOTE_outputLines.saveToFile('dumps/NOTE.wiki');

@@ -8,7 +8,7 @@ uses ExportCore,
 var ExportTabularCOBJ_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularCOBJ_outputLines := TStringList.create();
     ExportTabularCOBJ_outputLines.add(
@@ -57,7 +57,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularCOBJ_outputLines.saveToFile('dumps/COBJ.csv');

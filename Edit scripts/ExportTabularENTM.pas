@@ -8,7 +8,7 @@ uses ExportCore,
 var ExportTabularENTM_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularENTM_outputLines := TStringList.create();
     ExportTabularENTM_outputLines.add(
@@ -52,7 +52,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularENTM_outputLines.saveToFile('dumps/ENTM.csv');

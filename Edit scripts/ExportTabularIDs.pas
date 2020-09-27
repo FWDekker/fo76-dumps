@@ -11,7 +11,7 @@ var ExportTabularIDs_size: Integer;
 var ExportTabularIDs_maxSize: Integer;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularIDs_buffer := TStringList.create();
     ExportTabularIDs_size := 0;
@@ -47,7 +47,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     flushLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer, ExportTabularIDs_size);
     freeLargeFile(ExportTabularIDs_buffer);

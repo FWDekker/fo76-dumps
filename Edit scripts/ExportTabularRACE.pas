@@ -8,7 +8,7 @@ uses ExportCore,
 var ExportTabularRACE_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularRACE_outputLines := TStringList.create();
     ExportTabularRACE_outputLines.add(
@@ -52,7 +52,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularRACE_outputLines.saveToFile('dumps/RACE.csv');

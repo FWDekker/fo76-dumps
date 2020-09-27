@@ -7,7 +7,7 @@ uses ExportCore,
 var ExportWikiBOOK_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportWikiBOOK_outputLines := TStringList.create();
 end;
@@ -34,7 +34,7 @@ begin
     ExportWikiBOOK_outputLines.add(#10);
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportWikiBOOK_outputLines.saveToFile('dumps/BOOK.wiki');

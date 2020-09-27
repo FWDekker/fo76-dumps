@@ -7,7 +7,7 @@ uses ExportCore,
 var ExportWikiDIAL_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportWikiDIAL_outputLines := TStringList.create();
 end;
@@ -32,7 +32,7 @@ begin
     end;
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportWikiDIAL_outputLines.saveToFile('dumps/DIAL.wiki');

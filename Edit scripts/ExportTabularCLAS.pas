@@ -8,7 +8,7 @@ uses ExportCore,
 var ExportTabularCLAS_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularCLAS_outputLines := TStringList.create();
     ExportTabularCLAS_outputLines.add(
@@ -50,7 +50,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularCLAS_outputLines.saveToFile('dumps/CLAS.csv');

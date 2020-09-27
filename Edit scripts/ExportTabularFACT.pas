@@ -8,7 +8,7 @@ uses ExportCore,
 var ExportTabularFACT_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularFACT_outputLines := TStringList.create();
     ExportTabularFACT_outputLines.add(
@@ -89,7 +89,7 @@ begin
     ExportTabularFACT_outputLines.add(outputString);
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularFACT_outputLines.saveToFile('dumps/FACT.csv');

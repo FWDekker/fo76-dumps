@@ -7,7 +7,7 @@ uses ExportCore,
 var ExportTabularGMST_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularGMST_outputLines := TStringList.create();
     ExportTabularGMST_outputLines.add(
@@ -40,7 +40,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularGMST_outputLines.saveToFile('dumps/GMST.csv');

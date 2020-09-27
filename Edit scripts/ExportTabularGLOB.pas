@@ -7,7 +7,7 @@ uses ExportCore,
 var ExportTabularGLOB_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularGLOB_outputLines := TStringList.create();
     ExportTabularGLOB_outputLines.add(
@@ -38,7 +38,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularGLOB_outputLines.saveToFile('dumps/GLOB.csv');

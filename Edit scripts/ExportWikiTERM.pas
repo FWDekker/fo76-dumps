@@ -10,7 +10,7 @@ var ExportWikiTERM_size: Integer;
 var ExportWikiTERM_maxSize: Integer;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportWikiTERM_buffer := TStringList.create();
     ExportWikiTERM_size := 0;
@@ -54,7 +54,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     flushLargeFile('dumps/TERM.wiki', ExportWikiTERM_buffer, ExportWikiTERM_size);
     freeLargeFile(ExportWikiTERM_buffer);

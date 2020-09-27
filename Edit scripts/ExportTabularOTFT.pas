@@ -8,7 +8,7 @@ uses ExportCore,
 var ExportTabularOTFT_outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularOTFT_outputLines := TStringList.create();
     ExportTabularOTFT_outputLines.add(
@@ -43,7 +43,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularOTFT_outputLines.saveToFile('dumps/OTFT.csv');

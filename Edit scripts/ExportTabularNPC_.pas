@@ -8,7 +8,7 @@ uses ExportCore,
 var ExportTabularNPC__outputLines: TStringList;
 
 
-function initialize: Integer;
+function initialize(): Integer;
 begin
     ExportTabularNPC__outputLines := TStringList.create();
     ExportTabularNPC__outputLines.add(
@@ -85,7 +85,7 @@ begin
     );
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
     ExportTabularNPC__outputLines.saveToFile('dumps/NPC_.csv');
