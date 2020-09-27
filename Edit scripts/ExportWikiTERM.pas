@@ -1,15 +1,23 @@
 unit ExportWikiTERM;
 
 uses ExportCore,
-     ExportWikiCore;
+     ExportWikiCore,
+     ExportLargeFile;
 
 
-var ExportWikiTERM_outputLines: TStringList;
+var ExportWikiTERM_buffer: TStringList;
+var ExportWikiTERM_size: Integer;
+var ExportWikiTERM_maxSize: Integer;
 
 
 function initialize: Integer;
 begin
-    ExportWikiTERM_outputLines := TStringList.create();
+    ExportWikiTERM_buffer := TStringList.create();
+    ExportWikiTERM_size := 0;
+    ExportWikiTERM_maxSize := 10000000;
+
+    createDir('dumps/');
+    clearLargeFiles('dumps/TERM.wiki');
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -36,7 +44,7 @@ begin
         contents := '' + #10 + contents + #10 + #10;
     end;
 
-    ExportWikiTERM_outputLines.add(
+    appendLargeFile('dumps/TERM.wiki', ExportWikiTERM_buffer, ExportWikiTERM_size, ExportWikiTERM_maxSize,
           '==[' + getFileName(getFile(term)) + '] ' + evBySign(term, 'FULL') + ' (' + stringFormID(term) + ')==' + #10
         + '{{Transcript|text=' + #10
         + 'Welcome to ROBCO Industries (TM) Termlink' + #10
@@ -48,9 +56,8 @@ end;
 
 function finalize: Integer;
 begin
-    createDir('dumps/');
-    ExportWikiTERM_outputLines.saveToFile('dumps/TERM.wiki');
-    ExportWikiTERM_outputLines.free();
+    flushLargeFile('dumps/TERM.wiki', ExportWikiTERM_buffer);
+    freeLargeFile(ExportWikiTERM_buffer);
 end;
 
 
