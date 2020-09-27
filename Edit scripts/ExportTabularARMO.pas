@@ -2,11 +2,12 @@ unit ExportTabularARMO;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportJson;
+     ExportJson,
+     ExportTabularLOC;
 
 
 var ExportTabularARMO_outputLines: TStringList;
-var ExportTabularLOC_outputLines: TStringList;
+var ExportTabularARMO_LOC_outputLines: TStringList;
 
 
 function initialize(): Integer;
@@ -31,7 +32,7 @@ begin
         + ', "Keywords"'              // Sorted JSON array of keywords. Each keyword is represented by its editor ID
     );
 
-    ExportTabularLOC_outputLines := initializeLocationTabular();
+    ExportTabularARMO_LOC_outputLines := initLocList();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -68,16 +69,18 @@ begin
         + escapeCsvString(getJsonKeywordArray(armo))
     );
 
-    ExportTabularLOC_outputLines.AddStrings(getLocationData(armo));
+    appendLocationData(ExportTabularARMO_LOC_outputLines, armo);
 end;
 
 function finalize(): Integer;
 begin
     createDir('dumps/');
+
     ExportTabularARMO_outputLines.saveToFile('dumps/ARMO.csv');
-    ExportTabularLOC_outputLines.saveToFile('dumps/ARMOLOC.csv');
-    ExportTabularLOC_outputLines.free();
     ExportTabularARMO_outputLines.free();
+
+    ExportTabularARMO_LOC_outputLines.saveToFile('dumps/ARMO_LOC.csv');
+    ExportTabularARMO_LOC_outputLines.free();
 end;
 
 

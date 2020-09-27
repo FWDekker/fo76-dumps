@@ -65,13 +65,12 @@ begin
         clb.items.add('NOTE.wiki');
         clb.items.add('TERM.wiki');
 
-        for i := 0 to pred(clb.items.count) do begin
-            clb.checked[i] := true;
-        end;
+        // Show form
         if form.showModal() <> mrOk then begin
             exit;
         end;
 
+        // Process input
         for i := 0 to pred(clb.items.count) do begin
             if clb.checked[i] then begin
                 result.add(clb.items[i]);

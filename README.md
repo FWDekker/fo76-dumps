@@ -11,6 +11,9 @@ Tabular dumps are a simplified sort of dump that contains only the most importan
 These records should be very easy to understand by anyone.
 For more information on how to browse them, check [the wiki page](https://github.com/FWDekker/fo76-dumps/wiki/Browsing-CSV-files).
 
+Some dumps also have associated `_LOC` dumps, which contain information on the in-game locations of the records of that type.
+To manually interpret location data, take a look at my [maps with grids](https://fallout.fandom.com/wiki/User_blog:FDekker/Maps_with_grids) resources.
+
 <details>
   <summary>Click here for a list of tabular dumps</summary>
   <p>
@@ -64,6 +67,10 @@ For more information on the optimal procedure, see [the wiki page on generating 
 * Bugs can be reported on the [Issues](https://github.com/FWDekker/fo76-dumps/issues) page.
 * Feature requests can be made on the [Issues](https://github.com/FWDekker/fo76-dumps/issues) page.
 * Questions can be asked on [my Fallout Wiki talk page](https://fallout.fandom.com/wiki/User_talk:FDekker) or by emailing me.
+
+## Credits
+* [AYF](https://fallout.fandom.com/wiki/User:AllYourFavorites), for regularly reminding me to create new dumps!
+* [Wully616](https://github.com/Wully616), for [his contributions](https://github.com/FWDekker/fo76-dumps/pull/20) to dumping location data.
 
 ## Copyright
 The contents of all data dumps in this repository are owned by Bethesda Softworks LLC.

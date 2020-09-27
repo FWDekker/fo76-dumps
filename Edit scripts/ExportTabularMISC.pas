@@ -2,26 +2,28 @@ unit ExportTabularMISC;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportJson;
+     ExportJson,
+     ExportTabularLOC;
 
 
 var ExportTabularMISC_outputLines: TStringList;
-var ExportTabularLOC_outputLines: TStringList;
+var ExportTabularMISC_LOC_outputLines: TStringList;
 
-function initialize: Integer;
+
+function initialize(): Integer;
 begin
     ExportTabularMISC_outputLines := TStringList.create();
     ExportTabularMISC_outputLines.add(
-            '"File"'       // Name of the originating ESM
-        + ', "Form ID"'    // Form ID
-        + ', "Editor ID"'  // Editor ID
-        + ', "Name"'       // Full name
-        + ', "Weight"'     // Item weight in pounds
-        + ', "Value"'      // Item value in bottlecaps
-        + ', "Components"' // Sorted JSON array of the components needed to craft. Each component is formatted as
-                           // `[component editor id] ([amount])`
+            '"File"'        // Name of the originating ESM
+        + ', "Form ID"'     // Form ID
+        + ', "Editor ID"'   // Editor ID
+        + ', "Name"'        // Full name
+        + ', "Weight"'      // Item weight in pounds
+        + ', "Value"'       // Item value in bottlecaps
+        + ', "Components"'  // Sorted JSON array of the components needed to craft. Each component is formatted as
+                            // `[component editor id] ([amount])`
     );
-    ExportTabularLOC_outputLines := initializeLocationTabular();
+    ExportTabularMISC_LOC_outputLines := initLocList();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -45,20 +47,19 @@ begin
         + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Value')) + ', '
         + escapeCsvString(getJsonComponentArray(misc))
     );
-    
-    ExportTabularLOC_outputLines.AddStrings(
-        getLocationData(misc)
-    );
-    
+
+    appendLocationData(ExportTabularMISC_LOC_outputLines, misc);
 end;
 
-function finalize: Integer;
+function finalize(): Integer;
 begin
     createDir('dumps/');
+
     ExportTabularMISC_outputLines.saveToFile('dumps/MISC.csv');
-    ExportTabularLOC_outputLines.saveToFile('dumps/MISCLOC.csv');
-    ExportTabularLOC_outputLines.free();
     ExportTabularMISC_outputLines.free();
+
+    ExportTabularMISC_LOC_outputLines.saveToFile('dumps/MISC_LOC.csv');
+    ExportTabularMISC_LOC_outputLines.free();
 end;
 
 
@@ -89,7 +90,7 @@ begin
     end;
 
     resultList.sort();
-    result := listToJson(resultList);
+    result := stringListToJsonArray(resultList);
     resultList.free();
 end;
 

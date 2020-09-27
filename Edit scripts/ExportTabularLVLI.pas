@@ -2,11 +2,12 @@ unit ExportTabularLVLI;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportJson;
+     ExportJson,
+     ExportTabularLOC;
 
 
 var ExportTabularLVLI_outputLines: TStringList;
-var ExportTabularLOC_outputLines: TStringList;
+var ExportTabularLVLI_LOC_outputLines: TStringList;
 
 
 function initialize(): Integer;
@@ -20,8 +21,7 @@ begin
         + ', "Leveled List"'  // Leveled list
     );
 
-
-    ExportTabularLOC_outputLines := initializeLocationTabular();
+    ExportTabularLVLI_LOC_outputLines := initLocList();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -46,16 +46,18 @@ begin
         + escapeCsvString(getJsonLeveledListArray(lvli))
     );
 
-    ExportTabularLOC_outputLines.addStrings(getLocationData(lvli));
+    appendLocationData(ExportTabularLVLI_LOC_outputLines, lvli);
 end;
 
 function finalize(): Integer;
 begin
     createDir('dumps/');
+
     ExportTabularLVLI_outputLines.saveToFile('dumps/LVLI.csv');
-    ExportTabularLOC_outputLines.saveToFile('dumps/LVLI_LOC.csv');
-    ExportTabularLOC_outputLines.free();
     ExportTabularLVLI_outputLines.free();
+
+    ExportTabularLVLI_LOC_outputLines.saveToFile('dumps/LVLI_LOC.csv');
+    ExportTabularLVLI_LOC_outputLines.free();
 end;
 
 

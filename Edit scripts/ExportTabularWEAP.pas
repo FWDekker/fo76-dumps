@@ -2,11 +2,12 @@ unit ExportTabularWEAP;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportJson;
+     ExportJson,
+     ExportTabularLOC;
 
 
 var ExportTabularWEAP_outputLines: TStringList;
-var ExportTabularLOC_outputLines: TStringList;
+var ExportTabularWEAP_LOC_outputLines: TStringList;
 
 
 function initialize(): Integer;
@@ -31,7 +32,7 @@ begin
         + ', "Keywords"'              // Sorted JSON array of keywords. Each keyword is represented by its editor ID
     );
 
-    ExportTabularLOC_outputLines := initializeLocationTabular();
+    ExportTabularWEAP_LOC_outputLines := initLocList();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -41,6 +42,7 @@ end;
 
 function process(weap: IInterface): Integer;
 var data: IInterface;
+    locations: TStringList;
 begin
     if not canProcess(weap) then begin
         addWarning(name(weap) + ' is not a WEAP. Entry was ignored.');
@@ -68,16 +70,18 @@ begin
         + escapeCsvString(getJsonKeywordArray(weap))
     );
 
-    ExportTabularLOC_outputLines.AddStrings(getLocationData(weap));
+    appendLocationData(ExportTabularWEAP_LOC_outputLines, weap);
 end;
 
 function finalize(): Integer;
 begin
     createDir('dumps/');
+
     ExportTabularWEAP_outputLines.saveToFile('dumps/WEAP.csv');
-    ExportTabularLOC_outputLines.saveToFile('dumps/WEAPLOC.csv');
-    ExportTabularLOC_outputLines.free();
     ExportTabularWEAP_outputLines.free();
+
+    ExportTabularWEAP_LOC_outputLines.saveToFile('dumps/WEAP_LOC.csv');
+    ExportTabularWEAP_LOC_outputLines.free();
 end;
 
 

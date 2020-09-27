@@ -2,11 +2,12 @@ unit ExportTabularFLOR;
 
 uses ExportCore,
      ExportTabularCore,
-     ExportJson;
+     ExportJson,
+     ExportTabularLOC;
 
 
 var ExportTabularFLOR_outputLines: TStringList;
-var ExportTabularLOC_outputLines: TStringList;
+var ExportTabularFLOR_LOC_outputLines: TStringList;
 
 
 function initialize(): Integer;
@@ -22,7 +23,7 @@ begin
         + ', "Properties"'  // Sorted JSON object of properties
     );
 
-    ExportTabularLOC_outputLines := initializeLocationTabular();
+    ExportTabularFLOR_LOC_outputLines := initLocList();
 end;
 
 function canProcess(e: IInterface): Boolean;
@@ -30,36 +31,38 @@ begin
     result := signature(e) = 'FLOR';
 end;
 
-function process(flora: IInterface): Integer;
+function process(flor: IInterface): Integer;
 var data: IInterface;
 begin
-    if not canProcess(flora) then begin
-        addWarning(name(flora) + ' is not a FLOR. Entry was ignored.');
+    if not canProcess(flor) then begin
+        addWarning(name(flor) + ' is not a FLOR. Entry was ignored.');
         exit;
     end;
 
-    data := eBySign(flora, 'DATA');
+    data := eBySign(flor, 'DATA');
 
     ExportTabularFLOR_outputLines.add(
-          escapeCsvString(getFileName(getFile(flora))) + ', '
-        + escapeCsvString(stringFormID(flora)) + ', '
-        + escapeCsvString(evBySign(flora, 'EDID')) + ', '
-        + escapeCsvString(evBySign(flora, 'FULL')) + ', '
-        + escapeCsvString(evByName(flora, 'PFIG')) + ', '
-        + escapeCsvString(getJsonKeywordArray(flora)) + ', '
-        + escapeCsvString(getJsonPropertyObject(flora))
+          escapeCsvString(getFileName(getFile(flor))) + ', '
+        + escapeCsvString(stringFormID(flor)) + ', '
+        + escapeCsvString(evBySign(flor, 'EDID')) + ', '
+        + escapeCsvString(evBySign(flor, 'FULL')) + ', '
+        + escapeCsvString(evByName(flor, 'PFIG')) + ', '
+        + escapeCsvString(getJsonKeywordArray(flor)) + ', '
+        + escapeCsvString(getJsonPropertyObject(flor))
     );
 
-    ExportTabularLOC_outputLines.addStrings(getLocationData(flora));
+    appendLocationData(ExportTabularFLOR_LOC_outputLines, flor);
 end;
 
 function finalize(): Integer;
 begin
     createDir('dumps/');
+
     ExportTabularFLOR_outputLines.saveToFile('dumps/FLOR.csv');
-    ExportTabularLOC_outputLines.saveToFile('dumps/FLOR_LOC.csv');
-    ExportTabularLOC_outputLines.free();
     ExportTabularFLOR_outputLines.free();
+
+    ExportTabularFLOR_LOC_outputLines.saveToFile('dumps/FLOR_LOC.csv');
+    ExportTabularFLOR_LOC_outputLines.free();
 end;
 
 
