@@ -26,7 +26,7 @@ end;
 function process(glob: IInterface): Integer;
 begin
     if not canProcess(glob) then begin
-        addMessage('Warning: ' + name(glob) + ' is not a GLOB. Entry was ignored.');
+        addWarning(name(glob) + ' is not a GLOB. Entry was ignored.');
         exit;
     end;
 

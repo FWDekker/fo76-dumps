@@ -32,7 +32,7 @@ var acbs: IInterface;
     cnam: IInterface;
 begin
     if not canProcess(clas) then begin
-        addMessage('Warning: ' + name(clas) + ' is not a CLAS. Entry was ignored.');
+        addWarning(name(clas) + ' is not a CLAS. Entry was ignored.');
         exit;
     end;
 

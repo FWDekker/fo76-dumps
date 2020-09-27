@@ -21,7 +21,7 @@ end;
 function process(note: IInterface): Integer;
 begin
     if not canProcess(note) then begin
-        addMessage('Warning: ' + name(note) + ' is not a NOTE. Entry was ignored.');
+        addWarning(name(note) + ' is not a NOTE. Entry was ignored.');
         exit;
     end;
 
@@ -72,14 +72,12 @@ begin
         endStage := strToInt(evBySign(eByIndex(actions, i), 'ENAM'));
 
         if startStage < 0 then begin
-            addMessage('ERROR - Negative ENAM');
-            result := '<! DUMP ERROR: NEGATIVE ENAM >';
+            result := addError('Negative ENAM');
             exit;
         end;
 
         if startStage > endStage then begin
-            addMessage('ERROR - ENAM greater than SNAM');
-            result := '<! DUMP ERROR: ENAM GREATER THAN SNAM >';
+            result := addError('ENAM greater than SNAM');
             exit;
         end;
 
@@ -126,20 +124,18 @@ var speaker: String;
     i: Integer;
 begin
     if signature(topic) <> 'DIAL' then begin
-        addMessage('ERROR - Unexpected signature: ' + signature(topic));
-        result := '<! DUMP ERROR: UNEXPECTED SIGNATURE `' + signature(topic) + '`>';
+        result := addError('Unexpected signature: ' + signature(topic));
         exit;
     end;
 
     if eCount(childGroup(topic)) = 0 then begin
-        addMessage('ERROR - Topic has 0 children');
-        result := '<! DUMP ERROR: TOPIC HAS 0 CHILDREN >';
+        result := addError('Topic has 0 children');
         exit;
     end;
 
     if eCount(childGroup(topic)) <> 1 then begin
-        addMessage('WARNING - Topic has too many children');
-        result := '<! DUMP WARNING: MANUALLY CHECK `DIAL:' + stringFormID(topic) + '` FOR CUT CONTENT LINES >' + #10;
+        // Non-fatal error
+        result := addError('Manually check `DIAL:' + stringFormID(topic) + '` for cut content lines');
     end;
 
     // Add speaker at start of paragraph

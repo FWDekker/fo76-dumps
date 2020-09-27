@@ -33,7 +33,7 @@ var acbs: IInterface;
     cnam: IInterface;
 begin
     if not canProcess(race) then begin
-        addMessage('Warning: ' + name(race) + ' is not a RACE. Entry was ignored.');
+        addWarning(name(race) + ' is not a RACE. Entry was ignored.');
         exit;
     end;
 

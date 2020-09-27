@@ -166,6 +166,81 @@ end;
 
 
 (***
+ * Error and warning management.
+ *)
+var ExportCore_warnings: TStringList;
+var ExportCore_errors: TStringList;
+
+
+(**
+ * Initializes error and warning management if this has not happened yet.
+ *)
+procedure _errorInit();
+begin
+    if not assigned(ExportCore_warnings) then begin
+        ExportCore_warnings := TStringList.create();
+    end;
+    if not assigned(ExportCore_errors) then begin
+        ExportCore_errors := TStringList.create();
+    end;
+end;
+
+(**
+ * Generates and displays a warning message.
+ *
+ * @param message  the warning message to display
+ * @return the warning message to display inside dumps
+ *)
+function addWarning(message: String): String;
+begin
+    addMessage('Warning: ' + message);
+    result := '';
+
+    _errorInit();
+    ExportCore_warnings.add(message);
+end;
+
+(**
+ * Generates and displays an error message.
+ *
+ * @param message  the error message to display
+ * @return the error message to display inside dumps
+ *)
+function addError(message: String): String;
+begin
+    addMessage('Error: ' + message);
+    result := '<! {{DUMP ERROR}}: ' + upperCase(message) + ' >';
+
+    _errorInit();
+    ExportCore_errors.add(message);
+end;
+
+(**
+ * Returns a brief summary of the warnings and errors that have been generated.
+ *
+ * @param full  whether to include all generated messages and warnings
+ * @return a brief summary of the warnings and errors that have been generated
+ *)
+function errorStats(full: Boolean): String;
+begin
+    _errorInit();
+
+    result := '' +
+        'Generated ' + intToStr(ExportCore_warnings.count) + ' warning(s) and ' +
+        intToStr(ExportCore_errors.count) + ' error(s).';
+
+    if full and ((ExportCore_warnings.count > 0) or (ExportCore_errors.count > 0)) then begin
+        result := result +
+            #10 + #10 +
+            '# Warnings' + #10 + ExportCore_warnings.text +
+            #10 +
+            '# Errors' + #10 + ExportCore_errors.text;
+    end;
+end;
+
+
+
+(***
  *
  * Generic utility functions.
  *

@@ -30,7 +30,7 @@ var header: String;
     contents: String;
 begin
     if not canProcess(term) then begin
-        addMessage('Warning: ' + name(term) + ' is not a TERM. Entry was ignored.');
+        addWarning(name(term) + ' is not a TERM. Entry was ignored.');
         exit;
     end;
 
@@ -123,11 +123,10 @@ begin
         end else if menuItemType = 'Display Image' then begin
             result := result + '{{Image: ' + evBySign(menuItem, 'VNAM') + '}}' + #10;
         end else begin
-            addMessage('Warning: Unexpected menu item type `' + menuItemType + '`');
-
+            // Non-fatal error
             result := result
                 + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), parents.count) + #10
-                + '{{Error: Unexpected menu item type}}' + #10;
+                + addError('Unexpected menu item type `' + menuItemType + '`') + #10;
         end;
     end;
 

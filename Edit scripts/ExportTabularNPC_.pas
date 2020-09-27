@@ -50,7 +50,7 @@ var acbs: IInterface;
     cnam: IInterface;
 begin
     if not canProcess(npc_) then begin
-        addMessage('Warning: ' + name(npc_) + ' is not an NPC_. Entry was ignored.');
+        addWarning(name(npc_) + ' is not an NPC_. Entry was ignored.');
         exit;
     end;
 

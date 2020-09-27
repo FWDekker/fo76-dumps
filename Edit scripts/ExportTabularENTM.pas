@@ -34,7 +34,7 @@ end;
 function process(entm: IInterface): Integer;
 begin
     if not canProcess(entm) then begin
-        addMessage('Warning: ' + name(entm) + ' is not a ENTM. Entry was ignored.');
+        addWarning(name(entm) + ' is not an ENTM. Entry was ignored.');
         exit;
     end;
 

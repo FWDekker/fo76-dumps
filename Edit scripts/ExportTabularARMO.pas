@@ -40,7 +40,7 @@ function process(armo: IInterface): Integer;
 var data: IInterface;
 begin
     if not canProcess(armo) then begin
-        addMessage('Warning: ' + name(armo) + ' is not a ARMO. Entry was ignored.');
+        addWarning(name(armo) + ' is not an ARMO. Entry was ignored.');
         exit;
     end;
 

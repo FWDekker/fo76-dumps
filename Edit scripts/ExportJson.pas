@@ -39,8 +39,7 @@ var i: Integer;
     entries: TStringList;
 begin
     if keys.count <> values.count then begin
-        addMessage('ERROR - Key count does not match value count');
-        result := '<! DUMP ERROR: KEY COUNT DOES NOT MATCH VALUE COUNT >';
+        result := addError('Key count does not match value count');
         exit;
     end;
     if keys.count = 0 then begin

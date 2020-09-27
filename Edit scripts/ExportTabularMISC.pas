@@ -31,7 +31,7 @@ end;
 function process(misc: IInterface): Integer;
 begin
     if not canProcess(misc) then begin
-        addMessage('Warning: ' + name(misc) + ' is not a MISC. Entry was ignored.');
+        addWarning(name(misc) + ' is not a MISC. Entry was ignored.');
         exit;
     end;
 

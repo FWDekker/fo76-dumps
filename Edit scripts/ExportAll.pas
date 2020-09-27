@@ -252,9 +252,12 @@ begin
 
     createDir('dumps/');
     ExportAll_outputLines := TStringList.create();
-    ExportAll_outputLines.add('Done');
+    ExportAll_outputLines.add('All dumps completed. ' + errorStats(true));
     ExportAll_outputLines.saveToFile('dumps/_done.txt');
     ExportAll_outputLines.free();
+
+    addMessage(errorStats(false));
+    addMessage('Any errors and warnings have been written to `dumps/_done.txt`.');
 end;
 
 

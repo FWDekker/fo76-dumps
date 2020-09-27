@@ -48,7 +48,7 @@ var venc: IInterface;
     itemList: String;
 begin
     if not canProcess(fact) then begin
-        addMessage('Warning: ' + name(fact) + ' is not a FACT. Entry was ignored.');
+        addWarning(name(fact) + ' is not a FACT. Entry was ignored.');
         exit;
     end;
 

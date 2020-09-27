@@ -27,7 +27,7 @@ end;
 function process(gmst: IInterface): Integer;
 begin
     if not canProcess(gmst) then begin
-        addMessage('Warning: ' + name(gmst) + ' is not a GMST. Entry was ignored.');
+        addWarning(name(gmst) + ' is not a GMST. Entry was ignored.');
         exit;
     end;
 
@@ -61,8 +61,7 @@ begin
     end else if letter = 'u' then begin
         result := 'unsigned integer';
     end else begin
-        addMessage('<! DUMP ERROR. UNKNOWN TYPE `' + letter + '` !>');
-        result := '<! DUMP ERROR. UNKNOWN TYPE `' + letter + '` !>';
+        result := addError('Unknown type `' + letter + '`');
     end;
 end;
 

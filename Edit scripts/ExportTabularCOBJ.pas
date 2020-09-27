@@ -36,7 +36,7 @@ var product: IInterface;
     recipe: IInterface;
 begin
     if not canProcess(cobj) then begin
-        addMessage('Warning: ' + name(cobj) + ' is not a COBJ. Entry was ignored.');
+        addWarning(name(cobj) + ' is not a COBJ. Entry was ignored.');
         exit;
     end;
 
