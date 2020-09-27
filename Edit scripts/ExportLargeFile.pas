@@ -25,6 +25,7 @@ end;
  *
  * @param filename the prefix of the file to write to
  * @param buffer   the line buffer
+ * @param size     the current size of the buffer; updated automatically by this function
  * @param maxSize  the maximum size of a chunk in bytes before the buffer should be flushed
  * @param text     the new line to add
  *)
@@ -45,9 +46,10 @@ end;
  *
  * @param filename the prefix of the file to write to
  * @param buffer   the line buffer
+ * @param size     the current size of the buffer; updated automatically by this function
  * @see appendLargeFile
  *)
-procedure flushLargeFile(filename: String; buffer: TStringList);
+procedure flushLargeFile(filename: String; buffer: TStringList, var size: Integer);
 begin
     if buffer.count = 0 then begin
         exit;
@@ -55,6 +57,7 @@ begin
 
     buffer.saveToFile(_findFreeLargeFile(filename));
     buffer.clear();
+    size := 0;
 end;
 
 (**
