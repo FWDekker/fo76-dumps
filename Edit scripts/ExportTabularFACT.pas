@@ -100,7 +100,7 @@ end;
 (**
  * Returns a JSON array string of all relations that [fact] has to other factions.
  *
- * @param fact the faction to return relations of
+ * @param fact  the faction to return relations of
  * @return a JSON array string of all relations that [fact] has to other factions
  *)
 function getFlatRelationList(fact: IInterface): String;
@@ -131,7 +131,7 @@ end;
 (**
  * Returns a JSON array string of all items in [cont].
  *
- * @param cont the container to return all items from
+ * @param cont  the container to return all items from
  * @return a JSON array string of all items in [cont]
  *)
 function getFlatContainerItemList(cont: IInterface): String;
@@ -168,9 +168,9 @@ end;
  * Recursively adds all items in [lvli] to [itemHistory], using [lvliHistory] as a cache to prevent revisiting branches
  * of the item tree.
  *
- * @param lvliHistory a list of the form IDs of leveled items that have already been visited
- * @param itemHistory the list of items to add all items in [lvli] to
- * @param lvli        the leveled item to recursively visit
+ * @param lvliHistory  a list of the form IDs of leveled items that have already been visited
+ * @param itemHistory  the list of items to add all items in [lvli] to
+ * @param lvli         the leveled item to recursively visit
  *)
 procedure addLeveledItemList(lvliHistory: TStringList; itemHistory: TStringList; lvli: IInterface);
 var i: Integer;
@@ -206,8 +206,8 @@ end;
 (**
  * Adds a string representation of [item] to [itemHistory] if it's not already in there.
  *
- * @param itemHistory the list of items to (potentially) add [item] to
- * @param item        the item to (potentially) add to [itemHistory]
+ * @param itemHistory  the list of items to (potentially) add [item] to
+ * @param item         the item to (potentially) add to [itemHistory]
  *)
 procedure addItem(itemHistory: TStringList; item: IInterface);
 var itemString: String;

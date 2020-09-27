@@ -57,7 +57,7 @@ end;
 (**
  * Returns the components of [e] as a comma-separated list of editor IDs and counts.
  *
- * @param e the element to return the components of
+ * @param e  the element to return the components of
  * @return the components of [e] as a comma-separated list of editor IDs and counts
  *)
 function getFlatComponentList(e: IInterface): String;
@@ -88,8 +88,8 @@ end;
 (**
  * Returns the number of items the quantity keyword [quantity] signifies for [component].
  *
- * @param component the component to look up the quantity in
- * @param quantity  the quantity keyword to look up in [component]
+ * @param component  the component to look up the quantity in
+ * @param quantity   the quantity keyword to look up in [component]
  * @return the number of items the quantity keyword [quantity] signifies for [component]
  *)
 function quantityKeywordToValue(component: IInterface; quantity: IInterface): Integer;

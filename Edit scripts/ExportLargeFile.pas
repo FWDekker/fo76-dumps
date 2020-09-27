@@ -8,7 +8,7 @@ unit ExportLargeFile;
 (**
  * Deletes files `[filename].001` through `[filename].999`.
  *
- * @param filename the prefix of the files to delete
+ * @param filename  the prefix of the files to delete
  *)
 procedure clearLargeFiles(filename: String);
 var i: Integer;
@@ -23,11 +23,11 @@ end;
  *
  * The first chunk is written to `[filename].001`, the second to `[filename].002`, and so on.
  *
- * @param filename the prefix of the file to write to
- * @param buffer   the line buffer
- * @param size     the current size of the buffer; updated automatically by this function
- * @param maxSize  the maximum size of a chunk in bytes before the buffer should be flushed
- * @param text     the new line to add
+ * @param filename  the prefix of the file to write to
+ * @param buffer    the line buffer
+ * @param size      the current size of the buffer; updated automatically by this function
+ * @param maxSize   the maximum size of a chunk in bytes before the buffer should be flushed
+ * @param text      the new line to add
  *)
 procedure appendLargeFile(filename: String; buffer: TStringList; var size: Integer; maxSize: Integer; text: String);
 begin
@@ -44,9 +44,9 @@ end;
 (**
  * Flushes [buffer] to a [filename] part even if the buffer is not full.
  *
- * @param filename the prefix of the file to write to
- * @param buffer   the line buffer
- * @param size     the current size of the buffer; updated automatically by this function
+ * @param filename  the prefix of the file to write to
+ * @param buffer    the line buffer
+ * @param size      the current size of the buffer; updated automatically by this function
  * @see appendLargeFile
  *)
 procedure flushLargeFile(filename: String; buffer: TStringList; var size: Integer);
@@ -63,7 +63,7 @@ end;
 (**
  * Frees the line buffer [buffer] from memory.
  *
- * @param buffer the line buffer to free
+ * @param buffer  the line buffer to free
  * @see appendLargeFile
  *)
 procedure freeLargeFile(buffer: TStringList);
@@ -74,7 +74,7 @@ end;
 (**
  * Determines the first filename part that does not exist.
  *
- * @param filename the prefix of the file to find
+ * @param filename  the prefix of the file to find
  * @return the first filename part that does not exist
  * @see appendLargeFile
  *)

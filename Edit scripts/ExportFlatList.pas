@@ -8,7 +8,7 @@ unit ExportFlatList;
 (**
  * Returns the keywords of [e] as a comma-separated list of editor IDs.
  *
- * @param e the element to return the keywords of
+ * @param e  the element to return the keywords of
  * @return the keywords of [e] as a comma-separated list of editor IDs
  *)
 function getFlatKeywordList(e: IInterface): String;
@@ -31,7 +31,7 @@ end;
 (**
  * Returns the factions of [e] as a comma-separated list of editor IDs.
  *
- * @param e the element to return the factions of
+ * @param e  the element to return the factions of
  * @return the factions of [e] as a comma-separated list of editor IDs
  *)
 function getFlatFactionList(e: IInterface): String;
@@ -56,7 +56,7 @@ end;
 (**
  * Returns the components of [e] as a comma-separated list of editor IDs and counts.
  *
- * @param e the element to return the components of
+ * @param e  the element to return the components of
  * @return the components of [e] as a comma-separated list of editor IDs and counts
  *)
 function getFlatComponentList(e: IInterface): String;
@@ -86,7 +86,7 @@ end;
  *
  * Each perk is expressed as a pair of the perk's editor ID and the perk's rank, separated by an equals sign.
  *
- * @param e the element to return the perks of
+ * @param e  the element to return the perks of
  * @return the perks of [e] as a comma-separated list
  *)
 function getFlatPerkList(e: IInterface): String;
@@ -114,7 +114,7 @@ end;
  * Each property is expressed as a pair of the property's editor ID and either the property's value or the property's
  * curve table's editor ID, separated by an equals sign.
  *
- * @param e the element to return the properties of
+ * @param e  the element to return the properties of
  * @return the properties of [e] as a comma-separated list
  *)
 function getFlatPropertyList(e: IInterface): String;
@@ -154,7 +154,7 @@ end;
  *
  * Each child is simply converted to a string.
  *
- * @param e the element to return the children of
+ * @param e  the element to return the children of
  * @return the children of [list] as a comma-separated list
  *)
 function getFlatChildList(list: IInterface): String;
@@ -177,7 +177,7 @@ end;
  *
  * Each child is simply converted to a string.
  *
- * @param e the element to return the children of
+ * @param e  the element to return the children of
  * @return the children of [list] as a comma-separated list
  *)
 function getFlatUnsortedChildList(list: IInterface): String;
@@ -199,7 +199,7 @@ end;
  *
  * Each child is simply converted to its `name`.
  *
- * @param e the element to return the children of
+ * @param e  the element to return the children of
  * @return the children of [list] as a comma-separated list
  *)
 function getFlatChildNameList(list: IInterface): String;

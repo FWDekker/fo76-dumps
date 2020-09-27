@@ -127,7 +127,7 @@ end;
 (**
  * Returns a lowercase string representation of [e]'s form ID.
  *
- * @param e the record to return the form ID of
+ * @param e  the record to return the form ID of
  * @return a lowercase string representation of [e]'s form ID
  *)
 function stringFormID(e: IInterface): String;
@@ -146,8 +146,8 @@ end;
 (**
  * Returns `true` iff [e] is referenced by a record with signature [sig].
  *
- * @param e   the element to check for references
- * @param sig the signature to check
+ * @param e    the element to check for references
+ * @param sig  the signature to check
  * @return `true` iff [e] is referenced by a record with signature [sig]
  *)
 function isReferencedBy(e: IInterface; sig: String): Boolean;
@@ -174,8 +174,8 @@ end;
 (**
  * Repeats [text] [amount] times.
  *
- * @param text   the text to repeat
- * @param amount the number of times to repeat [text]
+ * @param text    the text to repeat
+ * @param amount  the number of times to repeat [text]
  * @return the concatenation of [amount] times [text]
  *)
 function repeatString(text: String; amount: Integer): String;
@@ -193,9 +193,9 @@ end;
  *
  * If [s] is already longer than [n] characters, [s] is returned unchanged.
  *
- * @param c the character to prepend
- * @param s the string to prepend to
- * @param n the desired string length
+ * @param c  the character to prepend
+ * @param s  the string to prepend to
+ * @param n  the desired string length
  * @return a string of at least [n] characters that consists of [s] preceded by copies of [c]
  *)
 function padLeft(c: Char; s: String; n: Size): String;
@@ -212,9 +212,9 @@ end;
  *
  * If [s] is already longer than [n] characters, [s] is returned unchanged.
  *
- * @param c the character to append
- * @param s the string to append to
- * @param n the desired string length
+ * @param c  the character to append
+ * @param s  the string to append to
+ * @param n  the desired string length
  * @return a string of at least [n] characters that consists of [s] proceeded by copies of [c]
  *)
 function padRight(c: Char; s: String; n: Size): String;
@@ -237,9 +237,9 @@ end;
 (**
  * Returns an empty string if the given string is empty, or surrounds it with the given prefix and suffix otherwise.
  *
- * @param string the string to surround with the prefix and suffix
- * @param prefix the string to put in front
- * @param suffix the string to put at the end
+ * @param string  the string to surround with the prefix and suffix
+ * @param prefix  the string to put in front
+ * @param suffix  the string to put at the end
  * @return an empty string if the given string is empty, or surrounds it with the given prefix and suffix otherwise
  *)
 function surroundIfNotEmpty(string: String; prefix: String; suffix: String): String;
@@ -250,7 +250,7 @@ end;
 (**
  * Converts a truthy boolean to 'True' and a falsy boolean to 'False'.
  *
- * @param bool the bool to convert to a string
+ * @param bool  the bool to convert to a string
  * @return 'True' if [bool] is true and 'False' if [bool] is false
  *)
 function boolToStr(bool: Boolean): String;
@@ -261,7 +261,7 @@ end;
 (**
  * Parses the given string to a float, rounds it, and turns that into a string.
  *
- * @param float the float to parse and round
+ * @param float  the float to parse and round
  * @return a string describing the rounded integer
  *)
 function parseFloatToInt(float: String): String;
