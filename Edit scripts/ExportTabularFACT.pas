@@ -62,7 +62,7 @@ begin
         + escapeCsvString(stringFormID(fact)) + ', '
         + escapeCsvString(evBySign(fact, 'EDID')) + ', '
         + escapeCsvString(evBySign(fact, 'FULL')) + ', '
-        + escapeCsvString(getFlatRelationList(fact)) + ', ';
+        + escapeCsvString(getJsonRelationArray(fact)) + ', ';
 
     if assigned(venc) then begin
         outputString := outputString
@@ -73,7 +73,7 @@ begin
             + escapeCsvString(evByPath(venv, 'Buys Stolen Items')) + ', '
             + escapeCsvString(evByPath(venv, 'Buys NonStolen Items')) + ', '
             + escapeCsvString(evByPath(venv, 'Buy/Sell Everything Not In List?')) + ', '
-            + escapeCsvString(getFlatContainerItemList(linkBySign(linkBySign(fact, 'VENC'), 'NAME')));
+            + escapeCsvString(getJsonContainerItemArray(linkBySign(linkBySign(fact, 'VENC'), 'NAME')));
     end else begin
         outputString := outputString
             + '"False", '
@@ -103,7 +103,7 @@ end;
  * @param fact  the faction to return relations of
  * @return a JSON array string of all relations that [fact] has to other factions
  *)
-function getFlatRelationList(fact: IInterface): String;
+function getJsonRelationArray(fact: IInterface): String;
 var i: Integer;
     relations: IInterface;
     relation: IInterface;
@@ -124,7 +124,7 @@ begin
     end;
 
     resultList.sort();
-    result := listToJson(resultList);
+    result := stringListToJsonArray(resultList);
     resultList.free();
 end;
 
@@ -134,7 +134,7 @@ end;
  * @param cont  the container to return all items from
  * @return a JSON array string of all items in [cont]
  *)
-function getFlatContainerItemList(cont: IInterface): String;
+function getJsonContainerItemArray(cont: IInterface): String;
 var i: Integer;
     entries: IInterface;
     entry: IInterface;
@@ -158,7 +158,7 @@ begin
     end;
 
     itemHistory.sort();
-    result := listToJson(itemHistory);
+    result := stringListToJsonArray(itemHistory);
 
     lvliHistory.free();
     itemHistory.free();

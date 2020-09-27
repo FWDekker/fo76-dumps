@@ -24,7 +24,7 @@ begin
         + ', "Class"'          // Class, formatted as `<editor id> "<full name>" [<signature>:<form id>]`
         + ', "Keywords"'       // Sorted JSON array of keywords. Each keyword is represented by its editor ID
         + ', "Perks"'          // Sorted JSON array of perks. Each perk is formatted as `<editor id>=[value]`
-        + ', "Properties"'     // Sorted JSON array of properties. Each property is formatted as `<editor id>=[value]`
+        + ', "Properties"'     // Sorted JSON object of properties
         + ', "Aggression"'     // AI aggression level as a string
         + ', "Confidence"'     // AI confidence level as a string
         + ', "Assistance"'     // AI assistance level as a string

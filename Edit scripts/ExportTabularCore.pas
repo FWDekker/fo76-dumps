@@ -17,16 +17,5 @@ begin
     result := '"' + result + '"';
 end;
 
-(**
- * Escapes all double quotes in [text] by putting a backslash in front of them.
- *
- * @param text  the text to escape
- * @return a quote-escaped version of [text]
- *)
-function escapeQuotes(text: String): String;
-begin
-    result := stringReplace(text, '"', '\"', [rfReplaceAll]);
-end;
-
 
 end.
