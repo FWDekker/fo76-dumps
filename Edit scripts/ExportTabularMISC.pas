@@ -20,8 +20,8 @@ begin
         + ', "Name"'        // Full name
         + ', "Weight"'      // Item weight in pounds
         + ', "Value"'       // Item value in bottlecaps
-        + ', "Components"'  // Sorted JSON array of the components needed to craft. Each component is formatted as
-                            // `[component editor id] ([amount])`
+        + ', "Components"'  // Sorted JSON array of the components needed to craft. Each component is represented by a
+                            // JSON object containing the component identifier and the count
     );
     ExportTabularMISC_LOC_outputLines := initLocList();
 end;
@@ -64,33 +64,44 @@ end;
 
 
 (**
- * Returns the components of [e] as a comma-separated list of editor IDs and counts.
+ * Returns the components of [e] as a comma-separated list of identifiers and counts.
  *
  * @param e  the element to return the components of
- * @return the components of [e] as a comma-separated list of editor IDs and counts
+ * @return the components of [e] as a comma-separated list of identifiers and counts
  *)
 function getJsonComponentArray(e: IInterface): String;
 var i: Integer;
     components: IInterface;
     component: IInterface;
+    componentKeys: TStringList;
+    componentValues: TStringList;
     quantity: IInterface;
     resultList: TStringList;
 begin
     resultList := TStringList.create();
+    componentKeys := TStringList.create();
+    componentValues := TStringList.create();
+
+    componentKeys.add('Component');
+    componentKeys.add('Count');
 
     components := eBySign(e, 'MCQP');
     for i := 0 to eCount(components) - 1 do begin
-        component := linkByName(eByIndex(components, i), 'Component');
+        component := eByName(eByIndex(components, i), 'Component');
         quantity := linkByName(eByIndex(components, i), 'Component Count Keyword');
 
-        resultList.add(
-              evBySign(component, 'EDID')
-            + ' (' + intToStr(quantityKeywordToValue(component, quantity)) + ')'
-        );
+        componentValues.clear();
+        componentValues.add(gev(component));
+        componentValues.add(intToStr(quantityKeywordToValue(linksTo(component), quantity)));
+
+        resultList.add(listsToJsonObject(componentKeys, componentValues, false));
     end;
 
     resultList.sort();
-    result := stringListToJsonArray(resultList);
+    result := listToJsonArray(resultList);
+
+    componentValues.free();
+    componentKeys.free();
     resultList.free();
 end;
 
