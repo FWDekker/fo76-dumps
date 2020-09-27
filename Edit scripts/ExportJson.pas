@@ -4,8 +4,27 @@
 unit ExportJson;
 
 
+(***
+ *
+ * Core functions for JSON serialization.
+ *
+ **)
+
+(**
+ * Escapes all double quotes in [text] by putting a backslash in front of them.
+ *
+ * @param text  the text to escape
+ * @return a quote-escaped version of [text]
+ *)
+function escapeQuotes(text: String): String;
+begin
+    result := stringReplace(text, '"', '\"', [rfReplaceAll]);
+end;
+
 (**
  * Serializes the list of values into a JSON array.
+ *
+ * Each list entry is interpreted as a raw value and is not surrounded with quotes.
  *
  * @param list  the list of values to convert to a serialized JSON array
  * @return a serialized JSON array version of [list]
@@ -18,12 +37,29 @@ begin
         exit;
     end;
 
-    result := '"' + list[0] + '"';
+    result := list[0];
     for i := 1 to list.count - 1 do begin
-        result := result + ',"' + list[i] + '"';
+        result := result + ',' + list[i];
     end;
 
     result := '[' + result + ']';
+end;
+
+(**
+ * Serializes the list of strings into a JSON array.
+ *
+ * Each list entry is interpreted as a string and is therefore surrounded with double quotes as part of serialization.
+ *
+ * @param list  the list of strings to convert to a serialized JSON array
+ * @return a serialized JSON array version of [list]
+ *)
+function stringListToJsonArray(list: TStringList): String;
+var i: Integer;
+begin
+    for i := 0 to list.count - 1 do begin
+        list[i] = '"' + escapeQuotes(list[i]) + '"';
+    end;
+    result := listToJsonArray(list);
 end;
 
 (**
@@ -49,7 +85,7 @@ begin
 
     entries := TStringList.create();
     for i := 0 to keys.count - 1 do begin
-        entries.add('"' + keys[i] + '": "' + values[i] + '"');
+        entries.add('"' + escapeQuotes(keys[i]) + '": "' + escapeQuotes(values[i]) + '"');
     end;
 
     if sorted then begin
@@ -64,6 +100,13 @@ begin
     result := '{' + result + '}';
 end;
 
+
+
+(***
+ *
+ * Domain-specific serialization functions.
+ *
+ **)
 
 (**
  * Returns the keywords of [e] as a serialized JSON array of editor IDs.
@@ -84,7 +127,7 @@ begin
     end;
 
     resultList.sort();
-    result := listToJsonArray(resultList);
+    result := stringListToJsonArray(resultList);
     resultList.free();
 end;
 
@@ -109,7 +152,7 @@ begin
     end;
 
     resultList.sort();
-    result := listToJsonArray(resultList);
+    result := stringListToJsonArray(resultList);
     resultList.free();
 end;
 
@@ -137,7 +180,7 @@ begin
     end;
 
     resultList.sort();
-    result := listToJsonArray(resultList);
+    result := stringListToJsonArray(resultList);
     resultList.free();
 end;
 
@@ -162,7 +205,7 @@ begin
     end;
 
     resultList.sort();
-    result := listToJsonArray(resultList);
+    result := stringListToJsonArray(resultList);
     resultList.free();
 end;
 
@@ -226,11 +269,11 @@ begin
     resultList := TStringList.create();
 
     for i := 0 to eCount(list) - 1 do begin
-        resultList.add(escapeQuotes(evByIndex(list, i)));
+        resultList.add(evByIndex(list, i));
     end;
 
     resultList.sort();
-    result := listToJsonArray(resultList);
+    result := stringListToJsonArray(resultList);
     resultList.free();
 end;
 
@@ -249,10 +292,10 @@ begin
     resultList := TStringList.create();
 
     for i := 0 to eCount(list) - 1 do begin
-        resultList.add(escapeQuotes(evByIndex(list, i)));
+        resultList.add(evByIndex(list, i));
     end;
 
-    result := listToJsonArray(resultList);
+    result := stringListToJsonArray(resultList);
     resultList.free();
 end;
 
@@ -271,46 +314,58 @@ begin
     resultList := TStringList.create();
 
     for i := 0 to eCount(list) - 1 do begin
-        resultList.add(escapeQuotes(name(eByIndex(list, i))));
+        resultList.add(name(eByIndex(list, i)));
     end;
 
     resultList.sort();
-    result := listToJsonArray(resultList);
+    result := stringListToJsonArray(resultList);
     resultList.free();
 end;
 
 (**
  * Returns the leveled list entries of [e] as a serialized JSON array.
  *
- * Each leveled list entry is expressed using a colon-separated triple of the referenced item, the level, and the
- * quantity.
+ * Each leveled list entry is expressed using a colon-separated triple of the referenced item, the level, and the count.
  *
  * @param e  the element to return the leveled list entries of
  * @return the entries of [e] as a serialized JSON array
  *)
 function getJsonLeveledListArray(e: IInterface): String;
 var i: Integer;
+    entries: IInterface;
     entry: IInterface;
+    entryKeys: TStringList;
+    entryValues: TStringList;
     reference: String;
     level: String;
     quantity: String;
     resultList: TStringList;
 begin
     resultList := TStringList.create();
+    entryKeys := TStringList.create();
+    entryValues := TStringList.create();
 
-    entries := elementByName(e, 'Leveled List Entries');
+    entryKeys.add('Reference');
+    entryKeys.add('Level');
+    entryKeys.add('Count');
+
+    entries := eByName(e, 'Leveled List Entries');
     for i := 0 to eCount(entries) - 1 do begin
-        entry := eBySign(eByIndex(entries, i), 'LVLO');
+        entry := eByName(eBySign(eByIndex(entries, i), 'LVLO'), 'Base Data');
 
-        reference := evByName(entry, 'Reference');
-        level := evBySign(eByIndex(entries, i), 'LVLV');
-        quantity := evBySign(eByIndex(entries, i), 'LVIV');
+        entryValues.clear();
+        entryValues.add(evByName(entry, 'Reference'));
+        entryValues.add(evByName(entry, 'Level'));
+        entryValues.add(evByName(entry, 'Count'));
 
-        resultList.add(reference + ':' + level + ':' + quantity);
+        resultList.add(listsToJsonObject(entryKeys, entryValues, false));
     end;
 
     resultList.sort();
-    result := listToJson(resultList);
+    result := listToJsonArray(resultList);
+
+    entryValues.free();
+    entryKeys.free();
     resultList.free();
 end;
 

@@ -9,7 +9,7 @@ unit ExportCore;
  *
  * Shorthands for commonly used functions.
  *
- ***)
+ **)
 
 (**
  * Shorthand for [getEditValue].
@@ -141,7 +141,7 @@ end;
  *
  * xEdit utility functions
  *
- ***)
+ **)
 
 (**
  * Returns `true` iff [e] is referenced by a record with signature [sig].
@@ -166,11 +166,12 @@ end;
 
 
 (***
+ *
  * Error and warning management.
- *)
+ *
+ **)
 var ExportCore_warnings: TStringList;
 var ExportCore_errors: TStringList;
-
 
 (**
  * Initializes error and warning management if this has not happened yet.
@@ -244,7 +245,7 @@ end;
  *
  * Generic utility functions.
  *
- ***)
+ **)
 
 (**
  * Repeats [text] [amount] times.
