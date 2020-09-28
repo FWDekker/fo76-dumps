@@ -61,4 +61,55 @@ begin
 end;
 
 
+(**
+ * Returns the leveled list entries of [e] as a serialized JSON array.
+ *
+ * Each leveled list entry is expressed using a JSON object containing the item, the level, and the count.
+ *
+ * @param e  the element to return the leveled list entries of
+ * @return the entries of [e] as a serialized JSON array
+ *)
+function getJsonLeveledListArray(e: IInterface): String;
+var i: Integer;
+    entries: IInterface;
+    entry: IInterface;
+    lvlo: IInterface;
+    baseData: IInterface;
+    resultList: TStringList;
+begin
+    resultList := TStringList.create();
+
+    entries := eByName(e, 'Leveled List Entries');
+    for i := 0 to eCount(entries) - 1 do begin
+        entry := eByIndex(entries, i);
+        lvlo := eBySign(entry, 'LVLO');
+        baseData := eByName(lvlo, 'Base Data');
+
+        if assigned(baseData) then begin
+            resultList.add('' +
+                '{' +
+                 '"Reference":"' + escapeQuotes(evByName(baseData, 'Reference')) + '"' +
+                ',"Level":"' + escapeQuotes(evByName(baseData, 'Level')) + '"' +
+                ',"Count":"' + escapeQuotes(evByName(baseData, 'Count')) + '"' +
+                ',"Chance None":"' + escapeQuotes(evByName(baseData, 'Chance None')) + '"' +
+                '}'
+            );
+        end else begin
+            resultList.add('' +
+                '{' +
+                 '"Reference":"' + escapeQuotes(evByName(lvlo, 'Reference')) + '"' +
+                ',"Minimum Level":"' + escapeQuotes(evBySign(entry, 'LVLV')) + '"' +
+                ',"Count":"' + escapeQuotes(evBySign(entry, 'LVIV')) + '"' +
+                ',"Chance None":"' + escapeQuotes(evBySign(entry, 'LVOV')) + '"' +
+                '}'
+            );
+        end;
+    end;
+
+    resultList.sort();
+    result := listToJsonArray(resultList);
+    resultList.free();
+end;
+
+
 end.

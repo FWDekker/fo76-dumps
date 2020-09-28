@@ -322,52 +322,5 @@ begin
     resultList.free();
 end;
 
-(**
- * Returns the leveled list entries of [e] as a serialized JSON array.
- *
- * Each leveled list entry is expressed using a colon-separated triple of the referenced item, the level, and the count.
- *
- * @param e  the element to return the leveled list entries of
- * @return the entries of [e] as a serialized JSON array
- *)
-function getJsonLeveledListArray(e: IInterface): String;
-var i: Integer;
-    entries: IInterface;
-    entry: IInterface;
-    entryKeys: TStringList;
-    entryValues: TStringList;
-    reference: String;
-    level: String;
-    quantity: String;
-    resultList: TStringList;
-begin
-    resultList := TStringList.create();
-    entryKeys := TStringList.create();
-    entryValues := TStringList.create();
-
-    entryKeys.add('Reference');
-    entryKeys.add('Level');
-    entryKeys.add('Count');
-
-    entries := eByName(e, 'Leveled List Entries');
-    for i := 0 to eCount(entries) - 1 do begin
-        entry := eByName(eBySign(eByIndex(entries, i), 'LVLO'), 'Base Data');
-
-        entryValues.clear();
-        entryValues.add(evByName(entry, 'Reference'));
-        entryValues.add(evByName(entry, 'Level'));
-        entryValues.add(evByName(entry, 'Count'));
-
-        resultList.add(listsToJsonObject(entryKeys, entryValues, false));
-    end;
-
-    resultList.sort();
-    result := listToJsonArray(resultList);
-
-    entryValues.free();
-    entryKeys.free();
-    resultList.free();
-end;
-
 
 end.
