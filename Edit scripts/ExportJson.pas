@@ -75,29 +75,6 @@ end;
  **)
 
 (**
- * Returns the keywords of [e] as a serialized JSON array of editor IDs.
- *
- * @param e  the element to return the keywords of
- * @return the keywords of [e] as a serialized JSON array of editor IDs
- *)
-function getJsonKeywordArray(e: IInterface): String;
-var i: Integer;
-    keywords: IInterface;
-    resultList: TStringList;
-begin
-    resultList := TStringList.create();
-
-    keywords := eBySign(eByPath(e, 'Keywords'), 'KWDA');
-    for i := 0 to eCount(keywords) - 1 do begin
-        resultList.add(evByIndex(keywords, i));
-    end;
-
-    resultList.sort();
-    result := stringListToJsonArray(resultList);
-    resultList.free();
-end;
-
-(**
  * Returns the properties of [e] as a serialized JSON object.
  *
  * Each property is expressed using the property's editor ID as the key and either the property's value or the

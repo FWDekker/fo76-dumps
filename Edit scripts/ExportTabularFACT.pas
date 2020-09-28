@@ -119,8 +119,8 @@ begin
 
         resultList.add(
             '{' +
-             '"Faction":"' + escapeJson(evByPath(relation, 'Faction')) + '"' +
-            ',"Group Combat Reaction":"' + escapeJson(evByPath(relation, 'Group Combat Reaction')) + '"'
+             '"Faction":"'               + escapeJson(evByPath(relation, 'Faction'))               + '"' +
+            ',"Group Combat Reaction":"' + escapeJson(evByPath(relation, 'Group Combat Reaction')) + '"' +
             '}'
         );
     end;

@@ -48,7 +48,7 @@ begin
         + escapeCsvString(evBySign(entm, 'ETIP')) + ', '
         + escapeCsvString(evBySign(entm, 'ETDI')) + ', '
         + escapeCsvString(getJsonChildArray(eByName(entm, 'Storefront Confirm Image List'))) + ', '
-        + escapeCsvString(getJsonKeywordArray(entm))
+        + escapeCsvString(getJsonChildArray(eBySign(eByPath(entm, 'Keywords'), 'KWDA')))
     );
 end;
 

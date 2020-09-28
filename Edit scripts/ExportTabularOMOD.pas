@@ -51,10 +51,10 @@ begin
             + escapeCsvString(evByName(data, 'Form Type')) + ', '
             + escapeCsvString(evBySign(omod, 'LNAM')) + ', '
             + escapeCsvString(evByName(data, 'Attach Point')) + ', '
-            + escapeCsvString(getJsonAttachParentSlotsArray(data)) + ', '
+            + escapeCsvString(getJsonChildArray(eByName(data, 'Attach Parent Slots'))) + ', '
             + escapeCsvString(getJsonIncludesArray(data)) + ', '
             + escapeCsvString(getJsonOMODPropertyObject(data)) + ', '
-            + escapeCsvString(getJsonTargetKeywordArray(omod))
+            + escapeCsvString(getJsonChildArray(eBySign(omod, 'MNAM')))
         );
 end;
 
@@ -65,40 +65,6 @@ begin
     ExportTabularOMOD_outputLines.free();
 end;
 
-
-function getJsonAttachParentSlotsArray(data: IInterface): String;
-var i: Integer;
-    attachParentSlots: IInterface;
-    resultList: TStringList;
-begin
-    resultList := TStringList.create();
-
-    attachParentSlots := eByName(data, 'Attach Parent Slots');
-    for i := 0 to eCount(attachParentSlots) - 1 do begin
-        resultList.add(evByIndex(attachParentSlots, i));
-    end;
-
-    resultList.sort();
-    result := stringListToJsonArray(resultList);
-    resultList.free();
-end;
-
-function getJsonTargetKeywordArray(omod: IInterface): String;
-var i: Integer;
-    keywords: IInterface;
-    resultList: TStringList;
-begin
-    resultList := TStringList.create();
-
-    keywords := eBySign(omod, 'MNAM');
-    for i := 0 to eCount(keywords) - 1 do begin
-        resultList.add(evByIndex(keywords, i));
-    end;
-
-    resultList.sort();
-    result := stringListToJsonArray(resultList);
-    resultList.free();
-end;
 
 (**
  * Returns a JSON array of the mods that are included by the given mod.
@@ -119,9 +85,9 @@ begin
         include := eByIndex(includes, i);
         resultList.add(
             '{' +
-             '"Mod":"'            + escapeJson(evByName(include, 'Mod')) + '"' +
-            ',"Minimum Level":"'  + escapeJson(evByName(include, 'MinimumLevel')) + '"' +
-            ',"Optional":"'       + escapeJson(evByName(include, 'Optional')) + '"' +
+             '"Mod":"'            + escapeJson(evByName(include, 'Mod'))            + '"' +
+            ',"Minimum Level":"'  + escapeJson(evByName(include, 'MinimumLevel'))   + '"' +
+            ',"Optional":"'       + escapeJson(evByName(include, 'Optional'))       + '"' +
             ',"Don''t Use All":"' + escapeJson(evByName(include, 'Don''t Use All')) + '"' +
             '}'
         );
@@ -151,12 +117,12 @@ begin
         prop := eByIndex(props, i);
         resultList.add(
             '{' +
-             '"Value Type":"'    + escapeJson(evByName(prop, 'Value Type')) + '"' +
+             '"Value Type":"'    + escapeJson(evByName(prop, 'Value Type'))    + '"' +
             ',"Function Type":"' + escapeJson(evByName(prop, 'Function Type')) + '"' +
-            ',"Property":"'      + escapeJson(evByName(prop, 'Property')) + '"' +
-            ',"Value 1":"'       + escapeJson(evByName(prop, 'Value 1')) + '"' +
-            ',"Value 2":"'       + escapeJson(evByName(prop, 'Value 2')) + '"' +
-            ',"Curve Table":"'   + escapeJson(evByName(prop, 'Curve Table')) + '"' +
+            ',"Property":"'      + escapeJson(evByName(prop, 'Property'))      + '"' +
+            ',"Value 1":"'       + escapeJson(evByName(prop, 'Value 1'))       + '"' +
+            ',"Value 2":"'       + escapeJson(evByName(prop, 'Value 2'))       + '"' +
+            ',"Curve Table":"'   + escapeJson(evByName(prop, 'Curve Table'))   + '"' +
             '}'
         );
     end;

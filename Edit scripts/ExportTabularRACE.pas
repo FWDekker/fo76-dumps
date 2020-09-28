@@ -47,7 +47,7 @@ begin
         + escapeCsvString(stringFormID(race)) + ', '
         + escapeCsvString(evBySign(race, 'EDID')) + ', '
         + escapeCsvString(evBySign(race, 'FULL')) + ', '
-        + escapeCsvString(getJsonKeywordArray(race)) + ', '
+        + escapeCsvString(getJsonChildArray(eBySign(eByPath(race, 'Keywords'), 'KWDA'))) + ', '
         + escapeCsvString(getJsonPropertyObject(race))
     );
 end;

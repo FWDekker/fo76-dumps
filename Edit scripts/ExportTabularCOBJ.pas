@@ -85,8 +85,8 @@ begin
 
         resultList.add(
             '{' +
-             '"Component":"' + escapeJson(evByName(component, 'Component')) + '"' +
-            ',"Count":"' + escapeJson(evByName(component, 'Count')) + '"' +
+             '"Component":"'   + escapeJson(evByName(component, 'Component'))   + '"' +
+            ',"Count":"'       + escapeJson(evByName(component, 'Count'))       + '"' +
             ',"Curve Table":"' + escapeJson(evByName(component, 'Curve Table')) + '"' +
             '}'
         );

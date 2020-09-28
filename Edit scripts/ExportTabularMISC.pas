@@ -87,9 +87,9 @@ begin
 
         resultList.add(
             '{' +
-             '"Component":"' + escapeJson(gev(component)) + '"' +
-            ',"Component Count Keyword":"' + escapeJson(gev(quantity)) + '"' +
-            ',"Count":"' + escapeJson(intToStr(quantityKeywordToValue(linksTo(component), linksTo(quantity)))) + '"' +
+             '"Component":"'               + escapeJson(gev(component))                                                          + '"' +
+            ',"Component Count Keyword":"' + escapeJson(gev(quantity))                                                           + '"' +
+            ',"Count":"'                   + escapeJson(intToStr(quantityKeywordToValue(linksTo(component), linksTo(quantity)))) + '"' +
             '}'
         );
     end;

@@ -88,19 +88,19 @@ begin
         if assigned(baseData) then begin
             resultList.add(
                 '{' +
-                 '"Reference":"' + escapeJson(evByName(baseData, 'Reference')) + '"' +
-                ',"Level":"' + escapeJson(evByName(baseData, 'Level')) + '"' +
-                ',"Count":"' + escapeJson(evByName(baseData, 'Count')) + '"' +
+                 '"Reference":"'   + escapeJson(evByName(baseData, 'Reference'))   + '"' +
+                ',"Level":"'       + escapeJson(evByName(baseData, 'Level'))       + '"' +
+                ',"Count":"'       + escapeJson(evByName(baseData, 'Count'))       + '"' +
                 ',"Chance None":"' + escapeJson(evByName(baseData, 'Chance None')) + '"' +
                 '}'
             );
         end else begin
             resultList.add(
                 '{' +
-                 '"Reference":"' + escapeJson(evByName(lvlo, 'Reference')) + '"' +
-                ',"Minimum Level":"' + escapeJson(evBySign(entry, 'LVLV')) + '"' +
-                ',"Count":"' + escapeJson(evBySign(entry, 'LVIV')) + '"' +
-                ',"Chance None":"' + escapeJson(evBySign(entry, 'LVOV')) + '"' +
+                 '"Reference":"'     + escapeJson(evByName(lvlo, 'Reference')) + '"' +
+                ',"Minimum Level":"' + escapeJson(evBySign(entry, 'LVLV'))     + '"' +
+                ',"Count":"'         + escapeJson(evBySign(entry, 'LVIV'))     + '"' +
+                ',"Chance None":"'   + escapeJson(evBySign(entry, 'LVOV'))     + '"' +
                 '}'
             );
         end;

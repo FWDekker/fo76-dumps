@@ -47,7 +47,7 @@ begin
         + escapeCsvString(evBySign(flor, 'EDID')) + ', '
         + escapeCsvString(evBySign(flor, 'FULL')) + ', '
         + escapeCsvString(evByName(flor, 'PFIG')) + ', '
-        + escapeCsvString(getJsonKeywordArray(flor)) + ', '
+        + escapeCsvString(getJsonChildArray(eBySign(eByPath(flor, 'Keywords'), 'KWDA'))) + ', '
         + escapeCsvString(getJsonPropertyObject(flor))
     );
 
