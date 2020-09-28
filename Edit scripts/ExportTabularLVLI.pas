@@ -86,21 +86,21 @@ begin
         baseData := eByName(lvlo, 'Base Data');
 
         if assigned(baseData) then begin
-            resultList.add('' +
+            resultList.add(
                 '{' +
-                 '"Reference":"' + escapeQuotes(evByName(baseData, 'Reference')) + '"' +
-                ',"Level":"' + escapeQuotes(evByName(baseData, 'Level')) + '"' +
-                ',"Count":"' + escapeQuotes(evByName(baseData, 'Count')) + '"' +
-                ',"Chance None":"' + escapeQuotes(evByName(baseData, 'Chance None')) + '"' +
+                 '"Reference":"' + escapeJson(evByName(baseData, 'Reference')) + '"' +
+                ',"Level":"' + escapeJson(evByName(baseData, 'Level')) + '"' +
+                ',"Count":"' + escapeJson(evByName(baseData, 'Count')) + '"' +
+                ',"Chance None":"' + escapeJson(evByName(baseData, 'Chance None')) + '"' +
                 '}'
             );
         end else begin
-            resultList.add('' +
+            resultList.add(
                 '{' +
-                 '"Reference":"' + escapeQuotes(evByName(lvlo, 'Reference')) + '"' +
-                ',"Minimum Level":"' + escapeQuotes(evBySign(entry, 'LVLV')) + '"' +
-                ',"Count":"' + escapeQuotes(evBySign(entry, 'LVIV')) + '"' +
-                ',"Chance None":"' + escapeQuotes(evBySign(entry, 'LVOV')) + '"' +
+                 '"Reference":"' + escapeJson(evByName(lvlo, 'Reference')) + '"' +
+                ',"Minimum Level":"' + escapeJson(evBySign(entry, 'LVLV')) + '"' +
+                ',"Count":"' + escapeJson(evBySign(entry, 'LVIV')) + '"' +
+                ',"Chance None":"' + escapeJson(evBySign(entry, 'LVOV')) + '"' +
                 '}'
             );
         end;

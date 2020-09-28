@@ -226,7 +226,7 @@ function errorStats(full: Boolean): String;
 begin
     _errorInit();
 
-    result := '' +
+    result :=
         'Generated ' + intToStr(ExportCore_warnings.count) + ' warning(s) and ' +
         intToStr(ExportCore_errors.count) + ' error(s).';
 

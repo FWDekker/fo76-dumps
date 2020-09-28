@@ -93,4 +93,55 @@ begin
 end;
 
 
+(**
+ * Returns the factions of [e] as a serialized JSON array of editor IDs.
+ *
+ * @param e  the element to return the factions of
+ * @return the factions of [e] as a serialized JSON array of editor IDs
+ *)
+function getJsonFactionArray(e: IInterface): String;
+var i: Integer;
+    factions: IInterface;
+    faction: IInterface;
+    resultList: TStringList;
+begin
+    resultList := TStringList.create();
+
+    factions := eByPath(e, 'Factions');
+    for i := 0 to eCount(factions) - 1 do begin
+        faction := eByIndex(factions, i);
+        resultList.add(evByPath(faction, 'Faction'));
+    end;
+
+    resultList.sort();
+    result := stringListToJsonArray(resultList);
+    resultList.free();
+end;
+
+(**
+ * Returns the perks of [e] as a serialized JSON array of editor IDs.
+ *
+ * @param e  the element to return the perks of
+ * @return the perks of [e] as a serialized JSON array of editor IDs
+ *)
+function getJsonPerkArray(e: IInterface): String;
+var i: Integer;
+    perks: IInterface;
+    perk: IInterface;
+    resultList: TStringList;
+begin
+    resultList := TStringList.create();
+
+    perks := eByPath(e, 'Perks');
+    for i := 0 to eCount(perks) - 1 do begin
+        perk := eByIndex(perks, i);
+        resultList.add(evByPath(perk, 'Perk'));
+    end;
+
+    resultList.sort();
+    result := stringListToJsonArray(resultList);
+    resultList.free();
+end;
+
+
 end.

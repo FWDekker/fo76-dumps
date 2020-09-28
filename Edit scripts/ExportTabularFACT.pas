@@ -107,34 +107,26 @@ function getJsonRelationArray(fact: IInterface): String;
 var i: Integer;
     relations: IInterface;
     relation: IInterface;
-    relationKeys: TStringList;
-    relationValues: TStringList;
     relationFaction: IInterface;
     resultList: TStringList;
 begin
     resultList := TStringList.create();
-    relationKeys := TStringList.create();
-    relationValues := TStringList.create();
-
-    relationKeys.add('Faction');
-    relationKeys.add('Reaction');
 
     relations := eByPath(fact, 'Relations');
     for i := 0 to eCount(relations) - 1 do begin
         relation := eByIndex(relations, i);
         relationFaction := linksTo(eByPath(relation, 'Faction'));
 
-        relationValues.clear();
-        relationValues.add(evByPath(relation, 'Faction'));
-        relationValues.add(evByPath(relation, 'Group Combat Reaction'));
-        resultList.add(listsToJsonObject(relationKeys, relationValues, false));
+        resultList.add(
+            '{' +
+             '"Faction":"' + escapeJson(evByPath(relation, 'Faction')) + '"' +
+            ',"Group Combat Reaction":"' + escapeJson(evByPath(relation, 'Group Combat Reaction')) + '"'
+            '}'
+        );
     end;
 
     resultList.sort();
     result := listToJsonArray(resultList);
-
-    relationValues.free();
-    relationKeys.free();
     resultList.free();
 end;
 
@@ -158,10 +150,10 @@ begin
     entries := eByPath(cont, 'Items');
     for i := 0 to eCount(entries) - 1 do begin
         entry := eBySign(eByIndex(entries, i), 'CNTO');
-        item := linkByPath(entry, 'Item');
+        item := eByPath(entry, 'Item');
 
-        if signature(item) = 'LVLI' then begin
-            addLeveledItemList(lvliHistory, itemHistory, item);
+        if signature(linksTo(item)) = 'LVLI' then begin
+            addLeveledItemList(lvliHistory, itemHistory, linksTo(item));
         end else begin
             addItem(itemHistory, item);
         end;
@@ -200,13 +192,13 @@ begin
         lvlo := eByIndex(eBySign(entry, 'LVLO'), 0);
 
         if name(lvlo) = 'Base Data' then begin
-            item := linkByPath(lvlo, 'Reference');
+            item := eByPath(lvlo, 'Reference');
         end else begin
-            item := linksTo(lvlo);
+            item := lvlo;
         end;
 
-        if signature(item) = 'LVLI' then begin
-            addLeveledItemList(lvliHistory, itemHistory, item);
+        if signature(linksTo(item)) = 'LVLI' then begin
+            addLeveledItemList(lvliHistory, itemHistory, linksTo(item));
         end else begin
             addItem(itemHistory, item);
         end;
@@ -217,12 +209,12 @@ end;
  * Adds a string representation of [item] to [itemHistory] if it's not already in there.
  *
  * @param itemHistory  the list of items to (potentially) add [item] to
- * @param item         the item to (potentially) add to [itemHistory]
+ * @param item         the link to the item to (potentially) add to [itemHistory]
  *)
 procedure addItem(itemHistory: TStringList; item: IInterface);
 var itemString: String;
 begin
-    itemString := evBySign(item, 'FULL') + ' (' + stringFormID(item) + ')';
+    itemString := gev(item);
 
     if itemHistory.indexOf(itemString) >= 0 then begin
         exit;

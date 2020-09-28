@@ -72,36 +72,30 @@ end;
 function getJsonComponentArray(e: IInterface): String;
 var i: Integer;
     components: IInterface;
+    entry: IInterface;
     component: IInterface;
-    componentKeys: TStringList;
-    componentValues: TStringList;
     quantity: IInterface;
     resultList: TStringList;
 begin
     resultList := TStringList.create();
-    componentKeys := TStringList.create();
-    componentValues := TStringList.create();
-
-    componentKeys.add('Component');
-    componentKeys.add('Count');
 
     components := eBySign(e, 'MCQP');
     for i := 0 to eCount(components) - 1 do begin
-        component := eByName(eByIndex(components, i), 'Component');
-        quantity := linkByName(eByIndex(components, i), 'Component Count Keyword');
+        entry := eByIndex(components, i);
+        component := eByName(entry, 'Component');
+        quantity := eByName(entry, 'Component Count Keyword');
 
-        componentValues.clear();
-        componentValues.add(gev(component));
-        componentValues.add(intToStr(quantityKeywordToValue(linksTo(component), quantity)));
-
-        resultList.add(listsToJsonObject(componentKeys, componentValues, false));
+        resultList.add(
+            '{' +
+             '"Component":"' + escapeJson(gev(component)) + '"' +
+            ',"Component Count Keyword":"' + escapeJson(gev(quantity)) + '"' +
+            ',"Count":"' + escapeJson(intToStr(quantityKeywordToValue(linksTo(component), linksTo(quantity)))) + '"' +
+            '}'
+        );
     end;
 
     resultList.sort();
     result := listToJsonArray(resultList);
-
-    componentValues.free();
-    componentKeys.free();
     resultList.free();
 end;
 
