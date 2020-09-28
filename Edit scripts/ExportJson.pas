@@ -89,7 +89,7 @@ begin
 
     keywords := eBySign(eByPath(e, 'Keywords'), 'KWDA');
     for i := 0 to eCount(keywords) - 1 do begin
-        resultList.add(evBySign(linkByIndex(keywords, i), 'EDID'));
+        resultList.add(evByIndex(keywords, i));
     end;
 
     resultList.sort();

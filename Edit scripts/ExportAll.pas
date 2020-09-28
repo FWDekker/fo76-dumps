@@ -15,6 +15,7 @@ uses ExportTabularARMO,
      ExportTabularLVLI,
      ExportTabularMISC,
      ExportTabularNPC_,
+     ExportTabularOMOD,
      ExportTabularOTFT,
      ExportTabularRACE,
      ExportTabularWEAP,
@@ -57,6 +58,7 @@ begin
         clb.items.add('LVLI.csv');
         clb.items.add('MISC.csv');
         clb.items.add('NPC_.csv');
+        clb.items.add('OMOD.csv');
         clb.items.add('OTFT.csv');
         clb.items.add('RACE.csv');
         clb.items.add('WEAP.csv');
@@ -137,6 +139,9 @@ begin
     if _hasSelectedDump('NPC_.csv') then begin
         ExportTabularNPC_.initialize();
     end;
+    if _hasSelectedDump('OMOD.csv') then begin
+        ExportTabularOMOD.initialize();
+    end;
     if _hasSelectedDump('OTFT.csv') then begin
         ExportTabularOTFT.initialize();
     end;
@@ -197,6 +202,9 @@ begin
     end;
     if _hasSelectedDump('NPC_.csv') and ExportTabularNPC_.canProcess(e) then begin
         ExportTabularNPC_.process(e);
+    end;
+    if _hasSelectedDump('OMOD.csv') and ExportTabularOMOD.canProcess(e) then begin
+        ExportTabularOMOD.process(e);
     end;
     if _hasSelectedDump('OTFT.csv') and ExportTabularOTFT.canProcess(e) then begin
         ExportTabularOTFT.process(e);
@@ -259,6 +267,9 @@ begin
     end;
     if _hasSelectedDump('NPC_.csv') then begin
         ExportTabularNPC_.finalize();
+    end;
+    if _hasSelectedDump('OMOD.csv') then begin
+        ExportTabularOMOD.finalize();
     end;
     if _hasSelectedDump('OTFT.csv') then begin
         ExportTabularOTFT.finalize();

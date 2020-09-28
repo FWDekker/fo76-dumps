@@ -32,6 +32,7 @@ To manually interpret location data, take a look at my [maps with grids](https:/
 | [`ExportTabularLVLI.pas`](Edit%20scripts/ExportTabularLVLI.pas) | `LVLI.csv` | Leveled lists                                    |
 | [`ExportTabularMISC.pas`](Edit%20scripts/ExportTabularMISC.pas) | `MISC.csv` | Inventory item weights, values, and scrap yields |
 | [`ExportTabularNPC_.pas`](Edit%20scripts/ExportTabularNPC_.pas) | `NPC_.csv` | NPC factions, keywords, stats, etc.              |
+| [`ExportTabularOMOD.pas`](Edit%20scripts/ExportTabularOMOD.pas) | `OMOD.csv` | Armor and weapon mods                            |
 | [`ExportTabularOTFT.pas`](Edit%20scripts/ExportTabularOTFT.pas) | `OTFT.csv` | Outfits                                          |
 | [`ExportTabularRACE.pas`](Edit%20scripts/ExportTabularRACE.pas) | `RACE.csv` | Race keywords and properties                     |
 | [`ExportTabularWEAP.pas`](Edit%20scripts/ExportTabularWEAP.pas) | `WEAP.csv` | Weapons                                          |
