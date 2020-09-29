@@ -66,12 +66,12 @@ begin
         + escapeCsvString(evBySign(npc_, 'FULL')) + ', '
         + escapeCsvString(evBySign(npc_, 'SHRT')) + ', '
         + escapeCsvString(evByPath(acbs, 'Level')) + ', '
-        + escapeCsvString(getJsonChildArray(eByPath(npc_, 'Factions'))) + ', '
+        + escapeCsvString(getJsonFactionArray(npc_)) + ', '
         + escapeCsvString(evBySign(npc_, 'RNAM')) + ', '
         + escapeCsvString(evBySign(npc_, 'ATKR')) + ', '
         + escapeCsvString(evBySign(npc_, 'CNAM')) + ', '
         + escapeCsvString(getJsonChildArray(eBySign(eByPath(npc_, 'Keywords'), 'KWDA'))) + ', '
-        + escapeCsvString(getJsonChildArray(eByPath(npc_, 'Perks'))) + ', '
+        + escapeCsvString(getJsonPerkArray(npc_)) + ', '
         + escapeCsvString(getJsonPropertyObject(npc_)) + ', '
         + escapeCsvString(evByPath(aidt, 'Aggression')) + ', '
         + escapeCsvString(evByPath(aidt, 'Confidence')) + ', '
@@ -90,6 +90,62 @@ begin
     createDir('dumps/');
     ExportTabularNPC__outputLines.saveToFile('dumps/NPC_.csv');
     ExportTabularNPC__outputLines.free();
+end;
+
+
+(**
+ * Returns a JSON array of each of the NPC's factions, each faction as a JSON object.
+ *
+ * @param npc_  the NPC to return the factions of
+ * @return a JSON array of each of the NPC's factions, each faction as a JSON object
+ *)
+function getJsonFactionArray(npc_: IInterface): String;
+var i: Integer;
+    factions: IInterface;
+    faction: IInterface;
+    resultList: TStringList;
+begin
+    resultList := TStringList.create();
+
+    factions := eByName(npc_, 'Factions');
+    for i := 0 to eCount(factions) - 1 do begin
+        faction := eByIndex(factions, i);
+        resultList.add(
+            '{' +
+             '"Faction":"' + escapeJson(evByName(faction, 'Faction')) + '"' +
+            ',"Rank":"'    + escapeJson(evByName(faction, 'Rank'))    + '"' +
+            '}'
+        );
+    end;
+
+    resultList.sort();
+    result := listToJsonArray(resultList);
+    resultList.free();
+end;
+
+(**
+ * Returns a JSON array of references to the NPC's perks.
+ *
+ * @param npc_  the NPC to return the perks of
+ * @return a JSON array of references to the NPC's perks
+ *)
+function getJsonPerkArray(npc_: IInterface): String;
+var i: Integer;
+    perks: IInterface;
+    perk: IInterface;
+    resultList: TStringList;
+begin
+    resultList := TStringList.create();
+
+    perks := eByName(npc_, 'Perks');
+    for i := 0 to eCount(perks) - 1 do begin
+        perk := eByIndex(perks, i);
+        resultList.add(evByName(perk, 'Perk'));
+    end;
+
+    resultList.sort();
+    result := stringListToJsonArray(resultList);
+    resultList.free();
 end;
 
 

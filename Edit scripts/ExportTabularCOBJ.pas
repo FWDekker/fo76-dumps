@@ -12,17 +12,13 @@ function initialize(): Integer;
 begin
     ExportTabularCOBJ_outputLines := TStringList.create();
     ExportTabularCOBJ_outputLines.add(
-            '"File"'              // Name of the originating ESM
-        + ', "Form ID"'           // Form ID
-        + ', "Editor ID"'         // Editor ID
-        + ', "Product form ID"'   // Form ID of the product, or an empty string if there is no product
-        + ', "Product editor ID"' // Editor ID of the product, or an empty string if there is no product
-        + ', "Product name"'      // Full name of the product, or an empty string if there is no product
-        + ', "Recipe form ID"'    // Form ID of the recipe, or an empty string if there is no recipe
-        + ', "Recipe editor ID"'  // Editor ID of the recipe, or an empty string if there is no recipe
-        + ', "Recipe name"'       // Full name of the recipe, or an empty string if there is no recipe
-        + ', "Components"'        // Sorted JSON array of the components needed to craft. Each component is formatted as
-                                  // `[editor id] ([amount])`
+            '"File"'        // Name of the originating ESM
+        + ', "Form ID"'     // Form ID
+        + ', "Editor ID"'   // Editor ID
+        + ', "Product"'     // Reference to product
+        + ', "Recipe"'      // Reference to recipe
+        + ', "Components"'  // Sorted JSON array of the components needed to craft. Each component is formatted as
+                            // `[editor id] ([amount])`
     );
 end;
 
@@ -40,19 +36,15 @@ begin
         exit;
     end;
 
-    product := linkBySign(cobj, 'CNAM');
-    recipe := linkBySign(cobj, 'GNAM');
+    product := eBySign(cobj, 'CNAM');
+    recipe := eBySign(cobj, 'GNAM');
 
     ExportTabularCOBJ_outputLines.add(
           escapeCsvString(getFileName(getFile(cobj))) + ', '
         + escapeCsvString(stringFormID(cobj)) + ', '
         + escapeCsvString(evBySign(cobj, 'EDID')) + ', '
-        + escapeCsvString(ifThen(not assigned(product), '', stringFormID(product))) + ', '
-        + escapeCsvString(ifThen(not assigned(product), '', evBySign(product, 'EDID'))) + ', '
-        + escapeCsvString(ifThen(not assigned(product), '', evBySign(product, 'FULL'))) + ', '
-        + escapeCsvString(ifThen(not assigned(recipe), '', stringFormID(recipe))) + ', '
-        + escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'EDID'))) + ', '
-        + escapeCsvString(ifThen(not assigned(recipe), '', evBySign(recipe, 'FULL'))) + ', '
+        + escapeCsvString(ifThen(not assigned(linksTo(product)), '', gev(product))) + ', '
+        + escapeCsvString(ifThen(not assigned(linksTo(recipe)), '', gev(recipe))) + ', '
         + escapeCsvString(getJsonComponentArray(cobj))
     );
 end;

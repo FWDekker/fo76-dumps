@@ -21,14 +21,13 @@ begin
         + ', "Weight"'                // Item weight in pounds
         + ', "Value"'                 // Item value in bottlecaps
         + ', "Health"'                // Item health in points
-        + ', "Race"'                  // Race that can equip this weapon
         + ', "Levels"'                // Sorted JSON array of possible weapon levels
         + ', "DR curve"'              // Damage Resistance curve
         + ', "Durability min curve"'  // Min durability curve
         + ', "Durability max curve"'  // Max durability curve
         + ', "Condition dmg curve"'   // Condition damage scale factor curve
         + ', "Attach slots"'          // Sorted JSON array of attachment slots available to the weapon
-        + ', "Equip slots"'           // Sorted JSON array of equipment slots used by the weapon
+        + ', "Equipment type"'        // Equipment type
         + ', "Keywords"'              // Sorted JSON array of keywords. Each keyword is represented by its editor ID
     );
 
@@ -49,7 +48,7 @@ begin
         exit;
     end;
 
-    data := eBySign(weap, 'DATA');
+    data := eBySign(weap, 'DNAM');
 
     ExportTabularWEAP_outputLines.add(
           escapeCsvString(getFileName(getFile(weap))) + ', '
@@ -59,14 +58,13 @@ begin
         + escapeCsvString(evByName(data, 'Weight')) + ', '
         + escapeCsvString(evByName(data, 'Value')) + ', '
         + escapeCsvString(evByName(data, 'Health')) + ', '
-        + escapeCsvString(evBySign(weap, 'RNAM')) + ', '
         + escapeCsvString(getJsonChildArray(eBySign(weap, 'EILV'))) + ','
         + escapeCsvString(evBySign(weap, 'CVT0')) + ','
         + escapeCsvString(evBySign(weap, 'CVT1')) + ','
         + escapeCsvString(evBySign(weap, 'CVT3')) + ','
         + escapeCsvString(evBySign(weap, 'CVT2')) + ','
         + escapeCsvString(getJsonChildArray(eBySign(weap, 'APPR'))) + ','
-        + escapeCsvString(getJsonChildNameArray(eByIndex(eBySign(weap, 'BOD2'), 0))) + ', '
+        + escapeCsvString(evBySign(weap, 'ETYP')) + ', '
         + escapeCsvString(getJsonChildArray(eBySign(eByPath(weap, 'Keywords'), 'KWDA')))
     );
 

@@ -86,7 +86,7 @@ begin
         resultList.add(
             '{' +
              '"Mod":"'            + escapeJson(evByName(include, 'Mod'))            + '"' +
-            ',"Minimum Level":"'  + escapeJson(evByName(include, 'MinimumLevel'))   + '"' +
+            ',"Minimum Level":"'  + escapeJson(evByName(include, 'Minimum Level'))  + '"' +
             ',"Optional":"'       + escapeJson(evByName(include, 'Optional'))       + '"' +
             ',"Don''t Use All":"' + escapeJson(evByName(include, 'Don''t Use All')) + '"' +
             '}'
