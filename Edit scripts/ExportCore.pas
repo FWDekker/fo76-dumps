@@ -337,6 +337,8 @@ end;
 (**
  * Parses the given string to a float, rounds it, and turns that into a string.
  *
+ * If the given string is not a float, the given string is returned.
+ *
  * @param float  the float to parse and round
  * @return a string describing the rounded integer
  *)
@@ -346,7 +348,12 @@ begin
         result := '';
         exit;
     end;
-    result := intToStr(round(strToFloat(float)));
+
+    try
+        result := intToStr(round(strToFloat(float)));
+    except
+        result := float;
+    end;
 end;
 
 
