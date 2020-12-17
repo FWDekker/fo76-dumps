@@ -19,9 +19,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'OTFT';
+    result := signature(el) = 'OTFT';
 end;
 
 function process(otft: IInterface): Integer;

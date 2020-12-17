@@ -24,9 +24,9 @@ begin
     ExportTabularLVLI_LOC_outputLines := initLocList();
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'LVLI';
+    result := signature(el) = 'LVLI';
 end;
 
 function process(lvli: IInterface): Integer;
@@ -62,14 +62,14 @@ end;
 
 
 (**
- * Returns the leveled list entries of [e] as a serialized JSON array.
+ * Returns the leveled list entries of [el] as a serialized JSON array.
  *
  * Each leveled list entry is expressed using a JSON object containing the item, the level, and the count.
  *
- * @param e  the element to return the leveled list entries of
- * @return the entries of [e] as a serialized JSON array
+ * @param el  the element to return the leveled list entries of
+ * @return the entries of [el] as a serialized JSON array
  *)
-function getJsonLeveledListArray(e: IInterface): String;
+function getJsonLeveledListArray(el: IInterface): String;
 var i: Integer;
     entries: IInterface;
     entry: IInterface;
@@ -79,7 +79,7 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    entries := eByName(e, 'Leveled List Entries');
+    entries := eByName(el, 'Leveled List Entries');
     for i := 0 to eCount(entries) - 1 do begin
         entry := eByIndex(entries, i);
         lvlo := eBySign(entry, 'LVLO');

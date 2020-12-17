@@ -19,9 +19,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'GMST';
+    result := signature(el) = 'GMST';
 end;
 
 function process(gmst: IInterface): Integer;

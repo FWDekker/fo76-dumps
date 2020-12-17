@@ -34,9 +34,9 @@ begin
     ExportTabularWEAP_LOC_outputLines := initLocList();
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'WEAP';
+    result := signature(el) = 'WEAP';
 end;
 
 function process(weap: IInterface): Integer;

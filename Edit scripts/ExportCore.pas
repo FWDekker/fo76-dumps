@@ -14,125 +14,125 @@ unit ExportCore;
 (**
  * Shorthand for [getEditValue].
  *)
-function gev(e: IwbElement): String;
+function gev(el: IwbElement): String;
 begin
-    result := getEditValue(e);
+    result := getEditValue(el);
 end;
 
 (**
  * Shorthand for [elementBySignature].
  *)
-function eBySign(e: IwbContainer; sig: String): IwbElement;
+function eBySign(el: IwbContainer; sig: String): IwbElement;
 begin
-    result := elementBySignature(e, sig);
+    result := elementBySignature(el, sig);
 end;
 
 (**
  * Shorthand for [elementByPath].
  *)
-function eByPath(e: IwbContainer; path: String): IwbElement;
+function eByPath(el: IwbContainer; path: String): IwbElement;
 begin
-    result := elementByPath(e, path);
+    result := elementByPath(el, path);
 end;
 
 (**
  * Shorthand for [elementByName].
  *)
-function eByName(e: IwbContainer; nam: String): IwbElement;
+function eByName(el: IwbContainer; nam: String): IwbElement;
 begin
-    result := elementByName(e, nam);
+    result := elementByName(el, nam);
 end;
 
 (**
  * Shorthand for [elementCount].
  *)
-function eCount(e: IwbContainer): Integer;
+function eCount(el: IwbContainer): Integer;
 begin
-    result := elementCount(e);
+    result := elementCount(el);
 end;
 
 (**
  * Shorthand for [elementByIndex].
  *)
-function eByIndex(e: IwbContainer; i: Integer): IwbElement;
+function eByIndex(el: IwbContainer; i: Integer): IwbElement;
 begin
-    result := elementByIndex(e, i);
+    result := elementByIndex(el, i);
 end;
 
 (**
  * Shorthand for calling [getEditValue] and [elementBySignature].
  *)
-function evBySign(e: IInterface; sig: String): String;
+function evBySign(el: IInterface; sig: String): String;
 begin
-    result := gev(eBySign(e, sig));
+    result := gev(eBySign(el, sig));
 end;
 
 (**
  * Shorthand for calling [getEditValue] and [elementByPath].
  *)
-function evByPath(e: IInterface; path: String): String;
+function evByPath(el: IInterface; path: String): String;
 begin
-    result := gev(eByPath(e, path));
+    result := gev(eByPath(el, path));
 end;
 
 (**
  * Shorthand for calling [getEditValue] and [elementByName].
  *)
-function evByName(e: IInterface; nam: String): String;
+function evByName(el: IInterface; nam: String): String;
 begin
-    result := gev(eByName(e, nam));
+    result := gev(eByName(el, nam));
 end;
 
 (**
  * Shorthand for calling [getEditValue] and [elementByIndex].
  *)
-function evByIndex(e: IInterface; i: Integer): String;
+function evByIndex(el: IInterface; i: Integer): String;
 begin
-    result := gev(eByIndex(e, i));
+    result := gev(eByIndex(el, i));
 end;
 
 (**
  * Shorthand for calling [linksTo] and [elementBySignature].
  *)
-function linkBySign(e: IInterface; sig: String): IInterface;
+function linkBySign(el: IInterface; sig: String): IInterface;
 begin
-    result := linksTo(eBySign(e, sig));
+    result := linksTo(eBySign(el, sig));
 end;
 
 (**
  * Shorthand for calling [linksTo] and [elementByPath].
  *)
-function linkByPath(e: IInterface; path: String): IInterface;
+function linkByPath(el: IInterface; path: String): IInterface;
 begin
-    result := linksTo(eByPath(e, path));
+    result := linksTo(eByPath(el, path));
 end;
 
 (**
  * Shorthand for calling [linksTo] and [elementByName].
  *)
-function linkByName(e: IInterface; nam: String): IInterface;
+function linkByName(el: IInterface; nam: String): IInterface;
 begin
-    result := linksTo(eByName(e, nam));
+    result := linksTo(eByName(el, nam));
 end;
 
 (**
  * Shorthand for calling [linksTo] and [elementByIndex].
  *)
-function linkByIndex(e: IInterface; i: Integer): IInterface;
+function linkByIndex(el: IInterface; i: Integer): IInterface;
 begin
-    result := linksTo(eByIndex(e, i));
+    result := linksTo(eByIndex(el, i));
 end;
 
 
 (**
- * Returns a lowercase string representation of [e]'s form ID.
+ * Returns a lowercase string representation of [el]'s form ID.
  *
- * @param e  the record to return the form ID of
- * @return a lowercase string representation of [e]'s form ID
+ * @param el  the record to return the form ID of
+ * @return a lowercase string representation of [el]'s form ID
  *)
-function stringFormID(e: IInterface): String;
+function stringFormID(el: IInterface): String;
 begin
-    result := lowerCase(intToHex(formID(e), 8));
+    result := lowerCase(intToHex(formID(el), 8));
 end;
 
 
@@ -144,19 +144,19 @@ end;
  **)
 
 (**
- * Returns `true` iff [e] is referenced by a record with signature [sig].
+ * Returns `true` iff [el] is referenced by a record with signature [sig].
  *
- * @param e    the element to check for references
+ * @param el   the element to check for references
  * @param sig  the signature to check
- * @return `true` iff [e] is referenced by a record with signature [sig]
+ * @return `true` iff [el] is referenced by a record with signature [sig]
  *)
-function isReferencedBy(e: IInterface; sig: String): Boolean;
+function isReferencedBy(el: IInterface; sig: String): Boolean;
 var i: Integer;
 begin
     result := false;
 
-    for i := 0 to referencedByCount(e) - 1 do begin
-        if signature(referencedByIndex(e, i)) = sig then begin
+    for i := 0 to referencedByCount(el) - 1 do begin
+        if signature(referencedByIndex(el, i)) = sig then begin
             result := true;
             exit;
         end;

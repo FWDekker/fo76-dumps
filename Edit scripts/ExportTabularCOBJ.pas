@@ -22,9 +22,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'COBJ';
+    result := signature(el) = 'COBJ';
 end;
 
 function process(cobj: IInterface): Integer;

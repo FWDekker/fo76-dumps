@@ -32,9 +32,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'FACT';
+    result := signature(el) = 'FACT';
 end;
 
 function process(fact: IInterface): Integer;

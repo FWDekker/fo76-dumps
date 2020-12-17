@@ -26,9 +26,9 @@ begin
     ExportTabularMISC_LOC_outputLines := initLocList();
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'MISC';
+    result := signature(el) = 'MISC';
 end;
 
 function process(misc: IInterface): Integer;
@@ -64,12 +64,12 @@ end;
 
 
 (**
- * Returns the components of [e] as a comma-separated list of identifiers and counts.
+ * Returns the components of [el] as a comma-separated list of identifiers and counts.
  *
- * @param e  the element to return the components of
- * @return the components of [e] as a comma-separated list of identifiers and counts
+ * @param el  the element to return the components of
+ * @return the components of [el] as a comma-separated list of identifiers and counts
  *)
-function getJsonComponentArray(e: IInterface): String;
+function getJsonComponentArray(el: IInterface): String;
 var i: Integer;
     components: IInterface;
     entry: IInterface;
@@ -79,7 +79,7 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    components := eBySign(e, 'MCQP');
+    components := eBySign(el, 'MCQP');
     for i := 0 to eCount(components) - 1 do begin
         entry := eByIndex(components, i);
         component := eByName(entry, 'Component');

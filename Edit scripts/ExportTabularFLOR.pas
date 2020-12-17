@@ -26,9 +26,9 @@ begin
     ExportTabularFLOR_LOC_outputLines := initLocList();
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'FLOR';
+    result := signature(el) = 'FLOR';
 end;
 
 function process(flor: IInterface): Integer;

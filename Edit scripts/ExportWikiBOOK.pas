@@ -12,9 +12,9 @@ begin
     ExportWikiBOOK_outputLines := TStringList.create();
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'BOOK';
+    result := signature(el) = 'BOOK';
 end;
 
 function process(book: IInterface): Integer;

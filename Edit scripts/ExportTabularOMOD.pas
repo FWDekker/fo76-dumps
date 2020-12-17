@@ -27,9 +27,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'OMOD';
+    result := signature(el) = 'OMOD';
 end;
 
 function process(omod: IInterface): Integer;

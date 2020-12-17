@@ -75,15 +75,15 @@ end;
  **)
 
 (**
- * Returns the properties of [e] as a serialized JSON object.
+ * Returns the properties of [el] as a serialized JSON object.
  *
  * Each property is expressed using the property's editor ID as the key and either the property's value or the
  * property's curve table's editor ID as the value.
  *
- * @param e  the element to return the properties of
- * @return the properties of [e] as a serialized JSON object
+ * @param el  the element to return the properties of
+ * @return the properties of [el] as a serialized JSON object
  *)
-function getJsonPropertyObject(e: IInterface): String;
+function getJsonPropertyObject(el: IInterface): String;
 var i: Integer;
     props: IInterface;
     prop: IInterface;
@@ -92,7 +92,7 @@ var i: Integer;
 begin
     result := '';
 
-    props := eBySign(e, 'PRPS');
+    props := eBySign(el, 'PRPS');
     for i := 0 to eCount(props) - 1 do begin
         prop := eByIndex(props, i);
         avEdid := evBySign(linkByPath(prop, 'Actor Value'), 'EDID');

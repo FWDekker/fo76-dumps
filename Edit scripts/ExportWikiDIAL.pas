@@ -12,9 +12,9 @@ begin
     ExportWikiDIAL_outputLines := TStringList.create();
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'QUST';
+    result := signature(el) = 'QUST';
 end;
 
 function process(dial: IInterface): Integer;
@@ -152,24 +152,24 @@ end;
 
 function getElementAfter(group: IInterface; previousFormID: Integer): IInterface;
 var i: Integer;
-    e: IInterface;
+    el: IInterface;
     nextFormID: Integer;
 begin
     nextFormID := -1;
 
     for i := 0 to eCount(group) - 1 do begin
-        e := eByIndex(group, i);
+        el := eByIndex(group, i);
 
-        if (formID(e) > previousFormID) and ((formID(e) <= nextFormID) or (nextFormId = -1)) then begin
-            nextFormID := formID(e);
+        if (formID(el) > previousFormID) and ((formID(el) <= nextFormID) or (nextFormId = -1)) then begin
+            nextFormID := formID(el);
         end;
     end;
 
     for i := 0 to eCount(group) - 1 do begin
-        e := eByIndex(group, i);
+        el := eByIndex(group, i);
 
-        if formID(e) = nextFormID then begin
-            result := e;
+        if formID(el) = nextFormID then begin
+            result := el;
             exit;
         end;
     end;

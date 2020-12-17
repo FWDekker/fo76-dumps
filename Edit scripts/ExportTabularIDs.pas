@@ -30,20 +30,20 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
     result := true;
 end;
 
-function process(e: IInterface): Integer;
+function process(el: IInterface): Integer;
 begin
     appendLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer, ExportTabularIDs_size, ExportTabularIDs_maxSize,
-          escapeCsvString(getFileName(getFile(e))) + ', '
-        + escapeCsvString(signature(e)) + ', '
-        + escapeCsvString(stringFormID(e)) + ', '
-        + escapeCsvString(evBySign(e, 'EDID')) + ', '
-        + escapeCsvString(evBySign(e, 'FULL')) + ', '
-        + escapeCsvString(getJsonChildArray(eBySign(eByPath(e, 'Keywords'), 'KWDA')))
+          escapeCsvString(getFileName(getFile(el))) + ', '
+        + escapeCsvString(signature(el)) + ', '
+        + escapeCsvString(stringFormID(el)) + ', '
+        + escapeCsvString(evBySign(el, 'EDID')) + ', '
+        + escapeCsvString(evBySign(el, 'FULL')) + ', '
+        + escapeCsvString(getJsonChildArray(eBySign(eByPath(el, 'Keywords'), 'KWDA')))
     );
 end;
 

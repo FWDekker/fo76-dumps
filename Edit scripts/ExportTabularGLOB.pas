@@ -18,9 +18,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'GLOB';
+    result := signature(el) = 'GLOB';
 end;
 
 function process(glob: IInterface): Integer;

@@ -38,9 +38,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'NPC_';
+    result := signature(el) = 'NPC_';
 end;
 
 function process(npc_: IInterface): Integer;

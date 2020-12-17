@@ -13,9 +13,9 @@ begin
     ExportWikiNOTE_outputLines := TStringList.create();
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'NOTE';
+    result := signature(el) = 'NOTE';
 end;
 
 function process(note: IInterface): Integer;

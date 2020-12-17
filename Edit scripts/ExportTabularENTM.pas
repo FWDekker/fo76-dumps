@@ -26,9 +26,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'ENTM';
+    result := signature(el) = 'ENTM';
 end;
 
 function process(entm: IInterface): Integer;

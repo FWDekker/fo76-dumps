@@ -21,9 +21,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'RACE';
+    result := signature(el) = 'RACE';
 end;
 
 function process(race: IInterface): Integer;

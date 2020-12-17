@@ -20,9 +20,9 @@ begin
     );
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'CLAS';
+    result := signature(el) = 'CLAS';
 end;
 
 function process(clas: IInterface): Integer;

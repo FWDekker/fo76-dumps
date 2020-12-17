@@ -28,18 +28,18 @@ begin
 end;
 
 (**
- * Appends to [locations] an entry for each location reference to [e].
+ * Appends to [locations] an entry for each location reference to [el].
  *
  * @param locations  the list to append location reference records to
- * @param e          the record to find the location reference data of
+ * @param el         the record to find the location reference data of
  *)
-procedure appendLocationData(var locations: TStringList; e: IInterface);
+procedure appendLocationData(var locations: TStringList; el: IInterface);
 var ref: IwbElement;
     data: IInterface;
     i: Integer;
 begin
-    for i := 0 to referencedByCount(e) - 1 do begin
-        ref := referencedByIndex(e, i);
+    for i := 0 to referencedByCount(el) - 1 do begin
+        ref := referencedByIndex(el, i);
         data := eBySign(ref, 'DATA');
 
         if (signature(ref) <> 'REFR') or (not elementExists(data, 'Position')) then begin
@@ -49,9 +49,9 @@ begin
         locations.add(
               escapeCsvString(getFileName(getFile(ref))) + ', '
             + escapeCsvString(stringFormID(ref)) + ', '
-            + escapeCsvString(stringFormID(e)) + ', '
-            + escapeCsvString(evBySign(e, 'EDID')) + ', '
-            + escapeCsvString(evBySign(e, 'FULL')) + ', '
+            + escapeCsvString(stringFormID(el)) + ', '
+            + escapeCsvString(evBySign(el, 'EDID')) + ', '
+            + escapeCsvString(evBySign(el, 'FULL')) + ', '
             + escapeCsvString(evBySign(ref, 'XLYR')) + ', '
             + escapeCsvString(gev(ElementByName(ref, 'Cell'))) + ', '
             + escapeCsvString(vec3ToString(ElementByName(data,'Position'))) + ', '

@@ -165,67 +165,67 @@ begin
     end;
 end;
 
-function process(e: IInterface): Integer;
+function process(el: IInterface): Integer;
 begin
-    if _hasSelectedDump('ARMO.csv') and ExportTabularARMO.canProcess(e) then begin
-        ExportTabularARMO.process(e);
+    if _hasSelectedDump('ARMO.csv') and ExportTabularARMO.canProcess(el) then begin
+        ExportTabularARMO.process(el);
     end;
-    if _hasSelectedDump('CLAS.csv') and ExportTabularCLAS.canProcess(e) then begin
-        ExportTabularCLAS.process(e);
+    if _hasSelectedDump('CLAS.csv') and ExportTabularCLAS.canProcess(el) then begin
+        ExportTabularCLAS.process(el);
     end;
-    if _hasSelectedDump('COBJ.csv') and ExportTabularCOBJ.canProcess(e) then begin
-        ExportTabularCOBJ.process(e);
+    if _hasSelectedDump('COBJ.csv') and ExportTabularCOBJ.canProcess(el) then begin
+        ExportTabularCOBJ.process(el);
     end;
-    if _hasSelectedDump('ENTM.csv') and ExportTabularENTM.canProcess(e) then begin
-        ExportTabularENTM.process(e);
+    if _hasSelectedDump('ENTM.csv') and ExportTabularENTM.canProcess(el) then begin
+        ExportTabularENTM.process(el);
     end;
-    if _hasSelectedDump('FACT.csv') and ExportTabularFACT.canProcess(e) then begin
-        ExportTabularFACT.process(e);
+    if _hasSelectedDump('FACT.csv') and ExportTabularFACT.canProcess(el) then begin
+        ExportTabularFACT.process(el);
     end;
-    if _hasSelectedDump('FLOR.csv') and ExportTabularFLOR.canProcess(e) then begin
-        ExportTabularFLOR.process(e);
+    if _hasSelectedDump('FLOR.csv') and ExportTabularFLOR.canProcess(el) then begin
+        ExportTabularFLOR.process(el);
     end;
-    if _hasSelectedDump('GLOB.csv') and ExportTabularGLOB.canProcess(e) then begin
-        ExportTabularGLOB.process(e);
+    if _hasSelectedDump('GLOB.csv') and ExportTabularGLOB.canProcess(el) then begin
+        ExportTabularGLOB.process(el);
     end;
-    if _hasSelectedDump('GMST.csv') and ExportTabularGMST.canProcess(e) then begin
-        ExportTabularGMST.process(e);
+    if _hasSelectedDump('GMST.csv') and ExportTabularGMST.canProcess(el) then begin
+        ExportTabularGMST.process(el);
     end;
-    if _hasSelectedDump('IDs.csv') and ExportTabularIDs.canProcess(e) then begin
-        ExportTabularIDs.process(e);
+    if _hasSelectedDump('IDs.csv') and ExportTabularIDs.canProcess(el) then begin
+        ExportTabularIDs.process(el);
     end;
-    if _hasSelectedDump('LVLI.csv') and ExportTabularLVLI.canProcess(e) then begin
-        ExportTabularLVLI.process(e);
+    if _hasSelectedDump('LVLI.csv') and ExportTabularLVLI.canProcess(el) then begin
+        ExportTabularLVLI.process(el);
     end;
-    if _hasSelectedDump('MISC.csv') and ExportTabularMISC.canProcess(e) then begin
-        ExportTabularMISC.process(e);
+    if _hasSelectedDump('MISC.csv') and ExportTabularMISC.canProcess(el) then begin
+        ExportTabularMISC.process(el);
     end;
-    if _hasSelectedDump('NPC_.csv') and ExportTabularNPC_.canProcess(e) then begin
-        ExportTabularNPC_.process(e);
+    if _hasSelectedDump('NPC_.csv') and ExportTabularNPC_.canProcess(el) then begin
+        ExportTabularNPC_.process(el);
     end;
-    if _hasSelectedDump('OMOD.csv') and ExportTabularOMOD.canProcess(e) then begin
-        ExportTabularOMOD.process(e);
+    if _hasSelectedDump('OMOD.csv') and ExportTabularOMOD.canProcess(el) then begin
+        ExportTabularOMOD.process(el);
     end;
-    if _hasSelectedDump('OTFT.csv') and ExportTabularOTFT.canProcess(e) then begin
-        ExportTabularOTFT.process(e);
+    if _hasSelectedDump('OTFT.csv') and ExportTabularOTFT.canProcess(el) then begin
+        ExportTabularOTFT.process(el);
     end;
-    if _hasSelectedDump('RACE.csv') and ExportTabularRACE.canProcess(e) then begin
-        ExportTabularRACE.process(e);
+    if _hasSelectedDump('RACE.csv') and ExportTabularRACE.canProcess(el) then begin
+        ExportTabularRACE.process(el);
     end;
-    if _hasSelectedDump('WEAP.csv') and ExportTabularWEAP.canProcess(e) then begin
-        ExportTabularWEAP.process(e);
+    if _hasSelectedDump('WEAP.csv') and ExportTabularWEAP.canProcess(el) then begin
+        ExportTabularWEAP.process(el);
     end;
-    if _hasSelectedDump('BOOK.wiki') and ExportWikiBOOK.canProcess(e) then begin
-        ExportWikiBOOK.process(e);
+    if _hasSelectedDump('BOOK.wiki') and ExportWikiBOOK.canProcess(el) then begin
+        ExportWikiBOOK.process(el);
     end;
-    if _hasSelectedDump('DIAL.wiki') and ExportWikiDIAL.canProcess(e) then begin
-        ExportWikiDIAL.process(e);
+    if _hasSelectedDump('DIAL.wiki') and ExportWikiDIAL.canProcess(el) then begin
+        ExportWikiDIAL.process(el);
     end;
-    if _hasSelectedDump('NOTE.wiki') and ExportWikiNOTE.canProcess(e) then begin
-        ExportWikiNOTE.process(e);
+    if _hasSelectedDump('NOTE.wiki') and ExportWikiNOTE.canProcess(el) then begin
+        ExportWikiNOTE.process(el);
     end;
-    if _hasSelectedDump('TERM.wiki') and ExportWikiTERM.canProcess(e) then begin
-        ExportWikiTERM.process(e);
+    if _hasSelectedDump('TERM.wiki') and ExportWikiTERM.canProcess(el) then begin
+        ExportWikiTERM.process(el);
     end;
 end;
 

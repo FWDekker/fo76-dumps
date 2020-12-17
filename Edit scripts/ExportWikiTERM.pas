@@ -20,9 +20,9 @@ begin
     clearLargeFiles('dumps/TERM.wiki');
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'TERM';
+    result := signature(el) = 'TERM';
 end;
 
 function process(term: IInterface): Integer;
@@ -61,7 +61,7 @@ begin
 end;
 
 
-function getTerminalContents(e: IInterface; parents: TStringList): String;
+function getTerminalContents(el: IInterface; parents: TStringList): String;
 var body: IInterface;
     bodyItem: IInterface;
 
@@ -71,9 +71,9 @@ var body: IInterface;
 
     i: Integer;
 begin
-    parents.add(stringFormID(e));
+    parents.add(stringFormID(el));
 
-    body := eByPath(e, 'Body Text');
+    body := eByPath(el, 'Body Text');
     for i := 0 to eCount(body) - 1 do begin
         bodyItem := eByIndex(body, i);
 
@@ -86,7 +86,7 @@ begin
             + '}}' + #10;
     end;
 
-    menu := eByPath(e, 'Menu Items');
+    menu := eByPath(el, 'Menu Items');
     for i := 0 to eCount(menu) - 1 do begin
         menuItem := eByIndex(menu, i);
         menuItemType := evBySign(menuItem, 'ANAM');

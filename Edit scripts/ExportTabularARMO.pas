@@ -35,9 +35,9 @@ begin
     ExportTabularARMO_LOC_outputLines := initLocList();
 end;
 
-function canProcess(e: IInterface): Boolean;
+function canProcess(el: IInterface): Boolean;
 begin
-    result := signature(e) = 'ARMO';
+    result := signature(el) = 'ARMO';
 end;
 
 function process(armo: IInterface): Integer;
