@@ -62,7 +62,7 @@ Even though the extension is `.wiki`, they are actually just regular text files.
 ## Generation
 All dumps have been created using [xEdit](https://tes5edit.github.io/) scripts, which are written in [a special form of Object Pascal](https://tes5edit.github.io/docs/11-Scripting-Functions.html#s_11-7).
 The scripts can be found in the `Edit scripts` directory.
-For more information on the optimal procedure, see [the wiki page on generating dumps](https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps).
+For more information on a reproducible procedure, see [the wiki page on generating dumps](https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps).
 
 ## Contact
 * Bugs can be reported on the [Issues](https://github.com/FWDekker/fo76-dumps/issues) page.
