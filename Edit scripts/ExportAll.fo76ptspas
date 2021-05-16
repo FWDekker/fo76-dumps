@@ -1,1 +1,25 @@
-ExportAll.fo76pas
+(**
+ * Exposes `ExportAll` to be run by double-clicking it.
+ *)
+unit ExportAllX;
+
+uses ExportAll;
+
+
+function initialize(): Integer;
+begin
+    ExportAll.initialize();
+end;
+
+function process(el: IInterface): Integer;
+begin
+    ExportAll.process(el);
+end;
+
+function finalize(): Integer;
+begin
+    ExportAll.finalize();
+end;
+
+
+end.
