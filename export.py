@@ -10,7 +10,7 @@ import pandas as pd
 # Configuration - Change these to your liking
 game_version = "x.y.z.w"  # Visible in-game in bottom-left corner in settings menu
 
-windows = False
+windows = True
 if windows:
     archiver_path = "7z.exe"  # Path to 7z executable
     xedit_path = r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe"  # Path to xEdit
@@ -64,7 +64,8 @@ def run_xedit():
     print("> Running xEdit.\nBe sure to check version information in the xEdit window!")
 
     # Create ini if it does not exist
-    Path(compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/Fallout76.ini").touch()
+    if not windows:
+        Path(compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/Fallout76.ini").touch()
 
     # Store initial `_done.txt` modification time
     done_file = Path(done_path)
