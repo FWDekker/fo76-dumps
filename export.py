@@ -1,19 +1,32 @@
-import fileinput
 import glob
 import os
+import shutil
 import sqlite3
 import subprocess
 from pathlib import Path
 import pandas as pd
 
 
-xedit_script = "ExportAll.fo76pas"
-# xedit_script = "ExportAll.fo76ptspas"  # Uncomment to run PTS dumps
-archiver_path = "7z.exe"  # Path to 7z executable
+# Configuration - Change these to your liking
+game_version = "x.y.z.w"  # Visible in-game in bottom-left corner in settings menu
 
+windows = False
+if windows:
+    archiver_path = "7z.exe"  # Path to 7z executable
+    xedit_path = r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe"  # Path to xEdit
+else:
+    archiver_path = "7z"  # Path to 7z executable
+    compatdata_path = f"{Path.home()}/.steam/steam/steamapps/compatdata/xxxxxxxxxx/"  # Path to xEdit compatdata
+    proton_path = f"{Path.home()}/.local/share/Steam/steamapps/common/Proton - Experimental/proton"  # Path to Proton
+    steam_path = f"{Path.home()}/.steam/steam/"  # Steam installation path
+    xedit_path = f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/FO76Edit64.exe"  # Path to xEdit
+
+# Utility - No need to change these
+script_version = "2.5.1"
 script_root = "./Edit scripts"  # Relative path to scripts
-dump_root = f"{script_root}/dumps/pts"  # Relative path to exported dumps
-db_path = f"{dump_root}/fo76-dumps-vSCRIPT-vGAME.db"  # Relative path to store SQLite database at
+dump_root = f"{script_root}/dumps/"  # Relative path to exported dumps
+db_path = f"{dump_root}/fo76-dumps-v{script_version}-v{game_version}.db"  # Relative path to store SQLite database at
+done_path = f"{dump_root}/_done.txt"  # Relative path to `_done.txt`
 
 
 def prompt_confirmation(message):
@@ -33,7 +46,7 @@ def clean_up():
     # Cleans up files from a previous run.
     print("> Checking for files to clean up.")
 
-    if Path(f"{dump_root}/_done.txt").exists():
+    if Path(done_path).exists():
         prompt_confirmation("WARNING: '_done.txt' already exists, indicating a dump already exists in the target "
                             "folder. Continue anyway? (y/n) ")
 
@@ -48,16 +61,29 @@ def run_xedit():
     # Runs xEdit by launching `xedit_script` using its default file association, and waits until it closes.
     #
     # Tries to detect whether the script ran successfully by checking if '_done.txt' has been created or modified.
-    print("> Running xEdit.")
+    print("> Running xEdit.\nBe sure to check version information in the xEdit window!")
 
-    done_file = Path(f"{dump_root}/_done.txt")
+    # Create ini if it does not exist
+    Path(compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/Fallout76.ini").touch()
+
+    # Store initial `_done.txt` modification time
+    done_file = Path(done_path)
     done_time = done_file.stat().st_mtime if done_file.exists() else None
 
+    # Actually run xEdit
     cwd = os.getcwd()
     os.chdir(script_root)
-    subprocess.call(["start", "", "/wait", f"{xedit_script}"], stderr=subprocess.STDOUT, shell=True)
+    if windows:
+        os.system(f"{xedit_path} ExportAll.fo76pas")
+    else:
+        os.system(
+            f"STEAM_COMPAT_CLIENT_INSTALL_PATH='{steam_path}' "
+            f"STEAM_COMPAT_DATA_PATH='{compatdata_path}' "
+            f"'{proton_path}' run '{xedit_path}' ExportAll.fo76pas"
+        )
     os.chdir(cwd)
 
+    # Check if `_done.txt` changed
     new_done_time = done_file.stat().st_mtime if done_file.exists() else None
     if new_done_time is None or done_time == new_done_time:
         prompt_confirmation("WARNING: xEdit did not create or update '_done.txt'. Continue anyway? (y/n) ")
@@ -88,11 +114,12 @@ def concat_parts_of(input_paths, output_path):
     if len(input_paths) == 0:
         return
 
-    with open(output_path, "w") as f_out:
-        f_in = fileinput.input(input_paths)
-        for line in f_in:
-            f_out.write(line)
-        f_in.close()
+    input_paths.sort()
+
+    with open(output_path, "wb") as f_out:
+        for input_path in input_paths:
+            with open(input_path, "rb") as f_in:
+                shutil.copyfileobj(f_in, f_out)
 
 
 def concat_parts():
@@ -153,8 +180,7 @@ def archive_files():
 
 
 if __name__ == "__main__":
-    print(f"Creating fo76-dumps using '{xedit_script}'. "
-          "Be sure to check version information in the xEdit window.")
+    print(f"Creating fo76-dumps using '{xedit_path}'.")
     print()
 
     clean_up()
