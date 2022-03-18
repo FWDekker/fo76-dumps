@@ -22,7 +22,7 @@ else:
     xedit_path = f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/FO76Edit64.exe"  # Path to xEdit
 
 # Utility - No need to change these
-script_version = "2.5.1"
+script_version = "2.5.2"
 script_root = "./Edit scripts"  # Relative path to scripts
 dump_root = f"{script_root}/dumps/"  # Relative path to exported dumps
 db_path = f"{dump_root}/fo76-dumps-v{script_version}-v{game_version}.db"  # Relative path to store SQLite database at
@@ -65,6 +65,8 @@ def run_xedit():
 
     # Create ini if it does not exist
     if not windows:
+        Path(compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/").mkdir(exist_ok=True,
+                                                                                                  parents=True)
         Path(compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/Fallout76.ini").touch()
 
     # Store initial `_done.txt` modification time
