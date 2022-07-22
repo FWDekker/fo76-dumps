@@ -1,76 +1,49 @@
-# Fallout 76 data dumps
-[![Latest release version](https://img.shields.io/github/release/FWDekker/fo76-dumps?style=for-the-badge)](https://github.com/FWDekker/fo76-dumps/releases/latest)
+# Fallout 76 dumps
+[![Latest release](https://img.shields.io/github/release/FWDekker/fo76-dumps?style=for-the-badge)](https://github.com/FWDekker/fo76-dumps/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/FWDekker/fo76-dumps/total?style=for-the-badge)](https://github.com/FWDekker/fo76-dumps/releases/zOverview)
+[![Discussions](https://img.shields.io/github/discussions/FWDekker/fo76-dumps?style=for-the-badge)](https://github.com/FWDekker/fo76-dumps/discussions)
 
-This repository contains a number of data dumps of _Fallout 76_ in several formats.
+_Fallout 76_ data dumps to assist data miners and wiki editors.
 
-## Files
-The dumps are distributed as attachments to [this repository's releases](https://github.com/FWDekker/fo76-dumps/releases).
+Includes:
+* Database with all form IDs and keywords
+* CSV with all NPCs and their features
+* Locations of all armors, weapons, and flora
+* Wikitext exports of all notes and holotapes
+* Curve tables with enemy damage
+* [...and more](https://github.com/FWDekker/fo76-dumps/wiki/List-of-dumps)
 
-### Tabular
-Tabular dumps are a simplified sort of dump that contains only the most important information.
-These records should be very easy to understand by anyone.
-For more information on how to browse them, check [the wiki page](https://github.com/FWDekker/fo76-dumps/wiki/Browsing-CSV-files).
+### Feel free to [request new dumps](https://github.com/FWDekker/fo76-dumps/discussions)!
 
-Some dumps also have associated `_LOC` dumps, which contain information on the in-game locations of the records of that type.
-To manually interpret location data, take a look at my [maps with grids](https://fallout.fandom.com/wiki/User_blog:FDekker/Maps_with_grids) resources.
+## Dumps
+> * **[List of releases](https://github.com/FWDekker/fo76-dumps/releases/zOverview)**
+> * **[Latest release](https://github.com/FWDekker/fo76-dumps/releases/latest)**
 
-<details>
-  <summary>Click here for a list of tabular dumps</summary>
-  <p>
+The dumps are distributed as attachments to
+[this repository's releases](https://github.com/FWDekker/fo76-dumps/releases/zOverview).
+A new release is created for each update to the game.
+The wiki contains a [list of all dumps](https://github.com/FWDekker/fo76-dumps/wiki/List-of-dumps) with a thorough
+explanation.
 
-| Dump script                                                     | Filename   | Description                                      |
-|-----------------------------------------------------------------|------------|--------------------------------------------------|
-| [`ExportTabularIDs.pas`](Edit%20scripts/ExportTabularIDs.pas)   | `IDs.csv`  | Form IDs, editor IDs, names, and keywords        |
-| [`ExportTabularARMO.pas`](Edit%20scripts/ExportTabularARMO.pas) | `ARMO.csv` | Armor and clothing                               |
-| [`ExportTabularCLAS.pas`](Edit%20scripts/ExportTabularCLAS.pas) | `CLAS.csv` | Class properties                                 |
-| [`ExportTabularCOBJ.pas`](Edit%20scripts/ExportTabularCOBJ.pas) | `COBJ.csv` | Craftable object recipes and components          |
-| [`ExportTabularENTM.pas`](Edit%20scripts/ExportTabularENTM.pas) | `ENTM.csv` | Atomic Shop unlockables                          |
-| [`ExportTabularFACT.pas`](Edit%20scripts/ExportTabularFACT.pas) | `FACT.csv` | Factions and vendors                             |
-| [`ExportTabularFLOR.pas`](Edit%20scripts/ExportTabularFLOR.pas) | `FLOR.csv` | Harvestable plants                               |
-| [`ExportTabularGLOB.pas`](Edit%20scripts/ExportTabularGLOB.pas) | `GLOB.csv` | Global variables                                 |
-| [`ExportTabularGMST.pas`](Edit%20scripts/ExportTabularGMST.pas) | `GMST.csv` | Game settings                                    |
-| [`ExportTabularLVLI.pas`](Edit%20scripts/ExportTabularLVLI.pas) | `LVLI.csv` | Leveled lists                                    |
-| [`ExportTabularMISC.pas`](Edit%20scripts/ExportTabularMISC.pas) | `MISC.csv` | Inventory item weights, values, and scrap yields |
-| [`ExportTabularNPC_.pas`](Edit%20scripts/ExportTabularNPC_.pas) | `NPC_.csv` | NPC factions, keywords, stats, etc.              |
-| [`ExportTabularOMOD.pas`](Edit%20scripts/ExportTabularOMOD.pas) | `OMOD.csv` | Armor and weapon mods                            |
-| [`ExportTabularOTFT.pas`](Edit%20scripts/ExportTabularOTFT.pas) | `OTFT.csv` | Outfits                                          |
-| [`ExportTabularRACE.pas`](Edit%20scripts/ExportTabularRACE.pas) | `RACE.csv` | Race keywords and properties                     |
-| [`ExportTabularWEAP.pas`](Edit%20scripts/ExportTabularWEAP.pas) | `WEAP.csv` | Weapons                                          |
-
-  </p>
-</details>
-
-### Wiki
-Wiki dumps are generated for the [Fallout Wiki](https://fallout.fandom.com/) and use [MediaWiki](https://www.mediawiki.org) templates.
-These dumps are useful when editing the wiki.
-Even though the extension is `.wiki`, they are actually just regular text files.
-
-<details>
-  <summary>Click here for a list of wiki dumps</summary>
-  <p>
-
-| Dump script                                               | Filename    | Description |
-|-----------------------------------------------------------|-------------|-------------|
-| [`ExportWikiBOOK.pas`](Edit%20scripts/ExportWikiBOOK.pas) | `BOOK.wiki` | Notes       |
-| [`ExportWikiDIAL.pas`](Edit%20scripts/ExportWikiDIAL.pas) | `DIAL.wiki` | Dialogue    |
-| [`ExportWikiNOTE.pas`](Edit%20scripts/ExportWikiNOTE.pas) | `NOTE.wiki` | Holodisks   |
-| [`ExportWikiTERM.pas`](Edit%20scripts/ExportWikiTERM.pas) | `TERM.wiki` | Terminals   |
-
-  </p>
-</details>
-
-## Generation
-All dumps have been created using [xEdit](https://tes5edit.github.io/) scripts, which are written in [a special form of Object Pascal](https://tes5edit.github.io/docs/11-Scripting-Functions.html#s_11-7).
-The scripts can be found in the `Edit scripts` directory.
-For more information on a reproducible procedure, see [the wiki page on generating dumps](https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps).
+## Development
+All dumps are created using a Python script that uses [xEdit](https://tes5edit.github.io/) and
+[ba2extract](https://f4se.silverlock.org/).
+The main script is located at [`export.py`](https://github.com/FWDekker/fo76-dumps/blob/master/export.py).
+The xEdit scripts are in the
+[`Edit scripts` directory](https://github.com/FWDekker/fo76-dumps/tree/master/Edit%20scripts).
+The wiki describes the [dumping process in more detail](https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps).
 
 ## Contact
-* Bugs can be reported on the [Issues](https://github.com/FWDekker/fo76-dumps/issues) page.
-* Feature requests can be made on the [Issues](https://github.com/FWDekker/fo76-dumps/issues) page.
-* Questions can be asked on [my Fallout Wiki talk page](https://fallout.fandom.com/wiki/User_talk:FDekker) or by emailing me.
+For **questions, suggestions, and requests**, choose the method that you are most comfortable with:
+
+* [Start a discussion](https://github.com/FWDekker/fo76-dumps/discussions)
+* [Open an issue](https://github.com/FWDekker/fo76-dumps/issues)
+* [Contact me on Fallout Wiki](https://fallout.fandom.com/wiki/User_talk:FDekker)
+* [Email me](https://fwdekker.com/about/)
 
 ## Acknowledgements
-* [Wully616](https://github.com/Wully616), for [his contributions](https://github.com/FWDekker/fo76-dumps/pull/20) to dumping location data.
+[Wully616](https://github.com/Wully616), for [his contributions](https://github.com/FWDekker/fo76-dumps/pull/20) to
+dumping location data.
 
 ## Copyright
-The contents of all data dumps in this repository are owned by Bethesda Softworks LLC.
+The contents of all dumps in this repository and its releases are owned by Bethesda Softworks LLC.

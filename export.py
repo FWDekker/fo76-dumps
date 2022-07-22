@@ -8,26 +8,39 @@ import pandas as pd
 
 
 # Configuration - Change these to your liking
+# TODO: Move to separate config file
 game_version = "x.y.z.w"  # Visible in-game in bottom-left corner in settings menu
 
-windows = True  # `True` if you run this script on Windows, `False` if you run on Linux
-archive_esms = False  # `True` if `*.esm`s should be archived into `SeventySix.esm.7z`
+windows = False  # `True` if you run this script on Windows, `False` if you run on Linux
+archive_esms = True  # `True` if `*.esm`s should be archived into `SeventySix.esm.7z`
+# TODO: Make more features toggleable (enable/disable xEdit, ba2, etc.)
 if windows:
     archiver_path = "7z.exe"  # Path to 7z executable
+    game_root = r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76"  # Path to game files
     xedit_path = r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe"  # Path to xEdit
+    ba2extract_path = "ba2extract.exe"  # Path to ba2extract from f4se's Fallout 4 tools
 else:
     archiver_path = "7z"  # Path to 7z executable
-    compatdata_path = f"{Path.home()}/.steam/steam/steamapps/compatdata/xxxxxxxxxx/"  # Path to xEdit compatdata
-    proton_path = f"{Path.home()}/.local/share/Steam/steamapps/common/Proton - Experimental/proton"  # Path to Proton
     steam_path = f"{Path.home()}/.steam/steam/"  # Steam installation path
+    proton_path = f"{Path.home()}/.local/share/Steam/steamapps/common/Proton - Experimental/proton"  # Path to Proton
+    game_root = f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/"  # Path to game files
+    # game_root = f"{Path.home()}/.steam/steam/steamapps/common/Fallout 76 Playtest/"  # Path to game files
+
+    xedit_compatdata_path = f"{Path.home()}/.steam/steam/steamapps/compatdata/3708952410/"  # Path to xEdit compatdata
     xedit_path = f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/FO76Edit64.exe"  # Path to xEdit
+    # xedit_path = f"{Path.home()}/.steam/steam/steamapps/common/Fallout 76 Playtest/FO76Edit64.exe"  # Path to xEdit
+    # TODO: Allow toggle for main vs PTS
+
+    ba2extract_path = "./ba2extract.exe"  # Path to ba2extract from F4SE's Fallout 4 tools
+    ba2extract_compatdata_path = f"{Path.home()}/.steam/steam/steamapps/compatdata/3915714770/"  # Path to ba2extract compatdata
 
 # Utility - No need to change these
-script_version = "2.5.3"
+script_version = "2.6.0"
 script_root = "./Edit scripts"  # Relative path to scripts
 dump_root = f"{script_root}/dumps/"  # Relative path to exported dumps
 db_path = f"{dump_root}/fo76-dumps-v{script_version}-v{game_version}.db"  # Relative path to store SQLite database at
 done_path = f"{dump_root}/_done.txt"  # Relative path to `_done.txt`
+# TODO: Use absolute paths
 
 
 def prompt_confirmation(message):
@@ -55,6 +68,8 @@ def clean_up():
         prompt_confirmation(f"WARNING: '{Path(db_path).name}' already exists and will be deleted. Continue? (y/n) ")
         os.remove(db_path)
 
+    # TODO check for BA2 dumps
+
     print("> Done checking for files to clean up.\n")
 
 
@@ -66,9 +81,9 @@ def run_xedit():
 
     # Create ini if it does not exist
     if not windows:
-        Path(compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/").mkdir(exist_ok=True,
-                                                                                                  parents=True)
-        Path(compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/Fallout76.ini").touch()
+        Path(xedit_compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/").mkdir(exist_ok=True,
+                                                                                                        parents=True)
+        Path(xedit_compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/Fallout76.ini").touch()
 
     # Store initial `_done.txt` modification time
     done_file = Path(done_path)
@@ -82,7 +97,7 @@ def run_xedit():
     else:
         os.system(
             f"STEAM_COMPAT_CLIENT_INSTALL_PATH='{steam_path}' "
-            f"STEAM_COMPAT_DATA_PATH='{compatdata_path}' "
+            f"STEAM_COMPAT_DATA_PATH='{xedit_compatdata_path}' "
             f"'{proton_path}' run '{xedit_path}' ExportAll.fo76pas"
         )
     os.chdir(cwd)
@@ -156,6 +171,27 @@ def import_in_sqlite():
     print(f"> Done importing CSVs into SQLite database at '{db_path}'.\n")
 
 
+def run_ba2extract():
+    # TODO: Make this configurable
+    # Extract BA2s
+    print("> Extracting interface BA2.")
+    if windows:
+        os.system(f"{ba2extract_path} '{game_root}/Data/SeventySix - Interface.ba2' '{dump_root}/ba2_interface/'")
+    else:
+        os.system(
+            f"STEAM_COMPAT_CLIENT_INSTALL_PATH='{steam_path}' "
+            f"STEAM_COMPAT_DATA_PATH='{ba2extract_compatdata_path}' "
+            f"'{proton_path}' run '{ba2extract_path}' '{game_root}/Data/SeventySix - Interface.ba2' '{dump_root}/ba2_interface/'"
+        )
+
+    os.rename(f"{dump_root}/ba2_interface/interface/credits.txt", f"{dump_root}/credits.txt")
+
+    print("> Cleaning up interface BA2 extraction.")
+    shutil.rmtree(f"{dump_root}/ba2_interface/")
+
+    print("> Done extracting interface BA2.")
+
+
 def archive_files():
     # Archives all files (except parts) that are larger than 10MB
     print("> Archiving files larger than 10MB.")
@@ -166,10 +202,9 @@ def archive_files():
     with open(os.devnull, "wb") as devnull:
         if archive_esms:
             print(f">> Starting archiving of ESMs.")
-            esm_dir = f"{os.path.dirname(xedit_path)}/Data/"
             children["ESMs"] = subprocess.Popen([archiver_path, "a", "-mx9", "-mmt4",
                                                  f"SeventySix.esm.v{game_version}.7z",
-                                                 f"{esm_dir}/SeventySix.esm", f"{esm_dir}/NW.esm"],
+                                                 f"{game_root}/Data/SeventySix.esm", f"{game_root}/Data/NW.esm"],
                                                 stdout=devnull, stderr=subprocess.STDOUT)
 
         for dump in glob.glob(f"*.csv") + glob.glob(f"*.wiki") + glob.glob(f"*.db"):
@@ -196,11 +231,19 @@ if __name__ == "__main__":
     print(f"Creating fo76-dumps using '{xedit_path}'.")
     print()
 
+    # Preparation
     clean_up()
+
+    # xEdit
     run_xedit()
     prefix_files()
     concat_parts()
     import_in_sqlite()
+
+    # BA2
+    run_ba2extract()
+
+    # Archival
     archive_files()
 
     print("Done!")
