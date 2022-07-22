@@ -19,21 +19,22 @@ def load_config() -> SimpleNamespace:
     else:
         cfg_user = {}
 
-    cfg2 = cfg_default | cfg_user
-    cfg2 = (cfg2 | cfg2["windows_settings"]) if cfg2["windows"] else (cfg2 | cfg2["linux_settings"])
+    my_cfg = cfg_default | cfg_user
+    my_cfg = (my_cfg | my_cfg["windows_settings"]) if my_cfg["windows"] else (my_cfg | my_cfg["linux_settings"])
+    my_cfg = SimpleNamespace(**my_cfg)
 
     # Version of this script
-    cfg2["script_version"] = "2.6.0"
+    my_cfg.script_version = "3.0.0"
     # Path to scripts
-    cfg2["script_root"] = Path("./Edit scripts").resolve()
+    my_cfg.script_root = Path("./Edit scripts").resolve()
     # Path to exported dumps
-    cfg2["dump_root"] = Path(cfg2["script_root"], "dumps")
+    my_cfg.dump_root = Path(my_cfg.script_root, "dumps")
     # Path to store SQLite database at
-    cfg2["db_path"] = Path(cfg2["dump_root"], f"fo76-dumps-v{cfg2['script_version']}-v{cfg2['game_version']}.db")
+    my_cfg.db_path = Path(my_cfg.dump_root, f"fo76-dumps-v{my_cfg.script_version}-v{my_cfg.game_version}.db")
     # Path to `_done.txt`
-    cfg2["done_path"] = Path(cfg2["dump_root"], "_done.txt")
+    my_cfg.done_path = Path(my_cfg.dump_root, "_done.txt")
 
-    return SimpleNamespace(**cfg2)
+    return my_cfg
 
 
 def prompt_confirmation(message: str) -> bool:
@@ -80,7 +81,7 @@ def xedit():
     """Runs xEdit and waits until it closes.
 
     Tries to detect whether the script ran successfully by checking if `_done.txt` was created or modified."""
-    print("> Running xEdit.\nBe sure to double-check version information in the xEdit window!")
+    print("> Running xEdit.\n> Be sure to double-check version information in the xEdit window!")
 
     # Check for existing files
     if Path(cfg.done_path).exists():
@@ -108,13 +109,15 @@ def xedit():
     # Check if `_done.txt` changed
     new_done_time = done_file.stat().st_mtime if done_file.exists() else None
     if new_done_time is None or done_time == new_done_time:
-        if not prompt_confirmation("WARNING: xEdit did not create or update '_done.txt'. Continue anyway? (y/n) "):
+        if not prompt_confirmation("> WARNING: xEdit did not create or update '_done.txt'. Continue anyway? (y/n) "):
             return
 
     # Post-processing
     xedit_prefix_outputs()
     xedit_concat_parts()
     xedit_create_db()
+    if cfg.enable_archive_xedit:
+        archive_xedit_start()
 
     print("> Done running xEdit.\n")
 
@@ -135,7 +138,7 @@ def xedit_prefix_outputs():
 
         path.rename(Path(path.parent, f"{prefix}{path.name}"))
 
-    print(">> Done prefixing files.\n")
+    print(">> Done prefixing files.")
 
 
 def xedit_concat_parts():
@@ -148,7 +151,7 @@ def xedit_concat_parts():
     print(">>> Combining 'wiki.TERM.wiki'.")
     concat_parts_of(glob.glob(f"{cfg.dump_root}/TERM.wiki.*"), f"{cfg.dump_root}/wiki.TERM.wiki")
 
-    print(">> Done combining dumped CSV parts.\n")
+    print(">> Done combining dumped CSV parts.")
 
 
 def xedit_create_db():
@@ -173,69 +176,81 @@ def xedit_create_db():
             df.columns = df.columns.str.replace(" ", "_")
             df.to_sql(table_name, con, index=False)
 
-    print(f">> Done importing CSVs into SQLite database at '{cfg.db_path}'.\n")
+    print(f">> Done importing CSVs into SQLite database at '{cfg.db_path}'.")
 
 
 def ba2extract():
     """Creates raw dumps using ba2extract."""
     print("> Extracting Bethesda archives.")
-    temp_dir = TemporaryDirectory(prefix="fo76-dumps-")
-
-    # Check for existing files
-    existing_outputs = sum([Path(f"{cfg.dump_root}/{it}").exists() for it in cfg.ba2extract_files.values()])
-    if existing_outputs > 0:
-        if not prompt_confirmation(f"WARNING: {existing_outputs} output file(s) already exist(s) and will be "
-                                   f"overwritten. Continue anyway? (y/n) "):
-            exit()
 
     # Extract archives
-    targets_string = " ".join([f"'{cfg.game_root}/Data/{it}'" for it in cfg.ba2extract_archives])
-    run_executable(f"'{cfg.ba2extract_path}' {targets_string} '{temp_dir.name}'", cfg.ba2extract_compatdata_path)
+    for target, files in cfg.ba2extract_targets.items():
+        print(f">> Extracting {target}.")
+        temp_dir = TemporaryDirectory(prefix=f"fo76-dumps-{target}")
 
-    # Move extracted files
-    for archive_path, desired_path in cfg.ba2extract_files.items():
-        shutil.move(f"{temp_dir.name}/{archive_path}", f"{cfg.dump_root}/{desired_path}")
+        run_executable(f"'{cfg.ba2extract_path}' '{cfg.game_root}/Data/{target}' '{temp_dir.name}'",
+                       cfg.ba2extract_compatdata_path)
+
+        for archive_path, desired_path in files.items():
+            desired_path_abs = Path(f"{cfg.dump_root}/raw.{desired_path}").resolve()
+
+            shutil.move(f"{temp_dir.name}/{archive_path}", desired_path_abs)
+
+            if cfg.ba2extract_zip_dirs and Path(desired_path_abs).is_dir():
+                shutil.make_archive(str(desired_path_abs), "zip", desired_path_abs)
+
+        print(f">> Done extracting {target}.")
 
     print("> Done extracting Bethesda archives.\n")
 
 
-def archive_dumps():
-    """Archives all `.csv`, `.wiki`, and `.db` dumps that are larger than 10MB."""
-    print("> Archiving dumps.")
+def archive_esms_start():
+    print("> Archiving ESMs in the background.")
     cwd = os.getcwd()
     os.chdir(cfg.dump_root)
 
-    # Fork
+    with open(os.devnull, "wb") as devnull:
+        archive_children["ESMs"] = subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4",
+                                                     f"SeventySix.esm.v{cfg.game_version}.7z",
+                                                     f"{cfg.game_root}/Data/SeventySix.esm",
+                                                     f"{cfg.game_root}/Data/NW.esm"],
+                                                    stdout=devnull, stderr=subprocess.STDOUT)
+
+    os.chdir(cwd)
+    print("")
+
+
+def archive_xedit_start():
+    """Archives all xEdit dumps that are larger than 10MB."""
+    print(">> Archiving large xEdit dumps in the background.")
+    cwd = os.getcwd()
+    os.chdir(cfg.dump_root)
+
     children = {}
     with open(os.devnull, "wb") as devnull:
-        if cfg.enable_archive_esms:
-            print(f">> Starting archiving of ESMs.")
-            children["ESMs"] = subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4",
-                                                 f"SeventySix.esm.v{cfg.game_version}.7z",
-                                                 f"{cfg.game_root}/Data/SeventySix.esm",
-                                                 f"{cfg.game_root}/Data/NW.esm"],
-                                                stdout=devnull, stderr=subprocess.STDOUT)
+        for dump in glob.glob(f"*.csv") + glob.glob(f"*.wiki") + glob.glob(f"*.db"):
+            csv_path = Path(dump)
 
-        if cfg.enable_archive_large:
-            for dump in glob.glob(f"*.csv") + glob.glob(f"*.wiki") + glob.glob(f"*.db"):
-                csv_path = Path(dump)
+            if csv_path.stat().st_size < 10000000:
+                continue
 
-                if csv_path.stat().st_size < 10000000:
-                    continue
+            print(f">> Starting archiving of '{csv_path.name}'.")
+            children[f"'{csv_path.name}'"] = subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4",
+                                                               f"{csv_path.name}.7z",
+                                                               csv_path.name],
+                                                              stdout=devnull, stderr=subprocess.STDOUT)
 
-                print(f">> Starting archiving of '{csv_path.name}'.")
-                children[f"'{csv_path.name}'"] = subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4",
-                                                                   f"{csv_path.name}.7z",
-                                                                   csv_path.name],
-                                                                  stdout=devnull, stderr=subprocess.STDOUT)
+    os.chdir(cwd)
 
-    # Join
-    for csv_path, child in children.items():
+
+def archive_join():
+    print("> Waiting for background archiving processes.")
+
+    for csv_path, child in archive_children.items():
         print(f">> Waiting for archiving of {csv_path}.")
         child.wait()
 
-    os.chdir(cwd)
-    print("> Done archiving dumps.\n")
+    print("> Done waiting for background archiving processes.\n")
 
 
 def main():
@@ -252,27 +267,29 @@ def main():
             shutil.rmtree(cfg.dump_root)
     print("")
 
-    # Create dumps output dir, just in case
+    # Create dumps output dir
     Path(cfg.dump_root).mkdir(parents=True, exist_ok=True)
+
+    # Archiving
+    if cfg.enable_archive_esms:
+        archive_esms_start()
 
     # xEdit
     if cfg.enable_xedit:
         xedit()
-        xedit_prefix_outputs()
-        xedit_concat_parts()
-        xedit_create_db()
 
     # ba2extract
     if cfg.enable_ba2extract:
         ba2extract()
 
-    # Archival
-    if cfg.enable_archive_large or cfg.enable_archive_esms:
-        archive_dumps()
+    # Archiving
+    archive_join()
 
     print("Done!")
 
 
 if __name__ == "__main__":
+    archive_children = {}
     cfg = load_config()
+
     main()

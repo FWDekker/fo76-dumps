@@ -11,22 +11,28 @@ config = {
     # `True` if you are running this script on Windows, `False` for Linux.
     "windows": True,
 
-    # `True` if xEdit should be used to generate tabular and wiki dumps.
-    "enable_xedit": True,
-    # `True` if ba2extract should be used to extract raw files.
-    "enable_ba2extract": True,
-    # `True` if large dumps should be archived to reduce space.
-    "enable_archive_large": True,
     # `True` if `SeventySix.esm` and `NW.esm` should be archived.
     "enable_archive_esms": False,
+    # `True` if xEdit should be used to generate tabular and wiki dumps.
+    "enable_xedit": True,
+    # `True` if large xEdit dumps should be archived.
+    "enable_archive_xedit": True,
+    # `True` if ba2extract should be used to extract raw files.
+    "enable_ba2extract": True,
 
-    # The list of archives to be extracted using ba2extract.
-    "ba2extract_archives": ["SeventySix - Interface.ba2"],
-    # The files to be moved from the extracted archives to the dumps output folder. Each entry maps the path in the
-    # archive to the desired path in the dumps output folder.
-    "ba2extract_files": {
-        "interface/credits.txt": "raw.credits.txt",
+    # The archives to be extracted using ba2extract. Each entry names an archive to be extracted, and maps for each file
+    # to be moved from the archive to the dumps output directory the path in the archive to the path in the dumps output
+    # directory.
+    "ba2extract_targets": {
+        "SeventySix - Interface.ba2": {
+            "interface/credits.txt": "credits.txt",
+        },
+        "SeventySix - Startup.ba2": {
+            "misc/curvetables/json": "curvetables",
+        },
     },
+    # `True` if directories extracted with ba2extract should be turned into a ZIP.
+    "ba2extract_zip_dirs": True,
 
     # Windows-specific settings
     "windows_settings": {
