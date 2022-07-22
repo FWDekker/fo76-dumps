@@ -10,7 +10,8 @@ import pandas as pd
 # Configuration - Change these to your liking
 game_version = "x.y.z.w"  # Visible in-game in bottom-left corner in settings menu
 
-windows = True
+windows = True  # `True` if you run this script on Windows, `False` if you run on Linux
+archive_esms = False  # `True` if `*.esm`s should be archived into `SeventySix.esm.7z`
 if windows:
     archiver_path = "7z.exe"  # Path to 7z executable
     xedit_path = r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe"  # Path to xEdit
@@ -22,7 +23,7 @@ else:
     xedit_path = f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/FO76Edit64.exe"  # Path to xEdit
 
 # Utility - No need to change these
-script_version = "2.5.2"
+script_version = "2.5.3"
 script_root = "./Edit scripts"  # Relative path to scripts
 dump_root = f"{script_root}/dumps/"  # Relative path to exported dumps
 db_path = f"{dump_root}/fo76-dumps-v{script_version}-v{game_version}.db"  # Relative path to store SQLite database at
@@ -158,27 +159,36 @@ def import_in_sqlite():
 def archive_files():
     # Archives all files (except parts) that are larger than 10MB
     print("> Archiving files larger than 10MB.")
+    cwd = os.getcwd()
+    os.chdir(dump_root)
+
     children = {}
+    with open(os.devnull, "wb") as devnull:
+        if archive_esms:
+            print(f">> Starting archiving of ESMs.")
+            esm_dir = f"{os.path.dirname(xedit_path)}/Data/"
+            children["ESMs"] = subprocess.Popen([archiver_path, "a", "-mx9", "-mmt4",
+                                                 f"SeventySix.esm.v{game_version}.7z",
+                                                 f"{esm_dir}/SeventySix.esm", f"{esm_dir}/NW.esm"],
+                                                stdout=devnull, stderr=subprocess.STDOUT)
 
-    for dump in glob.glob(f"{dump_root}/*.csv") + glob.glob(f"{dump_root}/*.wiki") + glob.glob(f"{dump_root}/*.db"):
-        csv_path = Path(dump)
+        for dump in glob.glob(f"*.csv") + glob.glob(f"*.wiki") + glob.glob(f"*.db"):
+            csv_path = Path(dump)
 
-        if csv_path.stat().st_size < 10000000:
-            continue
+            if csv_path.stat().st_size < 10000000:
+                continue
 
-        print(f">> Starting archiving of '{csv_path.name}'.")
-        with open(os.devnull, "wb") as devnull:
-            cwd = os.getcwd()
-            os.chdir(csv_path.parent)
-            child = subprocess.Popen([archiver_path, "a", "-mx9", "-mmt4", f"{csv_path.name}.7z", csv_path.name],
-                                     stdout=devnull, stderr=subprocess.STDOUT)
-            children[f"{csv_path.name}"] = child
-            os.chdir(cwd)
+            print(f">> Starting archiving of '{csv_path.name}'.")
+            children[f"'{csv_path.name}'"] = subprocess.Popen([archiver_path, "a", "-mx9", "-mmt4",
+                                                               f"{csv_path.name}.7z",
+                                                               csv_path.name],
+                                                              stdout=devnull, stderr=subprocess.STDOUT)
 
     for csv_path, child in children.items():
-        print(f">> Waiting for archiving of '{csv_path}'.")
+        print(f">> Waiting for archiving of {csv_path}.")
         child.wait()
 
+    os.chdir(cwd)
     print("> Done archiving files larger than 10MB.\n")
 
 
