@@ -4,43 +4,44 @@ import shutil
 import sqlite3
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
+
 import pandas as pd
 
+from config_default import config as cfg_default
 
-# Configuration - Change these to your liking
-# TODO: Move to separate config file
-game_version = "x.y.z.w"  # Visible in-game in bottom-left corner in settings menu
 
-windows = False  # `True` if you run this script on Windows, `False` if you run on Linux
-archive_esms = True  # `True` if `*.esm`s should be archived into `SeventySix.esm.7z`
+# TODO: Allow toggle for main vs PTS
 # TODO: Make more features toggleable (enable/disable xEdit, ba2, etc.)
-if windows:
-    archiver_path = "7z.exe"  # Path to 7z executable
-    game_root = r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76"  # Path to game files
-    xedit_path = r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe"  # Path to xEdit
-    ba2extract_path = "ba2extract.exe"  # Path to ba2extract from f4se's Fallout 4 tools
-else:
-    archiver_path = "7z"  # Path to 7z executable
-    steam_path = f"{Path.home()}/.steam/steam/"  # Steam installation path
-    proton_path = f"{Path.home()}/.local/share/Steam/steamapps/common/Proton - Experimental/proton"  # Path to Proton
-    game_root = f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/"  # Path to game files
-    # game_root = f"{Path.home()}/.steam/steam/steamapps/common/Fallout 76 Playtest/"  # Path to game files
-
-    xedit_compatdata_path = f"{Path.home()}/.steam/steam/steamapps/compatdata/3708952410/"  # Path to xEdit compatdata
-    xedit_path = f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/FO76Edit64.exe"  # Path to xEdit
-    # xedit_path = f"{Path.home()}/.steam/steam/steamapps/common/Fallout 76 Playtest/FO76Edit64.exe"  # Path to xEdit
-    # TODO: Allow toggle for main vs PTS
-
-    ba2extract_path = "./ba2extract.exe"  # Path to ba2extract from F4SE's Fallout 4 tools
-    ba2extract_compatdata_path = f"{Path.home()}/.steam/steam/steamapps/compatdata/3915714770/"  # Path to ba2extract compatdata
-
-# Utility - No need to change these
-script_version = "2.6.0"
-script_root = "./Edit scripts"  # Relative path to scripts
-dump_root = f"{script_root}/dumps/"  # Relative path to exported dumps
-db_path = f"{dump_root}/fo76-dumps-v{script_version}-v{game_version}.db"  # Relative path to store SQLite database at
-done_path = f"{dump_root}/_done.txt"  # Relative path to `_done.txt`
 # TODO: Use absolute paths
+# TODO: Move Proton invocations to separate function to reduce duplication
+# TODO: Move config loading to special function, then add cfg as param to other functions
+
+# xedit_path = f"{Path.home()}/.steam/steam/steamapps/common/Fallout 76 Playtest/FO76Edit64.exe"  # Path to xEdit
+# game_root = f"{Path.home()}/.steam/steam/steamapps/common/Fallout 76 Playtest/"  # Path to game files
+
+
+# Load configuration and set globals
+if Path("config.py").exists():
+    from config import config as cfg_user
+else:
+    cfg_user = {}
+
+cfg = cfg_default | cfg_user
+cfg = (cfg | cfg["windows_settings"]) if cfg["windows"] else (cfg | cfg["linux_settings"])
+
+# Version of this script
+cfg["script_version"] = "2.6.0"
+# Relative path to scripts
+cfg["script_root"] = "./Edit scripts"
+# Relative path to exported dumps
+cfg["dump_root"] = f"{cfg['script_root']}/dumps/"
+# Relative path to store SQLite database at
+cfg["db_path"] = f"{cfg['dump_root']}/fo76-dumps-v{cfg['script_version']}-v{cfg['game_version']}.db"
+# Relative path to `_done.txt`
+cfg["done_path"] = f"{cfg['dump_root']}/_done.txt"
+
+cfg = SimpleNamespace(**cfg)
 
 
 def prompt_confirmation(message):
@@ -57,48 +58,48 @@ def prompt_confirmation(message):
 
 
 def clean_up():
-    # Cleans up files from a previous run.
+    """Cleans up files from a previous run."""
     print("> Checking for files to clean up.")
 
-    if Path(done_path).exists():
+    if Path(cfg.done_path).exists():
         prompt_confirmation("WARNING: '_done.txt' already exists, indicating a dump already exists in the target "
                             "folder. Continue anyway? (y/n) ")
 
-    if Path(db_path).exists():
-        prompt_confirmation(f"WARNING: '{Path(db_path).name}' already exists and will be deleted. Continue? (y/n) ")
-        os.remove(db_path)
-
-    # TODO check for BA2 dumps
+    if Path(cfg.db_path).exists():
+        prompt_confirmation(f"WARNING: '{Path(cfg.db_path).name}' already exists and will be deleted. Continue? (y/n) ")
+        os.remove(cfg.db_path)
 
     print("> Done checking for files to clean up.\n")
 
 
 def run_xedit():
-    # Runs xEdit by launching `xedit_script` using its default file association, and waits until it closes.
-    #
-    # Tries to detect whether the script ran successfully by checking if '_done.txt' has been created or modified.
+    """Runs xEdit by launching xEdit using its default file association, and waits until it closes.
+
+    Tries to detect whether the script ran successfully by checking if `_done.txt` was created or modified."""
     print("> Running xEdit.\nBe sure to check version information in the xEdit window!")
 
     # Create ini if it does not exist
-    if not windows:
-        Path(xedit_compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/").mkdir(exist_ok=True,
-                                                                                                        parents=True)
-        Path(xedit_compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/Fallout76.ini").touch()
+    if not cfg.windows:
+        Path(cfg.xedit_compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/").mkdir(
+            exist_ok=True,
+            parents=True)
+        Path(cfg.xedit_compatdata_path,
+             "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/Fallout76.ini").touch()
 
     # Store initial `_done.txt` modification time
-    done_file = Path(done_path)
+    done_file = Path(cfg.done_path)
     done_time = done_file.stat().st_mtime if done_file.exists() else None
 
     # Actually run xEdit
     cwd = os.getcwd()
-    os.chdir(script_root)
-    if windows:
-        os.system(f"{xedit_path} ExportAll.fo76pas")
+    os.chdir(cfg.script_root)
+    if cfg.windows:
+        os.system(f"{cfg.xedit_path} ExportAll.fo76pas")
     else:
         os.system(
-            f"STEAM_COMPAT_CLIENT_INSTALL_PATH='{steam_path}' "
-            f"STEAM_COMPAT_DATA_PATH='{xedit_compatdata_path}' "
-            f"'{proton_path}' run '{xedit_path}' ExportAll.fo76pas"
+            f"STEAM_COMPAT_CLIENT_INSTALL_PATH='{cfg.steam_path}' "
+            f"STEAM_COMPAT_DATA_PATH='{cfg.xedit_compatdata_path}' "
+            f"'{cfg.proton_path}' run '{cfg.xedit_path}' ExportAll.fo76pas"
         )
     os.chdir(cwd)
 
@@ -111,12 +112,12 @@ def run_xedit():
 
 
 def prefix_files():
-    # Renames the exported files so that they have a prefix `tabular.` or `wiki.` depending on the file type.
-    #
-    # Files that already have the appropriate prefix are unaffected.
+    """Renames the exported files so that they have a prefix `tabular.` or `wiki.` depending on the file type.
+
+    Files that already have the appropriate prefix are unaffected."""
     print("> Prefixing files.")
 
-    for filename in glob.glob(f"{dump_root}/*.csv") + glob.glob(f"{dump_root}/*.wiki"):
+    for filename in glob.glob(f"{cfg.dump_root}/*.csv") + glob.glob(f"{cfg.dump_root}/*.wiki"):
         path = Path(filename)
         prefix = "tabular." if path.suffix == ".csv" else "wiki."
 
@@ -129,7 +130,7 @@ def prefix_files():
 
 
 def concat_parts_of(input_paths, output_path):
-    # Concatenates the contents of all files `input_paths` and writes the output to `output_path`.
+    """Concatenates the contents of all files in `input_paths` and writes the output to `output_path`."""
     if len(input_paths) == 0:
         return
 
@@ -142,24 +143,24 @@ def concat_parts_of(input_paths, output_path):
 
 
 def concat_parts():
-    # Concatenates files that have been dumped in parts by the xEdit script.
+    """Concatenates files that have been dumped in parts by the xEdit script."""
     print("> Combining dumped CSV parts.")
 
     print(">> Combining 'tabular.IDs.csv'.")
-    concat_parts_of(glob.glob(f"{dump_root}/IDs.csv.*"), f"{dump_root}/tabular.IDs.csv")
+    concat_parts_of(glob.glob(f"{cfg.dump_root}/IDs.csv.*"), f"{cfg.dump_root}/tabular.IDs.csv")
 
     print(">> Combining 'wiki.TERM.wiki'.")
-    concat_parts_of(glob.glob(f"{dump_root}/TERM.wiki.*"), f"{dump_root}/wiki.TERM.wiki")
+    concat_parts_of(glob.glob(f"{cfg.dump_root}/TERM.wiki.*"), f"{cfg.dump_root}/wiki.TERM.wiki")
 
     print("> Done combining dumped CSV parts.\n")
 
 
 def import_in_sqlite():
-    # Imports the dumped CSVs into an SQLite database.
-    print(f"> Importing CSVs into SQLite database at '{db_path}'.")
+    """Imports the dumped CSVs into an SQLite database."""
+    print(f"> Importing CSVs into SQLite database at '{cfg.db_path}'.")
 
-    with sqlite3.connect(db_path) as con:
-        for file in glob.glob(f"{dump_root}/*.csv"):
+    with sqlite3.connect(cfg.db_path) as con:
+        for file in glob.glob(f"{cfg.dump_root}/*.csv"):
             path = Path(file)
             table_name = path.stem.split('.', 1)[1]
             print(f">> Importing '{path.name}' into table '{table_name}'.")
@@ -168,43 +169,47 @@ def import_in_sqlite():
             df.columns = df.columns.str.replace(" ", "_")
             df.to_sql(table_name, con, index=False)
 
-    print(f"> Done importing CSVs into SQLite database at '{db_path}'.\n")
+    print(f"> Done importing CSVs into SQLite database at '{cfg.db_path}'.\n")
 
 
 def run_ba2extract():
     # TODO: Make this configurable
-    # Extract BA2s
+    # TODO: Use temp dir for program's output
+    # TODO: Suppress output!
+    """Creates raw dumps using ba2extract."""
     print("> Extracting interface BA2.")
-    if windows:
-        os.system(f"{ba2extract_path} '{game_root}/Data/SeventySix - Interface.ba2' '{dump_root}/ba2_interface/'")
+    if cfg.windows:
+        os.system(
+            f"{cfg.ba2extract_path} '{cfg.game_root}/Data/SeventySix - Interface.ba2' '{cfg.dump_root}/ba2_interface/'")
     else:
         os.system(
-            f"STEAM_COMPAT_CLIENT_INSTALL_PATH='{steam_path}' "
-            f"STEAM_COMPAT_DATA_PATH='{ba2extract_compatdata_path}' "
-            f"'{proton_path}' run '{ba2extract_path}' '{game_root}/Data/SeventySix - Interface.ba2' '{dump_root}/ba2_interface/'"
+            f"STEAM_COMPAT_CLIENT_INSTALL_PATH='{cfg.steam_path}' "
+            f"STEAM_COMPAT_DATA_PATH='{cfg.ba2extract_compatdata_path}' "
+            f"'{cfg.proton_path}' run '{cfg.ba2extract_path}' '{cfg.game_root}/Data/SeventySix - Interface.ba2' '{cfg.dump_root}/ba2_interface/'"
         )
 
-    os.rename(f"{dump_root}/ba2_interface/interface/credits.txt", f"{dump_root}/credits.txt")
+    os.rename(f"{cfg.dump_root}/ba2_interface/interface/credits.txt", f"{cfg.dump_root}/credits.txt")
 
     print("> Cleaning up interface BA2 extraction.")
-    shutil.rmtree(f"{dump_root}/ba2_interface/")
+    shutil.rmtree(f"{cfg.dump_root}/ba2_interface/")
 
     print("> Done extracting interface BA2.")
 
 
 def archive_files():
-    # Archives all files (except parts) that are larger than 10MB
+    """Archives all `.csv`, `.wiki`, and `.db` dumps that are larger than 10MB."""
     print("> Archiving files larger than 10MB.")
     cwd = os.getcwd()
-    os.chdir(dump_root)
+    os.chdir(cfg.dump_root)
 
     children = {}
     with open(os.devnull, "wb") as devnull:
-        if archive_esms:
+        if cfg.enable_archive_esms:
             print(f">> Starting archiving of ESMs.")
-            children["ESMs"] = subprocess.Popen([archiver_path, "a", "-mx9", "-mmt4",
-                                                 f"SeventySix.esm.v{game_version}.7z",
-                                                 f"{game_root}/Data/SeventySix.esm", f"{game_root}/Data/NW.esm"],
+            children["ESMs"] = subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4",
+                                                 f"SeventySix.esm.v{cfg.game_version}.7z",
+                                                 f"{cfg.game_root}/Data/SeventySix.esm",
+                                                 f"{cfg.game_root}/Data/NW.esm"],
                                                 stdout=devnull, stderr=subprocess.STDOUT)
 
         for dump in glob.glob(f"*.csv") + glob.glob(f"*.wiki") + glob.glob(f"*.db"):
@@ -214,7 +219,7 @@ def archive_files():
                 continue
 
             print(f">> Starting archiving of '{csv_path.name}'.")
-            children[f"'{csv_path.name}'"] = subprocess.Popen([archiver_path, "a", "-mx9", "-mmt4",
+            children[f"'{csv_path.name}'"] = subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4",
                                                                f"{csv_path.name}.7z",
                                                                csv_path.name],
                                                               stdout=devnull, stderr=subprocess.STDOUT)
@@ -228,8 +233,12 @@ def archive_files():
 
 
 if __name__ == "__main__":
-    print(f"Creating fo76-dumps using '{xedit_path}'.")
-    print()
+    print(f"Creating fo76-dumps using '{cfg.xedit_path}'.\n")
+
+    if cfg.game_version == "x.y.z.w":
+        prompt_confirmation("WARNING: The game version is set to `x.y.z.w` in the configuration, which is probably "
+                            "incorrect. If you continue, some dumps will have incorrect names. Do you want to continue "
+                            "anyway? (y/n) ")
 
     # Preparation
     clean_up()
@@ -240,7 +249,7 @@ if __name__ == "__main__":
     concat_parts()
     import_in_sqlite()
 
-    # BA2
+    # ba2extract
     run_ba2extract()
 
     # Archival
