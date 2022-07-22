@@ -11,8 +11,22 @@ config = {
     # `True` if you are running this script on Windows, `False` for Linux.
     "windows": True,
 
+    # `True` if xEdit should be used to generate tabular and wiki dumps.
+    "enable_xedit": True,
+    # `True` if ba2extract should be used to extract raw files.
+    "enable_ba2extract": True,
+    # `True` if large dumps should be archived to reduce space.
+    "enable_archive_large": True,
     # `True` if `SeventySix.esm` and `NW.esm` should be archived.
     "enable_archive_esms": False,
+
+    # The list of archives to be extracted using ba2extract.
+    "ba2extract_archives": ["SeventySix - Interface.ba2"],
+    # The files to be moved from the extracted archives to the dumps output folder. Each entry maps the path in the
+    # archive to the desired path in the dumps output folder.
+    "ba2extract_files": {
+        "interface/credits.txt": "raw.credits.txt",
+    },
 
     # Windows-specific settings
     "windows_settings": {
