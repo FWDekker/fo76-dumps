@@ -20,13 +20,16 @@ def load_config() -> SimpleNamespace:
         cfg_user = {}
 
     my_cfg = cfg_default | cfg_user
-    my_cfg = (my_cfg | my_cfg["windows_settings"]) if my_cfg["windows"] else (my_cfg | my_cfg["linux_settings"])
+    if not my_cfg["windows"]:
+        if ("linux_settings" in cfg_default.keys()) and ("linux_settings" in cfg_user.keys()):
+            my_cfg["linux_settings"] = cfg_default["linux_settings"] | cfg_user["linux_settings"]
+        my_cfg = my_cfg | my_cfg["linux_settings"]
     my_cfg = SimpleNamespace(**my_cfg)
 
     # Version of this script
     my_cfg.script_version = "3.0.0"
     # Path to scripts
-    my_cfg.script_root = Path("./Edit scripts").resolve()
+    my_cfg.script_root = Path(my_cfg.game_root, "Edit scripts").resolve()
     # Path to exported dumps
     my_cfg.dump_root = Path(my_cfg.script_root, "dumps")
     # Path to store SQLite database at
@@ -85,7 +88,7 @@ def xedit():
 
     # Check for existing files
     if Path(cfg.done_path).exists():
-        if not prompt_confirmation("WARNING: '_done.txt' already exists, indicating a dump already exists in the "
+        if not prompt_confirmation("> WARNING: '_done.txt' already exists, indicating a dump already exists in the "
                                    "target folder. Continue anyway? (y/n) "):
             return
         os.remove(cfg.done_path)
@@ -160,8 +163,8 @@ def xedit_create_db():
 
     # Check for existing files
     if Path(cfg.db_path).exists():
-        if not prompt_confirmation(f"WARNING: '{Path(cfg.db_path).name}' already exists and will be deleted. Continue? "
-                                   f"(y/n) "):
+        if not prompt_confirmation(f">> WARNING: '{Path(cfg.db_path).name}' already exists and will be deleted. "
+                                   f"Continue anyway? (y/n) "):
             return
         os.remove(cfg.db_path)
 
@@ -170,7 +173,7 @@ def xedit_create_db():
         for file in glob.glob(f"{cfg.dump_root}/*.csv"):
             path = Path(file)
             table_name = path.stem.split('.', 1)[1]
-            print(f">> Importing '{path.name}' into table '{table_name}'.")
+            print(f">>> Importing '{path.name}' into table '{table_name}'.")
 
             df = pd.read_csv(file, quotechar='"', doublequote=True, skipinitialspace=True, dtype="string")
             df.columns = df.columns.str.replace(" ", "_")
@@ -193,6 +196,9 @@ def ba2extract():
 
         for archive_path, desired_path in files.items():
             desired_path_abs = Path(f"{cfg.dump_root}/raw.{desired_path}").resolve()
+
+            if Path(desired_path_abs).exists() and Path(desired_path_abs).is_dir():
+                shutil.rmtree(desired_path_abs)
 
             shutil.move(f"{temp_dir.name}/{archive_path}", desired_path_abs)
 
@@ -226,7 +232,6 @@ def archive_xedit_start():
     cwd = os.getcwd()
     os.chdir(cfg.dump_root)
 
-    children = {}
     with open(os.devnull, "wb") as devnull:
         for dump in glob.glob(f"*.csv") + glob.glob(f"*.wiki") + glob.glob(f"*.db"):
             csv_path = Path(dump)
@@ -235,10 +240,10 @@ def archive_xedit_start():
                 continue
 
             print(f">> Starting archiving of '{csv_path.name}'.")
-            children[f"'{csv_path.name}'"] = subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4",
-                                                               f"{csv_path.name}.7z",
-                                                               csv_path.name],
-                                                              stdout=devnull, stderr=subprocess.STDOUT)
+            archive_children[f"'{csv_path.name}'"] = subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4",
+                                                                       f"{csv_path.name}.7z",
+                                                                       csv_path.name],
+                                                                      stdout=devnull, stderr=subprocess.STDOUT)
 
     os.chdir(cwd)
 

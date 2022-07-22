@@ -6,11 +6,14 @@ from pathlib import Path
 
 
 config = {
+    ## Main settings
     # Version of Fallout 76, used in some file names. Shown in-game in bottom-left corner in settings menu.
     "game_version": "x.y.z.w",
     # `True` if you are running this script on Windows, `False` for Linux.
     "windows": True,
 
+
+    ## Toggleable features
     # `True` if `SeventySix.esm` and `NW.esm` should be archived.
     "enable_archive_esms": False,
     # `True` if xEdit should be used to generate tabular and wiki dumps.
@@ -20,6 +23,8 @@ config = {
     # `True` if ba2extract should be used to extract raw files.
     "enable_ba2extract": True,
 
+
+    ## ba2extract settings
     # The archives to be extracted using ba2extract. Each entry names an archive to be extracted, and maps for each file
     # to be moved from the archive to the dumps output directory the path in the archive to the path in the dumps output
     # directory.
@@ -34,19 +39,19 @@ config = {
     # `True` if directories extracted with ba2extract should be turned into a ZIP.
     "ba2extract_zip_dirs": True,
 
-    # Windows-specific settings
-    "windows_settings": {
-        # Path to 7z executable
-        "archiver_path": "7z.exe",
-        # Path to game files
-        "game_root": r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76",
-        # Path to xEdit executable
-        "xedit_path": r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe",
-        # Path to ba2extract executable
-        "ba2extract_path": "ba2extract.exe",
-    },
 
-    # Linux-specific settings
+    ## Settings for Windows
+    # Path to 7z executable
+    "archiver_path": "7z.exe",
+    # Path to game files
+    "game_root": r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76",
+    # Path to xEdit executable
+    "xedit_path": r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe",
+    # Path to ba2extract executable
+    "ba2extract_path": "ba2extract.exe",
+
+
+    ## Settings for Linux
     "linux_settings": {
         # Path to 7z executable
         "archiver_path": "7z",
@@ -60,11 +65,11 @@ config = {
         # Path to xEdit executable
         "xedit_path": f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/FO76Edit64.exe",
         # Path to xEdit compatdata
-        "xedit_compatdata_path": f"{Path.home()}/.steam/steam/steamapps/compatdata/3708952410/",
+        "xedit_compatdata_path": f"{Path.home()}/.steam/steam/steamapps/compatdata/INSERT NUMBER HERE/",
 
         # Path to ba2extract executable
         "ba2extract_path": "./ba2extract.exe",
         # Path to ba2extract compatdata
-        "ba2extract_compatdata_path": f"{Path.home()}/.steam/steam/steamapps/compatdata/3915714770/",
-    },
+        "ba2extract_compatdata_path": f"{Path.home()}/.steam/steam/steamapps/compatdata/INSERT NUMBER HERE/",
+    }
 }
