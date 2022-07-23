@@ -29,13 +29,13 @@ def load_config() -> SimpleNamespace:
     # Version of this script
     my_cfg.script_version = "3.0.0"
     # Path to scripts
-    my_cfg.script_root = Path(my_cfg.game_root, "Edit scripts").resolve()
+    my_cfg.script_root = f"{my_cfg.game_root}/Edit scripts"
     # Path to exported dumps
-    my_cfg.dump_root = Path(my_cfg.script_root, "dumps")
+    my_cfg.dump_root = f"{my_cfg.script_root}/dumps"
     # Path to store SQLite database at
-    my_cfg.db_path = Path(my_cfg.dump_root, f"fo76-dumps-v{my_cfg.script_version}-v{my_cfg.game_version}.db")
+    my_cfg.db_path = f"{my_cfg.dump_root}/fo76-dumps-v{my_cfg.script_version}-v{my_cfg.game_version}.db"
     # Path to `_done.txt`
-    my_cfg.done_path = Path(my_cfg.dump_root, "_done.txt")
+    my_cfg.done_path = f"{my_cfg.dump_root}/_done.txt"
 
     return my_cfg
 
@@ -57,7 +57,7 @@ def run_executable(command: str, compatdata_path: str):
     """Runs the executable with parameters defined in `command`. On Windows, the command is executed normally. On Linux,
     the command is executed in a Proton instance using `compatdata_path`."""
     if cfg.windows:
-        os.system(command)
+        subprocess.call(command, stdout=subprocess.DEVNULL)
     else:
         os.system(
             f"STEAM_COMPAT_CLIENT_INSTALL_PATH='{cfg.steam_path}' "
@@ -90,14 +90,15 @@ def xedit():
     if Path(cfg.done_path).exists():
         if not prompt_confirmation("> WARNING: '_done.txt' already exists, indicating a dump already exists in the "
                                    "target folder. Continue anyway? (y/n) "):
+            print("")
             return
         os.remove(cfg.done_path)
 
     # Create ini if it does not exist
     if not cfg.windows:
-        config_dir = Path(cfg.xedit_compatdata_path, "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/")
-        config_dir.mkdir(exist_ok=True, parents=True)
-        Path(config_dir, "Fallout76.ini").touch(exist_ok=True)
+        config_dir = f"{cfg.xedit_compatdata_path}/pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/"
+        Path(config_dir).mkdir(exist_ok=True, parents=True)
+        Path(f"{config_dir}/Fallout76.ini").touch(exist_ok=True)
 
     # Store initial `_done.txt` modification time
     done_file = Path(cfg.done_path)
@@ -106,13 +107,14 @@ def xedit():
     # Actually run xEdit
     cwd = os.getcwd()
     os.chdir(cfg.script_root)
-    run_executable(f"'{cfg.xedit_path}' ExportAll.fo76pas", cfg.xedit_compatdata_path)
+    run_executable(f"\"{cfg.xedit_path}\" ExportAll.fo76pas", cfg.xedit_compatdata_path if not cfg.windows else "")
     os.chdir(cwd)
 
     # Check if `_done.txt` changed
     new_done_time = done_file.stat().st_mtime if done_file.exists() else None
     if new_done_time is None or done_time == new_done_time:
         if not prompt_confirmation("> WARNING: xEdit did not create or update '_done.txt'. Continue anyway? (y/n) "):
+            print()
             return
 
     # Post-processing
@@ -139,7 +141,7 @@ def xedit_prefix_outputs():
             # Skip already-prefixed files
             return
 
-        path.rename(Path(path.parent, f"{prefix}{path.name}"))
+        path.rename(f"{path.parent}/{prefix}{path.name}")
 
     print(">> Done prefixing files.")
 
@@ -191,18 +193,18 @@ def ba2extract():
         print(f">> Extracting {target}.")
         temp_dir = TemporaryDirectory(prefix=f"fo76-dumps-{target}")
 
-        run_executable(f"'{cfg.ba2extract_path}' '{cfg.game_root}/Data/{target}' '{temp_dir.name}'",
-                       cfg.ba2extract_compatdata_path)
+        run_executable(f"\"{cfg.ba2extract_path}\" \"{cfg.game_root}/Data/{target}\" \"{temp_dir.name}\"",
+                       cfg.ba2extract_compatdata_path if not cfg.windows else "")
 
         for archive_path, desired_path in files.items():
-            desired_path_abs = Path(f"{cfg.dump_root}/raw.{desired_path}").resolve()
+            desired_path_abs = Path(f"{cfg.dump_root}/raw.{desired_path}")
 
-            if Path(desired_path_abs).exists() and Path(desired_path_abs).is_dir():
+            if desired_path_abs.exists() and desired_path_abs.is_dir():
                 shutil.rmtree(desired_path_abs)
 
             shutil.move(f"{temp_dir.name}/{archive_path}", desired_path_abs)
 
-            if cfg.ba2extract_zip_dirs and Path(desired_path_abs).is_dir():
+            if cfg.ba2extract_zip_dirs and desired_path_abs.is_dir():
                 shutil.make_archive(str(desired_path_abs), "zip", desired_path_abs)
 
         print(f">> Done extracting {target}.")
@@ -266,7 +268,7 @@ def main():
                                    "probably incorrect. If you continue, some dumps will have incorrect names. Do you "
                                    "want to continue anyway? (y/n) "):
             exit()
-    if Path.exists(cfg.dump_root) and len(os.listdir(cfg.dump_root)) != 0:
+    if Path(cfg.dump_root).exists() and len(os.listdir(cfg.dump_root)) != 0:
         if prompt_confirmation("INFO: The dump output directory exists and is not empty. Do you want to remove the "
                                "directory and its contents? This is optional. (y/n) "):
             shutil.rmtree(cfg.dump_root)

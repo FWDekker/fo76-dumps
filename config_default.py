@@ -42,13 +42,13 @@ config = {
 
     ## Settings for Windows
     # Path to 7z executable
-    "archiver_path": "7z.exe",
+    "archiver_path": r"C:\Program Files\7-Zip\7z.exe",
     # Path to game files
     "game_root": r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76",
     # Path to xEdit executable
     "xedit_path": r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe",
     # Path to ba2extract executable
-    "ba2extract_path": "ba2extract.exe",
+    "ba2extract_path": r"ba2extract.exe",
 
 
     ## Settings for Linux
