@@ -142,3 +142,5 @@ cython_debug/
 ## Custom
 # Ignore created dump files
 Edit scripts/dumps/
+ba2extract.exe
+config.py
