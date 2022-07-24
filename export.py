@@ -95,10 +95,11 @@ def xedit():
         os.remove(cfg.done_path)
 
     # Create ini if it does not exist
-    if not cfg.windows:
-        config_dir = f"{cfg.xedit_compatdata_path}/pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/"
-        Path(config_dir).mkdir(exist_ok=True, parents=True)
-        Path(f"{config_dir}/Fallout76.ini").touch(exist_ok=True)
+    config_dir = \
+        f"{Path.home()}/Documents/My Games/Fallout 76/" if cfg.windows \
+        else f"{cfg.xedit_compatdata_path}/pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/"
+    Path(config_dir).mkdir(exist_ok=True, parents=True)
+    Path(f"{config_dir}/Fallout76.ini").touch(exist_ok=True)
 
     # Store initial `_done.txt` modification time
     done_file = Path(cfg.done_path)
@@ -107,7 +108,8 @@ def xedit():
     # Actually run xEdit
     cwd = os.getcwd()
     os.chdir(cfg.script_root)
-    run_executable(f"\"{cfg.xedit_path}\" ExportAll.fo76pas", cfg.xedit_compatdata_path if not cfg.windows else "")
+    run_executable(f"\"{cfg.xedit_path}\" -D:\"{cfg.game_root}/Data/\" ExportAll.fo76pas",
+                   cfg.xedit_compatdata_path if not cfg.windows else "")
     os.chdir(cwd)
 
     # Check if `_done.txt` changed
@@ -267,6 +269,13 @@ def main():
         if not prompt_confirmation("WARNING: The game version is set to 'x.y.z.w' in the configuration, which is "
                                    "probably incorrect. If you continue, some dumps will have incorrect names. Do you "
                                    "want to continue anyway? (y/n) "):
+            exit()
+    if not cfg.windows and ("INSERT NUMBER HERE" in cfg.xedit_compatdata_path or
+                            "INSERT NUMBER HERE" in cfg.ba2extract_compatdata_path):
+        if not prompt_confirmation("WARNING: You did not adjust the compatdata path for xEdit or for ba2extract. This "
+                                   "might cause issues when launching xEdit or ba2extract. Check the dump scripts wiki "
+                                   "at https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps/ for more "
+                                   "information. Continue anyway? (y/n) "):
             exit()
     if Path(cfg.dump_root).exists() and len(os.listdir(cfg.dump_root)) != 0:
         if prompt_confirmation("INFO: The dump output directory exists and is not empty. Do you want to remove the "
