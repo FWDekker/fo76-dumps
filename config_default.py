@@ -42,13 +42,13 @@ config = {
 
     ## Settings for Windows
     # Path to 7z executable
-    "archiver_path": r"C:\Program Files\7-Zip\7z.exe",
+    "archiver_path": Path(r"C:\Program Files\7-Zip\7z.exe"),
     # Path to game files
-    "game_root": r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76",
+    "game_root": Path(r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76"),
     # Path to xEdit executable
-    "xedit_path": r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe",
+    "xedit_path": Path(r"C:\Program Files (x86)\Steam\steamapps\common\Fallout76\FO76Edit64.exe"),
     # Path to ba2extract executable
-    "ba2extract_path": r"ba2extract.exe",
+    "ba2extract_path": Path(f"{Path.cwd()}/ba2extract.exe"),
 
 
     ## Settings for Linux
@@ -56,20 +56,20 @@ config = {
         # Path to 7z executable
         "archiver_path": "7z",
         # Path to game files
-        "game_root": f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/",
+        "game_root": Path(f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/"),
         # Path to Steam installation
-        "steam_path": f"{Path.home()}/.steam/steam/",
+        "steam_path": Path(f"{Path.home()}/.steam/steam/"),
         # Path to Proton installation
-        "proton_path": f"{Path.home()}/.local/share/Steam/steamapps/common/Proton - Experimental/proton",
+        "proton_path": Path(f"{Path.home()}/.local/share/Steam/steamapps/common/Proton - Experimental/proton"),
 
         # Path to xEdit executable
-        "xedit_path": f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/FO76Edit64.exe",
+        "xedit_path": Path(f"{Path.home()}/.steam/steam/steamapps/common/Fallout76/FO76Edit64.exe"),
         # Path to xEdit compatdata
-        "xedit_compatdata_path": f"{Path.home()}/.steam/steam/steamapps/compatdata/INSERT NUMBER HERE/",
+        "xedit_compatdata_path": Path(f"{Path.home()}/.steam/steam/steamapps/compatdata/INSERT NUMBER HERE/"),
 
         # Path to ba2extract executable
-        "ba2extract_path": "./ba2extract.exe",
+        "ba2extract_path": Path(f"{Path.cwd()}/ba2extract.exe"),
         # Path to ba2extract compatdata
-        "ba2extract_compatdata_path": f"{Path.home()}/.steam/steam/steamapps/compatdata/INSERT NUMBER HERE/",
+        "ba2extract_compatdata_path": Path(f"{Path.home()}/.steam/steam/steamapps/compatdata/INSERT NUMBER HERE/"),
     }
 }

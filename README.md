@@ -28,7 +28,7 @@ explanation.
 ## Development
 All dumps are created using a Python script that uses [xEdit](https://tes5edit.github.io/) and
 [ba2extract](https://f4se.silverlock.org/).
-The main script is located at [`export.py`](https://github.com/FWDekker/fo76-dumps/blob/master/export.py).
+The main script is located at [`facemation.py`](https://github.com/FWDekker/fo76-dumps/blob/master/export.py).
 The xEdit scripts are in the
 [`Edit scripts` directory](https://github.com/FWDekker/fo76-dumps/tree/master/Edit%20scripts).
 The wiki describes the [dumping process in more detail](https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps).
