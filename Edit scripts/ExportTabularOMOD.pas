@@ -23,7 +23,8 @@ begin
         + ', "Attach parent slots"'  // Sorted JSON array of attach parent slots
         + ', "Includes"'             // Sorted JSON object of includes
         + ', "Properties"'           // Sorted JSON object of properties
-        + ', "Target keywords"'      // Sorted JSON array of keywords. Each keyword is represented by its editor ID
+        + ', "Target keywords"'      // Sorted JSON array of keywords. Each keyword is represented as
+                                     // `{EditorID} [KYWD:{FormID}]`
     );
 end;
 

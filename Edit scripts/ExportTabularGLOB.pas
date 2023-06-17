@@ -11,10 +11,10 @@ function initialize(): Integer;
 begin
     ExportTabularGLOB_outputLines := TStringList.create();
     ExportTabularGLOB_outputLines.add(
-            '"File"'      // Name of the originating ESM
-        + ', "Form ID"'   // Form ID
-        + ', "Editor ID"' // Editor ID
-        + ', "Value"'     // Value of the global variable
+            '"File"'       // Name of the originating ESM
+        + ', "Form ID"'    // Form ID
+        + ', "Editor ID"'  // Editor ID
+        + ', "Value"'      // Value of the global variable
     );
 end;
 

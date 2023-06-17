@@ -28,7 +28,8 @@ begin
         + ', "Condition dmg curve"'   // Condition damage scale factor curve
         + ', "Attach slots"'          // Sorted JSON array of attachment slots available to the weapon
         + ', "Equipment type"'        // Equipment type
-        + ', "Keywords"'              // Sorted JSON array of keywords. Each keyword is represented by its editor ID
+        + ', "Keywords"'              // Sorted JSON array of keywords. Each keyword is represented as
+                                      // `{EditorID} [KYWD:{FormID}]`
     );
 
     ExportTabularWEAP_LOC_outputLines := initLocList();

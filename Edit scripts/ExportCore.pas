@@ -44,6 +44,14 @@ begin
 end;
 
 (**
+ * Shorthand for [elementExists].
+ *)
+function eHasByPath(el: IwbContainer; path: String): Boolean;
+begin
+    result := elementExists(el, path);
+end;
+
+(**
  * Shorthand for [elementCount].
  *)
 function eCount(el: IwbContainer): Integer;

@@ -103,7 +103,7 @@ begin
             avValue := evByPath(prop, 'Value');
         end;
         try
-            avValue := floatToStr(strToFloat(avValue)); // Remove unnecessary decimals
+            avValue := floatToStr(strToFloat(avValue));  // Remove unnecessary decimals
         except end;
 
         result := result + '"' + escapeJson(avEdid) + '":"' + escapeJson(avValue) + '"';

@@ -39,7 +39,6 @@ end;
  *)
 function escapeWiki(text: String): String;
 begin
-    result := text;
     result := escapeHTML(text);
     result := stringReplace(result, '{', '&#123;', [rfReplaceAll]);
     result := stringReplace(result, '|', '&#124;', [rfReplaceAll]);

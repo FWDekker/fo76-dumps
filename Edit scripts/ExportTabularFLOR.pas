@@ -19,7 +19,8 @@ begin
         + ', "Editor ID"'   // Editor ID
         + ', "Name"'        // Full name
         + ', "Ingredient"'  // Item obtained when harvested
-        + ', "Keywords"'    // Sorted JSON array of keywords. Each keyword is represented by its editor ID
+        + ', "Keywords"'    // Sorted JSON array of keywords. Each keyword is represented as
+                            // `{EditorID} [KYWD:{FormID}]`
         + ', "Properties"'  // Sorted JSON object of properties
     );
 

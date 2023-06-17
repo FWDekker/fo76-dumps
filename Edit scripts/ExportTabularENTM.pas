@@ -21,8 +21,8 @@ begin
         + ', "Storefront image path"'          // Path to where images are located
         + ', "Storefront image preview"'       // File name of preview image
         + ', "Storefront confirm image list"'  // Sorted JSON array of file names
-        + ', "Keywords"'                       // Sorted JSON array of keywords. Each keyword is represented by its
-                                               // editor ID
+        + ', "Keywords"'                       // Sorted JSON array of keywords. Each keyword is represented as
+                                               // `{EditorID} [KYWD:{FormID}]`
     );
 end;
 

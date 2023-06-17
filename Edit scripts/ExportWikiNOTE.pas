@@ -110,7 +110,7 @@ begin
                 + #10 + #10;
         end;
     end;
-    delete(result, length(result) - 1, 1); // Remove trailing newline
+    delete(result, length(result) - 1, 1);  // Remove trailing newline
 
     result := result + '}}';
 end;
