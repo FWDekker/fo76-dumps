@@ -23,7 +23,7 @@ def load_config() -> SimpleNamespace:
     my_cfg = SimpleNamespace(**my_cfg)
 
     # Version of this script
-    my_cfg.script_version = "3.1.0"
+    my_cfg.script_version = "3.2.0"
     # Path to scripts
     my_cfg.script_root = my_cfg.game_root / "Edit scripts/"
     # Path to exported dumps
