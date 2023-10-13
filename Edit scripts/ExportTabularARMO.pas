@@ -67,7 +67,7 @@ begin
         + escapeCsvString(evBySign(armo, 'CVT2')) + ','
         + escapeCsvString(getJsonChildArray(eBySign(armo, 'APPR'))) + ','
         + escapeCsvString(getJsonChildNameArray(eByIndex(eBySign(armo, 'BOD2'), 0))) + ', '
-        + escapeCsvString(getJsonChildArray(eBySign(eByPath(armo, 'Keywords'), 'KWDA')))
+        + escapeCsvString(getJsonChildArray(eByPath(armo, 'Keywords\KWDA')))
     );
 
     appendLocationData(ExportTabularARMO_LOC_outputLines, armo);

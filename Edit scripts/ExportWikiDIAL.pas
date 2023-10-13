@@ -100,7 +100,7 @@ begin
 
         for i := 0 to eCount(dialogs) - 1 do begin
             dialog := eByIndex(dialogs, i);
-            responses := eByPath(dialog, 'Responses');
+            responses := eByName(dialog, 'Responses');
 
             topicSize := topicSize + eCount(responses);
         end;
@@ -114,7 +114,7 @@ begin
             previousDialog := formID(dialog);
             dialogHasRowSpan := false;
 
-            responses := eByPath(dialog, 'Responses');
+            responses := eByName(dialog, 'Responses');
             for i := 0 to eCount(responses) - 1 do begin
                 response := eByIndex(responses, i);
 

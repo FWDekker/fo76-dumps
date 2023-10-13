@@ -28,6 +28,7 @@ end;
 function process(term: IInterface): Integer;
 var header: String;
     contents: String;
+    history: TStringList;
 begin
     if not canProcess(term) then begin
         addWarning(name(term) + ' is not a TERM. Entry was ignored.');
@@ -39,7 +40,9 @@ begin
         header := header + #10;
     end;
 
-    contents := trim(getTerminalContents(term, TStringList.create));
+    history := TStringList.create();
+    contents := trim(getTerminalContents(term, history));
+    history.free();
     if not (contents = '') then begin
         contents := '' + #10 + contents + #10 + #10;
     end;
@@ -61,7 +64,7 @@ begin
 end;
 
 
-function getTerminalContents(el: IInterface; parents: TStringList): String;
+function getTerminalContents(el: IInterface; history: TStringList): String;
 var body: IInterface;
     bodyItem: IInterface;
 
@@ -71,13 +74,13 @@ var body: IInterface;
 
     i: Integer;
 begin
-    parents.add(stringFormID(el));
+    history.add(stringFormID(el));
 
-    body := eByPath(el, 'Body Text');
+    body := eByName(el, 'Body Text');
     for i := 0 to eCount(body) - 1 do begin
         bodyItem := eByIndex(body, i);
 
-        if eCount(eByPath(bodyItem, 'Conditions')) > 0 then begin
+        if eCount(eByName(bodyItem, 'Conditions')) > 0 then begin
             result := result + '{{Info: The following body is conditional}}' + #10;
         end;
         result := result
@@ -86,7 +89,7 @@ begin
             + '}}' + #10;
     end;
 
-    menu := eByPath(el, 'Menu Items');
+    menu := eByName(el, 'Menu Items');
     for i := 0 to eCount(menu) - 1 do begin
         menuItem := eByIndex(menu, i);
         menuItemType := evBySign(menuItem, 'ANAM');
@@ -102,35 +105,33 @@ begin
 
         if menuItemType = 'Display Text' then begin
             result := result
-                + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), parents.count) + #10
+                + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), history.count) + #10
                 + '{{Transcript|text=' + #10
                 + escapeWiki(trim(evBySign(menuItem, 'UNAM'))) + #10
                 + '}}' + #10;
         end else if menuItemType = 'Submenu - Terminal' then begin
-            if parents.indexOf(stringFormID(linkBySign(menuItem, 'TNAM'))) >= 0 then begin
+            if history.indexOf(stringFormID(linkBySign(menuItem, 'TNAM'))) >= 0 then begin
                 if evBySign(menuItem, 'RNAM') <> '' then begin
                     result := result
-                        + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), parents.count) + #10
+                        + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), history.count) + #10
                         + '{{Transcript|text=' + #10
                         + trim(escapeWiki(evBySign(menuItem, 'RNAM'))) + #10
                         + '}}' + #10;
                 end;
             end else begin
                 result := result
-                    + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), parents.count) + #10
-                    + trim(getTerminalContents(linkBySign(menuItem, 'TNAM'), parents)) + #10;
+                    + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), history.count) + #10
+                    + trim(getTerminalContents(linkBySign(menuItem, 'TNAM'), history)) + #10;
             end;
         end else if menuItemType = 'Display Image' then begin
             result := result + '{{Image: ' + evBySign(menuItem, 'VNAM') + '}}' + #10;
         end else begin
             // Non-fatal error
             result := result
-                + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), parents.count) + #10
+                + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), history.count) + #10
                 + addError('Unexpected menu item type `' + menuItemType + '`') + #10;
         end;
     end;
-
-    parents.delete(parents.count - 1);
 end;
 
 

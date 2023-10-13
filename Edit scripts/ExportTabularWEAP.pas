@@ -66,7 +66,7 @@ begin
         + escapeCsvString(evBySign(weap, 'CVT2')) + ','
         + escapeCsvString(getJsonChildArray(eBySign(weap, 'APPR'))) + ','
         + escapeCsvString(evBySign(weap, 'ETYP')) + ', '
-        + escapeCsvString(getJsonChildArray(eBySign(eByPath(weap, 'Keywords'), 'KWDA')))
+        + escapeCsvString(getJsonChildArray(eByPath(weap, 'Keywords\KWDA')))
     );
 
     appendLocationData(ExportTabularWEAP_LOC_outputLines, weap);

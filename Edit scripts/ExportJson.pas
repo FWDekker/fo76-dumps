@@ -95,12 +95,12 @@ begin
     props := eBySign(el, 'PRPS');
     for i := 0 to eCount(props) - 1 do begin
         prop := eByIndex(props, i);
-        avEdid := evBySign(linkByPath(prop, 'Actor Value'), 'EDID');
+        avEdid := evBySign(linkByName(prop, 'Actor Value'), 'EDID');
 
-        if assigned(linkByPath(prop, 'Curve Table')) then begin
-            avValue := evBySign(linkByPath(prop, 'Curve Table'), 'EDID');
+        if assigned(linkByName(prop, 'Curve Table')) then begin
+            avValue := evBySign(linkByName(prop, 'Curve Table'), 'EDID');
         end else begin
-            avValue := evByPath(prop, 'Value');
+            avValue := evByName(prop, 'Value');
         end;
         try
             avValue := floatToStr(strToFloat(avValue));  // Remove unnecessary decimals

@@ -66,23 +66,23 @@ begin
         + escapeCsvString(evBySign(npc_, 'EDID')) + ', '
         + escapeCsvString(evBySign(npc_, 'FULL')) + ', '
         + escapeCsvString(evBySign(npc_, 'SHRT')) + ', '
-        + escapeCsvString(evByPath(acbs, 'Level')) + ', '
+        + escapeCsvString(evByName(acbs, 'Level')) + ', '
         + escapeCsvString(getJsonFactionArray(npc_)) + ', '
         + escapeCsvString(evBySign(npc_, 'RNAM')) + ', '
         + escapeCsvString(evBySign(npc_, 'ATKR')) + ', '
         + escapeCsvString(evBySign(npc_, 'CNAM')) + ', '
-        + escapeCsvString(getJsonChildArray(eBySign(eByPath(npc_, 'Keywords'), 'KWDA'))) + ', '
+        + escapeCsvString(getJsonChildArray(eByPath(npc_, 'Keywords\KWDA'))) + ', '
         + escapeCsvString(getJsonPerkArray(npc_)) + ', '
         + escapeCsvString(getJsonPropertyObject(npc_)) + ', '
-        + escapeCsvString(evByPath(aidt, 'Aggression')) + ', '
-        + escapeCsvString(evByPath(aidt, 'Confidence')) + ', '
-        + escapeCsvString(evByPath(aidt, 'Assistance')) + ', '
+        + escapeCsvString(evByName(aidt, 'Aggression')) + ', '
+        + escapeCsvString(evByName(aidt, 'Confidence')) + ', '
+        + escapeCsvString(evByName(aidt, 'Assistance')) + ', '
         + escapeCsvString(evBySign(npc_, 'CVT0')) + ', '
         + escapeCsvString(evBySign(npc_, 'CVT2')) + ', '
         + escapeCsvString(evBySign(npc_, 'DOFT')) + ', '
         + escapeCsvString(evBySign(npc_, 'VTCK')) + ', '
         + escapeCsvString(evBySign(npc_, 'HCLF')) + ', '
-        + escapeCsvString(getJsonChildArray(eByPath(npc_, 'Head Parts')))
+        + escapeCsvString(getJsonChildArray(eByName(npc_, 'Head Parts')))
     );
 end;
 

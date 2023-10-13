@@ -69,10 +69,10 @@ begin
             + '"True", '
             + escapeCsvString(parseFloatToInt(evBySign(venr, 'FLTV'))) + ', '
             + escapeCsvString(parseFloatToInt(evBySign(veng, 'NAM5')) + '-' + parseFloatToInt(evBySign(veng, 'NAM6'))) + ', '
-            + escapeCsvString(evByPath(venv, 'Start Hour') + '-' + evByPath(venv, 'End Hour')) + ', '
-            + escapeCsvString(evByPath(venv, 'Buys Stolen Items')) + ', '
-            + escapeCsvString(evByPath(venv, 'Buys NonStolen Items')) + ', '
-            + escapeCsvString(evByPath(venv, 'Buy/Sell Everything Not In List?')) + ', '
+            + escapeCsvString(evByName(venv, 'Start Hour') + '-' + evByName(venv, 'End Hour')) + ', '
+            + escapeCsvString(evByName(venv, 'Buys Stolen Items')) + ', '
+            + escapeCsvString(evByName(venv, 'Buys NonStolen Items')) + ', '
+            + escapeCsvString(evByName(venv, 'Buy/Sell Everything Not In List?')) + ', '
             + escapeCsvString(getJsonContainerItemArray(linkBySign(linkBySign(fact, 'VENC'), 'NAME')));
     end else begin
         outputString := outputString
@@ -112,15 +112,15 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    relations := eByPath(fact, 'Relations');
+    relations := eByName(fact, 'Relations');
     for i := 0 to eCount(relations) - 1 do begin
         relation := eByIndex(relations, i);
-        relationFaction := linksTo(eByPath(relation, 'Faction'));
+        relationFaction := linkByName(relation, 'Faction');
 
         resultList.add(
             '{' +
-             '"Faction":"'               + escapeJson(evByPath(relation, 'Faction'))               + '"' +
-            ',"Group Combat Reaction":"' + escapeJson(evByPath(relation, 'Group Combat Reaction')) + '"' +
+             '"Faction":"'               + escapeJson(evByName(relation, 'Faction'))               + '"' +
+            ',"Group Combat Reaction":"' + escapeJson(evByName(relation, 'Group Combat Reaction')) + '"' +
             '}'
         );
     end;
@@ -147,10 +147,10 @@ begin
     itemHistory := TStringList.create();
     lvliHistory := TStringList.create();
 
-    entries := eByPath(cont, 'Items');
+    entries := eByName(cont, 'Items');
     for i := 0 to eCount(entries) - 1 do begin
         entry := eBySign(eByIndex(entries, i), 'CNTO');
-        item := eByPath(entry, 'Item');
+        item := eByName(entry, 'Item');
 
         if signature(linksTo(item)) = 'LVLI' then begin
             addLeveledItemList(lvliHistory, itemHistory, linksTo(item));
@@ -186,13 +186,13 @@ begin
     end;
     lvliHistory.add(stringFormID(lvli));
 
-    entries := eByPath(lvli, 'Leveled List Entries');
+    entries := eByName(lvli, 'Leveled List Entries');
     for i := 0 to eCount(entries) - 1 do begin
         entry := eByIndex(entries, i);
         lvlo := eByIndex(eBySign(entry, 'LVLO'), 0);
 
         if name(lvlo) = 'Base Data' then begin
-            item := eByPath(lvlo, 'Reference');
+            item := eByName(lvlo, 'Reference');
         end else begin
             item := lvlo;
         end;

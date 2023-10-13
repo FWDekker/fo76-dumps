@@ -30,8 +30,8 @@ begin
     ExportWikiNOTE_outputLines.add('==[' + getFileName(getFile(note)) + '] ' + evBySign(note, 'FULL') + '==');
     ExportWikiNOTE_outputLines.add('Form ID:   ' + stringFormID(note));
     ExportWikiNOTE_outputLines.add('Editor ID: ' + evBySign(note, 'EDID'));
-    ExportWikiNOTE_outputLines.add('Weight:    ' + evByPath(eBySign(note, 'DATA'), 'Weight'));
-    ExportWikiNOTE_outputLines.add('Value:     ' + evByPath(eBySign(note, 'DATA'), 'Value'));
+    ExportWikiNOTE_outputLines.add('Weight:    ' + evByPath(note, 'DATA\Weight'));
+    ExportWikiNOTE_outputLines.add('Value:     ' + evByPath(note, 'DATA\Value'));
     ExportWikiNOTE_outputLines.add('Transcript: ' + #10 + getNoteDialogue(note) + #10 + #10);
 end;
 
@@ -44,8 +44,7 @@ end;
 
 
 function getNoteDialogue(note: IInterface): String;
-var scene: IInterface;
-    actions: IInterface;
+var actions: IInterface;
     actionList: TList;
 
     maxStage: Integer;
@@ -54,16 +53,15 @@ var scene: IInterface;
 
     i: Integer;
 begin
-    if evByPath(eBySign(note, 'SNAM'), 'Terminal') <> '' then begin
+    if evByPath(note, 'SNAM\Terminal') <> '' then begin
         result := ''
             + 'This disk shows terminal entries from `TERM:'
-            + stringFormID(linkByPath(eBySign(note, 'SNAM'), 'Terminal'))
+            + stringFormID(linkByPath(note, 'SNAM\Terminal'))
             + '`.';
         exit;
     end;
 
-    scene := linkByPath(eBySign(note, 'SNAM'), 'Scene');
-    actions := eByPath(scene, 'Actions');
+    actions := eByName(linkByPath(note, 'SNAM\Scene'), 'Actions');
 
     // Find max stage (and validate their values)
     maxStage := 0;
@@ -112,6 +110,8 @@ begin
     end;
     delete(result, length(result) - 1, 1);  // Remove trailing newline
 
+    // Finalize
+    actionList.free();
     result := result + '}}';
 end;
 
@@ -149,7 +149,7 @@ begin
     ExportWikiNOTE_lastSpeaker := speaker;
 
     // Add lines of paragraph
-    lines := eByPath(eByIndex(childGroup(topic), 0), 'Responses');
+    lines := eByName(eByIndex(childGroup(topic), 0), 'Responses');
     for i := 0 to eCount(lines) do begin
         line := escapeHTML(trim(evBySign(eByIndex(lines, i), 'NAM1')));
         comment := escapeHTML(trim(evBySign(eByIndex(lines, i), 'NAM2')));

@@ -60,7 +60,7 @@ begin
         + escapeCsvString(evByName(enit, 'Health')) + ', '
         + escapeCsvString(evByName(enit, 'Spoiled')) + ', '
         + escapeCsvString(getJsonEffectsArray(eByName(alch, 'Effects'))) + ', '
-        + escapeCsvString(getJsonChildArray(eBySign(eByPath(alch, 'Keywords'), 'KWDA')));
+        + escapeCsvString(getJsonChildArray(eByPath(alch, 'Keywords\KWDA')));
 
     ExportTabularALCH_outputLines.add(outputString);
 end;

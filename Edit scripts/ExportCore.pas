@@ -9,6 +9,10 @@ unit ExportCore;
  *
  * Shorthands for commonly used functions.
  *
+ * Some terminology: Given an element identified as `EDID - Editor ID`, the signature is `EDID` and the name is
+ * `EDID - Editor ID`. If an element has no signature, it can only be addressed by its name. A nested element can be
+ * addressed by its path, which is a sequence of signatures and names (or mixtures thereof), separated by backslashes.
+ *
  **)
 
 (**
@@ -28,19 +32,19 @@ begin
 end;
 
 (**
- * Shorthand for [elementByPath].
- *)
-function eByPath(el: IwbContainer; path: String): IwbElement;
-begin
-    result := elementByPath(el, path);
-end;
-
-(**
  * Shorthand for [elementByName].
  *)
 function eByName(el: IwbContainer; nam: String): IwbElement;
 begin
     result := elementByName(el, nam);
+end;
+
+(**
+ * Shorthand for [elementByPath].
+ *)
+function eByPath(el: IwbContainer; path: String): IwbElement;
+begin
+    result := elementByPath(el, path);
 end;
 
 (**
@@ -76,19 +80,19 @@ begin
 end;
 
 (**
- * Shorthand for calling [getEditValue] and [elementByPath].
- *)
-function evByPath(el: IInterface; path: String): String;
-begin
-    result := gev(eByPath(el, path));
-end;
-
-(**
  * Shorthand for calling [getEditValue] and [elementByName].
  *)
 function evByName(el: IInterface; nam: String): String;
 begin
     result := gev(eByName(el, nam));
+end;
+
+(**
+ * Shorthand for calling [getEditValue] and [elementByPath].
+ *)
+function evByPath(el: IInterface; path: String): String;
+begin
+    result := gev(eByPath(el, path));
 end;
 
 (**
@@ -108,19 +112,19 @@ begin
 end;
 
 (**
- * Shorthand for calling [linksTo] and [elementByPath].
- *)
-function linkByPath(el: IInterface; path: String): IInterface;
-begin
-    result := linksTo(eByPath(el, path));
-end;
-
-(**
  * Shorthand for calling [linksTo] and [elementByName].
  *)
 function linkByName(el: IInterface; nam: String): IInterface;
 begin
     result := linksTo(eByName(el, nam));
+end;
+
+(**
+ * Shorthand for calling [linksTo] and [elementByPath].
+ *)
+function linkByPath(el: IInterface; path: String): IInterface;
+begin
+    result := linksTo(eByPath(el, path));
 end;
 
 (**

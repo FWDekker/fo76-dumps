@@ -27,8 +27,8 @@ begin
     ExportWikiBOOK_outputLines.add('==[' + getFileName(getFile(book)) + '] ' + evBySign(book, 'FULL') + '==');
     ExportWikiBOOK_outputLines.add('Form ID:      ' + stringFormID(book));
     ExportWikiBOOK_outputLines.add('Editor ID:    ' + evBySign(book, 'EDID'));
-    ExportWikiBOOK_outputLines.add('Weight:       ' + evByPath(eBySign(book, 'DATA'), 'Weight'));
-    ExportWikiBOOK_outputLines.add('Value:        ' + evByPath(eBySign(book, 'DATA'), 'Value'));
+    ExportWikiBOOK_outputLines.add('Weight:       ' + evByPath(book, 'DATA\Weight'));
+    ExportWikiBOOK_outputLines.add('Value:        ' + evByPath(book, 'DATA\Value'));
     ExportWikiBOOK_outputLines.add('Can be taken: ' + canBeTakenString(book));
     ExportWikiBOOK_outputLines.add('Transcript:' + #10 + getBookContents(book));
     ExportWikiBOOK_outputLines.add(#10);
@@ -46,7 +46,7 @@ function canBeTakenString(book: IInterface): String;
 var flags: String;
     pickUpFlag: String;
 begin
-    flags := evByPath(eBySign(book, 'DNAM'), 'Flags');
+    flags := evByPath(book, 'DNAM\Flags');
     if length(flags) = 1 then begin
         result := 'no';
     end;

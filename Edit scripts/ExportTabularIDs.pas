@@ -43,7 +43,7 @@ begin
         + escapeCsvString(stringFormID(el)) + ', '
         + escapeCsvString(evBySign(el, 'EDID')) + ', '
         + escapeCsvString(evBySign(el, 'FULL')) + ', '
-        + escapeCsvString(getJsonChildArray(eBySign(eByPath(el, 'Keywords'), 'KWDA')))
+        + escapeCsvString(getJsonChildArray(eByPath(el, 'Keywords\KWDA')))
     );
 end;
 

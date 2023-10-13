@@ -43,8 +43,8 @@ begin
         + escapeCsvString(stringFormID(misc)) + ', '
         + escapeCsvString(evBySign(misc, 'EDID')) + ', '
         + escapeCsvString(evBySign(misc, 'FULL')) + ', '
-        + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Weight')) + ', '
-        + escapeCsvString(evByPath(eBySign(misc, 'DATA'), 'Value')) + ', '
+        + escapeCsvString(evByPath(misc, 'DATA\Weight')) + ', '
+        + escapeCsvString(evByPath(misc, 'DATA\Value')) + ', '
         + escapeCsvString(getJsonComponentArray(misc))
     );
 
