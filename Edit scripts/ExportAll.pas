@@ -13,6 +13,7 @@ uses ExportTabularALCH,
      ExportTabularGLOB,
      ExportTabularGMST,
      ExportTabularIDs,
+     ExportTabularLSCR,
      ExportTabularLVLI,
      ExportTabularMISC,
      ExportTabularNPC_,
@@ -57,6 +58,7 @@ begin
         clb.items.add('GLOB.csv');
         clb.items.add('GMST.csv');
         clb.items.add('IDs.csv');
+        clb.items.add('LSCR.csv');
         clb.items.add('LVLI.csv');
         clb.items.add('MISC.csv');
         clb.items.add('NPC_.csv');
@@ -125,6 +127,9 @@ begin
     if ExportAll_selection.indexOf('IDs.csv') >= 0 then begin
         ExportTabularIDs.initialize();
     end;
+    if ExportAll_selection.indexOf('LSCR.csv') >= 0 then begin
+        ExportTabularLVLI.initialize();
+    end;
     if ExportAll_selection.indexOf('LVLI.csv') >= 0 then begin
         ExportTabularLVLI.initialize();
     end;
@@ -191,6 +196,9 @@ begin
     end end;
     if ExportAll_selection.indexOf('IDs.csv') >= 0 then begin if ExportTabularIDs.canProcess(el) then begin
         ExportTabularIDs.process(el);
+    end end;
+    if ExportAll_selection.indexOf('LSCR.csv') >= 0 then begin if ExportTabularLVLI.canProcess(el) then begin
+        ExportTabularLVLI.process(el);
     end end;
     if ExportAll_selection.indexOf('LVLI.csv') >= 0 then begin if ExportTabularLVLI.canProcess(el) then begin
         ExportTabularLVLI.process(el);
@@ -259,6 +267,9 @@ begin
     end;
     if ExportAll_selection.indexOf('IDs.csv') >= 0 then begin
         ExportTabularIDs.finalize();
+    end;
+    if ExportAll_selection.indexOf('LSCR.csv') >= 0 then begin
+        ExportTabularLVLI.finalize();
     end;
     if ExportAll_selection.indexOf('LVLI.csv') >= 0 then begin
         ExportTabularLVLI.finalize();
