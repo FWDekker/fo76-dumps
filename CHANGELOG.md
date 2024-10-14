@@ -1,5 +1,7 @@
 # Changelog
-## Unreleased
+## [4.0.1] -- 2023-10-14
+* Automatically detect game version number from executable.
+* Explicitly ignore `PLYT` records to prevent crash with EcksEdit 4.1.6.9.
 
 
 ## [4.0.0] -- 2023-10-13

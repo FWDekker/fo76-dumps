@@ -7,8 +7,9 @@ from pathlib import Path
 
 config = {
     ## Main settings
-    # Version of Fallout 76, used in some file names. Shown in-game in bottom-left corner in settings menu.
-    "game_version": "x.y.z.w",
+    # Version of Fallout 76, used in some file names. Shown in-game in bottom-left corner in settings menu, and in the
+    # properties of `Fallout76.exe`. Set this to `"auto"` to automatically detect the version number.
+    "game_version": "auto",
     # `True` if you are running this script on Windows, `False` for Linux.
     "windows": True,
 
