@@ -19,18 +19,14 @@ Includes:
 > * **[List of releases](https://github.com/FWDekker/fo76-dumps/releases/zOverview)**
 > * **[Latest release](https://github.com/FWDekker/fo76-dumps/releases/latest)**
 
-The dumps are distributed as attachments to
-[this repository's releases](https://github.com/FWDekker/fo76-dumps/releases/zOverview).
+The dumps are distributed as attachments to [this repository's releases](https://github.com/FWDekker/fo76-dumps/releases/zOverview).
 A new release is created for each update to the game.
-The wiki contains a [list of all dumps](https://github.com/FWDekker/fo76-dumps/wiki/List-of-dumps) with a thorough
-explanation.
+The wiki contains a [list of all dumps](https://github.com/FWDekker/fo76-dumps/wiki/List-of-dumps) with a thorough explanation.
 
 ## Development
-All dumps are created using a Python script that uses [xEdit](https://tes5edit.github.io/) and
-[ba2extract](https://f4se.silverlock.org/).
+All dumps are created using a Python script that uses [xEdit](https://tes5edit.github.io/) and [ba2extract](https://f4se.silverlock.org/).
 The main script is located at [`fo76dumps.py`](https://github.com/FWDekker/fo76-dumps/blob/main/fo76dumps.py).
-The xEdit scripts are in the
-[`Edit scripts` directory](https://github.com/FWDekker/fo76-dumps/tree/main/Edit%20scripts).
+The xEdit scripts are in the [`Edit scripts` directory](https://github.com/FWDekker/fo76-dumps/tree/main/Edit%20scripts).
 The wiki describes the [dumping process in more detail](https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps).
 
 ## Contact

@@ -12,5 +12,13 @@ authors = [{name = "Florine W. Dekker"}]
 description = "Data dumps of Fallout 76 game files"
 readme = "README.md"
 
+[project.optional-dependencies]
+contribute = ["black==24.10.0"]
+
+[tool.black]
+# Invoke as `black .`
+line-length = 120
+force-exclude = "config_default.py"
+
 [tool.setuptools]
 package-dir = {"fo76dumps" = ""}

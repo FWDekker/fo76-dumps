@@ -11,6 +11,7 @@ def load_config() -> SimpleNamespace:
     """
 
     from config_default import config as cfg_default
+
     if Path("config.py").exists():
         from config import config as cfg_user
     else:
