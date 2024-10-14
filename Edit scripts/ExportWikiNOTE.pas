@@ -13,10 +13,15 @@ begin
     ExportWikiNOTE_outputLines := TStringList.create();
 end;
 
-function process(note: IInterface): Integer;
+function process(el: IInterface): Integer;
 begin
-    if signature(note) <> 'NOTE' then begin exit; end;
+    if signature(el) <> 'NOTE' then begin exit; end;
 
+    _process(el);
+end;
+
+function _process(note: IInterface): Integer;
+begin
     ExportWikiNOTE_lastSpeaker := '';
 
     ExportWikiNOTE_outputLines.add('==[' + getFileName(getFile(note)) + '] ' + evBySign(note, 'FULL') + '==');

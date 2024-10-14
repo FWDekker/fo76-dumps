@@ -22,12 +22,17 @@ begin
     );
 end;
 
-function process(cobj: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'COBJ' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(cobj: IInterface): Integer;
 var product: IInterface;
     recipe: IInterface;
 begin
-    if signature(cobj) <> 'COBJ' then begin exit; end;
-
     product := eBySign(cobj, 'CNAM');
     recipe := eBySign(cobj, 'GNAM');
 

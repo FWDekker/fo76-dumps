@@ -30,12 +30,17 @@ begin
     );
 end;
 
-function process(alch: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'ALCH' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(alch: IInterface): Integer;
 var enit: IInterface;
     outputString: String;
 begin
-    if signature(alch) <> 'ALCH' then begin exit; end;
-
     enit := eBySign(alch, 'ENIT');
 
     outputString :=

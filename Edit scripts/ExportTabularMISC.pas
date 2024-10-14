@@ -26,10 +26,15 @@ begin
     ExportTabularMISC_LOC_outputLines := initLocList();
 end;
 
-function process(misc: IInterface): Integer;
+function process(el: IInterface): Integer;
 begin
-    if signature(misc) <> 'MISC' then begin exit; end;
+    if signature(el) <> 'MISC' then begin exit; end;
 
+    _process(el);
+end;
+
+function _process(misc: IInterface): Integer;
+begin
     ExportTabularMISC_outputLines.add(
           escapeCsvString(getFileName(getFile(misc))) + ', '
         + escapeCsvString(stringFormID(misc)) + ', '

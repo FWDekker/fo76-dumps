@@ -22,14 +22,19 @@ begin
     );
 end;
 
-function process(race: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'RACE' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(race: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if signature(race) <> 'RACE' then begin exit; end;
-
     acbs := eBySign(race, 'ACBS');
     rnam := linkBySign(race, 'RNAM');
     aidt := eBySign(race, 'AIDT');

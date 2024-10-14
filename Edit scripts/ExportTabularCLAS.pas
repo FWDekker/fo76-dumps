@@ -20,14 +20,19 @@ begin
     );
 end;
 
-function process(clas: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'CLAS' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(clas: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if signature(clas) <> 'CLAS' then begin exit; end;
-
     acbs := eBySign(clas, 'ACBS');
     rnam := linkBySign(clas, 'RNAM');
     aidt := eBySign(clas, 'AIDT');

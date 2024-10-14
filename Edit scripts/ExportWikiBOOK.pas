@@ -12,10 +12,15 @@ begin
     ExportWikiBOOK_outputLines := TStringList.create();
 end;
 
-function process(book: IInterface): Integer;
+function process(el: IInterface): Integer;
 begin
-    if signature(book) <> 'BOOK' then begin exit; end;
+    if signature(el) <> 'BOOK' then begin exit; end;
 
+    _process(el);
+end;
+
+function _process(book: IInterface): Integer;
+begin
     ExportWikiBOOK_outputLines.add('==[' + getFileName(getFile(book)) + '] ' + evBySign(book, 'FULL') + '==');
     ExportWikiBOOK_outputLines.add('Form ID:      ' + stringFormID(book));
     ExportWikiBOOK_outputLines.add('Editor ID:    ' + evBySign(book, 'EDID'));

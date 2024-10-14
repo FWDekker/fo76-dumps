@@ -32,6 +32,11 @@ end;
 
 function process(el: IInterface): Integer;
 begin
+    _process(el);
+end;
+
+function _process(el: IInterface): Integer;
+begin
     appendLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer, ExportTabularIDs_size, ExportTabularIDs_maxSize,
           escapeCsvString(getFileName(getFile(el))) + ', '
         + escapeCsvString(signature(el)) + ', '

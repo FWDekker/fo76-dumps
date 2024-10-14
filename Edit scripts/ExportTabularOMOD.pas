@@ -28,11 +28,16 @@ begin
     );
 end;
 
-function process(omod: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'OMOD' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(omod: IInterface): Integer;
 var data: IInterface;
 begin
-    if signature(omod) <> 'OMOD' then begin exit; end;
-
     data := eBySign(omod, 'DATA');
 
     ExportTabularOMOD_outputLines.add(

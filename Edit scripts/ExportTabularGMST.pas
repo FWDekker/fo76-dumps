@@ -19,10 +19,15 @@ begin
     );
 end;
 
-function process(gmst: IInterface): Integer;
+function process(el: IInterface): Integer;
 begin
-    if signature(gmst) <> 'GMST' then begin exit; end;
+    if signature(el) <> 'GMST' then begin exit; end;
 
+    _process(el);
+end;
+
+function _process(gmst: IInterface): Integer;
+begin
     ExportTabularGMST_outputLines.add(
           escapeCsvString(getFileName(getFile(gmst))) + ', '
         + escapeCsvString(stringFormID(gmst)) + ', '

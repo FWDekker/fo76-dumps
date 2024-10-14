@@ -19,14 +19,19 @@ begin
     );
 end;
 
-function process(otft: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'OTFT' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(otft: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if signature(otft) <> 'OTFT' then begin exit; end;
-
     ExportTabularOTFT_outputLines.add(
           escapeCsvString(getFileName(getFile(otft))) + ', '
         + escapeCsvString(stringFormID(otft)) + ', '

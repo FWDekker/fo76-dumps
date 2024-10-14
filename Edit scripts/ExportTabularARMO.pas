@@ -36,11 +36,16 @@ begin
     ExportTabularARMO_LOC_outputLines := initLocList();
 end;
 
-function process(armo: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'ARMO' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(armo: IInterface): Integer;
 var data: IInterface;
 begin
-    if signature(armo) <> 'ARMO' then begin exit; end;
-
     data := eBySign(armo, 'DATA');
 
     ExportTabularARMO_outputLines.add(

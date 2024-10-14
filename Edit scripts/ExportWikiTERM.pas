@@ -20,13 +20,18 @@ begin
     clearLargeFiles('dumps/TERM.wiki');
 end;
 
-function process(term: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'TERM' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(term: IInterface): Integer;
 var header: String;
     contents: String;
     history: TStringList;
 begin
-    if signature(term) <> 'TERM' then begin exit; end;
-
     header := escapeWiki(trim(evBySign(term, 'WNAM')));
     if not (header = '') then begin
         header := header + #10;

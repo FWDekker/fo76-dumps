@@ -35,12 +35,17 @@ begin
     ExportTabularWEAP_LOC_outputLines := initLocList();
 end;
 
-function process(weap: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'WEAP' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(weap: IInterface): Integer;
 var data: IInterface;
     locations: TStringList;
 begin
-    if signature(weap) <> 'WEAP' then begin exit; end;
-
     data := eBySign(weap, 'DNAM');
 
     ExportTabularWEAP_outputLines.add(

@@ -39,14 +39,19 @@ begin
     );
 end;
 
-function process(npc_: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'NPC_' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(npc_: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if signature(npc_) <> 'NPC_' then begin exit; end;
-
     acbs := eBySign(npc_, 'ACBS');
     rnam := linkBySign(npc_, 'RNAM');
     aidt := eBySign(npc_, 'AIDT');

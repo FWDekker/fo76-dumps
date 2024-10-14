@@ -27,11 +27,16 @@ begin
     ExportTabularFLOR_LOC_outputLines := initLocList();
 end;
 
-function process(flor: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'FLOR' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(flor: IInterface): Integer;
 var data: IInterface;
 begin
-    if signature(flor) <> 'FLOR' then begin exit; end;
-
     data := eBySign(flor, 'DATA');
 
     ExportTabularFLOR_outputLines.add(

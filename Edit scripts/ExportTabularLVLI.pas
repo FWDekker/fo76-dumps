@@ -24,11 +24,16 @@ begin
     ExportTabularLVLI_LOC_outputLines := initLocList();
 end;
 
-function process(lvli: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'LVLI' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(lvli: IInterface): Integer;
 var data: IInterface;
 begin
-    if signature(lvli) <> 'LVLI' then begin exit; end;
-
     data := eBySign(lvli, 'DATA');
     ExportTabularLVLI_outputLines.add(
           escapeCsvString(getFileName(getFile(lvli))) + ', '

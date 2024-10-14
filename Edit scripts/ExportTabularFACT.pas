@@ -32,7 +32,14 @@ begin
     );
 end;
 
-function process(fact: IInterface): Integer;
+function process(el: IInterface): Integer;
+begin
+    if signature(el) <> 'FACT' then begin exit; end;
+
+    _process(el);
+end;
+
+function _process(fact: IInterface): Integer;
 var venc: IInterface;
     venr: IInterface;
     veng: IInterface;
@@ -42,8 +49,6 @@ var venc: IInterface;
     bottlecapRange: String;
     itemList: String;
 begin
-    if signature(fact) <> 'FACT' then begin exit; end;
-
     venc := linkBySign(fact, 'VENC');
     venr := linkBySign(fact, 'VENR');
     veng := linkBySign(fact, 'VENG');

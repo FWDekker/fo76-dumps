@@ -26,10 +26,15 @@ begin
     );
 end;
 
-function process(entm: IInterface): Integer;
+function process(el: IInterface): Integer;
 begin
-    if signature(entm) <> 'ENTM' then begin exit; end;
+    if signature(el) <> 'ENTM' then begin exit; end;
 
+    _process(el);
+end;
+
+function _process(entm: IInterface): Integer;
+begin
     ExportTabularENTM_outputLines.add(
           escapeCsvString(getFileName(getFile(entm))) + ', '
         + escapeCsvString(stringFormID(entm)) + ', '
