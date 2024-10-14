@@ -162,6 +162,8 @@ end;
 
 function process(el: IInterface): Integer;
 begin
+    if signature(el) = 'PLYT' then begin exit(); end;
+
     if ExportAll_selection.indexOf('ALCH.csv') >= 0 then begin if ExportTabularALCH.canProcess(el) then begin
         ExportTabularALCH.process(el);
     end end;
