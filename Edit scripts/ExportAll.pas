@@ -25,22 +25,22 @@ uses ExportTabularALCH,
      ExportWikiNOTE,
      ExportWikiTERM;
 
-var ExportAll_selection: TStrings;
+var ExportAll_selection: TMemIniFile;
 
 
 
 (**
  * Opens a prompt from which the user can select which dumps to include.
  *
- * @return the dumps selected by the user
+ * @return the dumps selected by the user as an INI-like memory structure
  *)
-function _selectDumps(): TStrings;
+function _selectDumps(): TMemIniFile;
 var form: TForm;
     clb: TCheckListBox;
 
     i: Integer;
 begin
-    result := THashedStringList.create();
+    result := TMemIniFile.create('test.ini');
 
     form := frmFileSelect;
     try
@@ -74,15 +74,21 @@ begin
             exit;
         end;
 
-        // Process input
+        // Process selection
         for i := 0 to pred(clb.items.count) do begin
-            if clb.checked[i] then begin
-                result.add(clb.items[i]);
-            end;
+            result.writeBool('', clb.items[i], clb.checked[i]);
         end;
     finally
         form.free();
     end;
+end;
+
+(**
+ * Returns `True` if and only if the dump identified by [name] has been selected for dumping.
+ *)
+function _selected(name: String): Boolean;
+begin
+    result := ExportAll_selection.readBool('', name, False);
 end;
 
 
@@ -90,211 +96,81 @@ end;
 function initialize(): Integer;
 begin
     ExportAll_selection := _selectDumps();
-    if ExportAll_selection.count = 0 then begin
-        result := 1;
-        exit;
-    end;
 
-    if ExportAll_selection.indexOf('ALCH.csv') >= 0 then begin
-        ExportTabularALCH.initialize();
-    end;
-    if ExportAll_selection.indexOf('ARMO.csv') >= 0 then begin
-        ExportTabularARMO.initialize();
-    end;
-    if ExportAll_selection.indexOf('CLAS.csv') >= 0 then begin
-        ExportTabularCLAS.initialize();
-    end;
-    if ExportAll_selection.indexOf('COBJ.csv') >= 0 then begin
-        ExportTabularCOBJ.initialize();
-    end;
-    if ExportAll_selection.indexOf('ENTM.csv') >= 0 then begin
-        ExportTabularENTM.initialize();
-    end;
-    if ExportAll_selection.indexOf('FACT.csv') >= 0 then begin
-        ExportTabularFACT.initialize();
-    end;
-    if ExportAll_selection.indexOf('FLOR.csv') >= 0 then begin
-        ExportTabularFLOR.initialize();
-    end;
-    if ExportAll_selection.indexOf('GLOB.csv') >= 0 then begin
-        ExportTabularGLOB.initialize();
-    end;
-    if ExportAll_selection.indexOf('GMST.csv') >= 0 then begin
-        ExportTabularGMST.initialize();
-    end;
-    if ExportAll_selection.indexOf('IDs.csv') >= 0 then begin
-        ExportTabularIDs.initialize();
-    end;
-    if ExportAll_selection.indexOf('LVLI.csv') >= 0 then begin
-        ExportTabularLVLI.initialize();
-    end;
-    if ExportAll_selection.indexOf('MISC.csv') >= 0 then begin
-        ExportTabularMISC.initialize();
-    end;
-    if ExportAll_selection.indexOf('NPC_.csv') >= 0 then begin
-        ExportTabularNPC_.initialize();
-    end;
-    if ExportAll_selection.indexOf('OMOD.csv') >= 0 then begin
-        ExportTabularOMOD.initialize();
-    end;
-    if ExportAll_selection.indexOf('OTFT.csv') >= 0 then begin
-        ExportTabularOTFT.initialize();
-    end;
-    if ExportAll_selection.indexOf('RACE.csv') >= 0 then begin
-        ExportTabularRACE.initialize();
-    end;
-    if ExportAll_selection.indexOf('WEAP.csv') >= 0 then begin
-        ExportTabularWEAP.initialize();
-    end;
-    if ExportAll_selection.indexOf('BOOK.wiki') >= 0 then begin
-        ExportWikiBOOK.initialize();
-    end;
-    if ExportAll_selection.indexOf('DIAL.wiki') >= 0 then begin
-        ExportWikiDIAL.initialize();
-    end;
-    if ExportAll_selection.indexOf('NOTE.wiki') >= 0 then begin
-        ExportWikiNOTE.initialize();
-    end;
-    if ExportAll_selection.indexOf('TERM.wiki') >= 0 then begin
-        ExportWikiTERM.initialize();
-    end;
+    if _selected('ALCH.csv') then begin ExportTabularALCH.initialize(); end;
+    if _selected('ARMO.csv') then begin ExportTabularARMO.initialize(); end;
+    if _selected('CLAS.csv') then begin ExportTabularCLAS.initialize(); end;
+    if _selected('COBJ.csv') then begin ExportTabularCOBJ.initialize(); end;
+    if _selected('ENTM.csv') then begin ExportTabularENTM.initialize(); end;
+    if _selected('FACT.csv') then begin ExportTabularFACT.initialize(); end;
+    if _selected('FLOR.csv') then begin ExportTabularFLOR.initialize(); end;
+    if _selected('GLOB.csv') then begin ExportTabularGLOB.initialize(); end;
+    if _selected('GMST.csv') then begin ExportTabularGMST.initialize(); end;
+    if _selected('IDs.csv') then begin ExportTabularIDs.initialize(); end;
+    if _selected('LVLI.csv') then begin ExportTabularLVLI.initialize(); end;
+    if _selected('MISC.csv') then begin ExportTabularMISC.initialize(); end;
+    if _selected('NPC_.csv') then begin ExportTabularNPC_.initialize(); end;
+    if _selected('OMOD.csv') then begin ExportTabularOMOD.initialize(); end;
+    if _selected('OTFT.csv') then begin ExportTabularOTFT.initialize(); end;
+    if _selected('RACE.csv') then begin ExportTabularRACE.initialize(); end;
+    if _selected('WEAP.csv') then begin ExportTabularWEAP.initialize(); end;
+    if _selected('BOOK.wiki') then begin ExportWikiBOOK.initialize(); end;
+    if _selected('DIAL.wiki') then begin ExportWikiDIAL.initialize(); end;
+    if _selected('NOTE.wiki') then begin ExportWikiNOTE.initialize(); end;
+    if _selected('TERM.wiki') then begin ExportWikiTERM.initialize(); end;
 end;
 
 function process(el: IInterface): Integer;
 begin
-    if signature(el) = 'PLYT' then begin exit(); end;
+    if signature(el) = 'PLYT' then begin exit; end;
 
-    if ExportAll_selection.indexOf('ALCH.csv') >= 0 then begin if ExportTabularALCH.canProcess(el) then begin
-        ExportTabularALCH.process(el);
-    end end;
-    if ExportAll_selection.indexOf('ARMO.csv') >= 0 then begin if ExportTabularARMO.canProcess(el) then begin
-        ExportTabularARMO.process(el);
-    end end;
-    if ExportAll_selection.indexOf('CLAS.csv') >= 0 then begin if ExportTabularCLAS.canProcess(el) then begin
-        ExportTabularCLAS.process(el);
-    end end;
-    if ExportAll_selection.indexOf('COBJ.csv') >= 0 then begin if ExportTabularCOBJ.canProcess(el) then begin
-        ExportTabularCOBJ.process(el);
-    end end;
-    if ExportAll_selection.indexOf('ENTM.csv') >= 0 then begin if ExportTabularENTM.canProcess(el) then begin
-        ExportTabularENTM.process(el);
-    end end;
-    if ExportAll_selection.indexOf('FACT.csv') >= 0 then begin if ExportTabularFACT.canProcess(el) then begin
-        ExportTabularFACT.process(el);
-    end end;
-    if ExportAll_selection.indexOf('FLOR.csv') >= 0 then begin if ExportTabularFLOR.canProcess(el) then begin
-        ExportTabularFLOR.process(el);
-    end end;
-    if ExportAll_selection.indexOf('GLOB.csv') >= 0 then begin if ExportTabularGLOB.canProcess(el) then begin
-        ExportTabularGLOB.process(el);
-    end end;
-    if ExportAll_selection.indexOf('GMST.csv') >= 0 then begin if ExportTabularGMST.canProcess(el) then begin
-        ExportTabularGMST.process(el);
-    end end;
-    if ExportAll_selection.indexOf('IDs.csv') >= 0 then begin if ExportTabularIDs.canProcess(el) then begin
-        ExportTabularIDs.process(el);
-    end end;
-    if ExportAll_selection.indexOf('LVLI.csv') >= 0 then begin if ExportTabularLVLI.canProcess(el) then begin
-        ExportTabularLVLI.process(el);
-    end end;
-    if ExportAll_selection.indexOf('MISC.csv') >= 0 then begin if ExportTabularMISC.canProcess(el) then begin
-        ExportTabularMISC.process(el);
-    end end;
-    if ExportAll_selection.indexOf('NPC_.csv') >= 0 then begin if ExportTabularNPC_.canProcess(el) then begin
-        ExportTabularNPC_.process(el);
-    end end;
-    if ExportAll_selection.indexOf('OMOD.csv') >= 0 then begin if ExportTabularOMOD.canProcess(el) then begin
-        ExportTabularOMOD.process(el);
-    end end;
-    if ExportAll_selection.indexOf('OTFT.csv') >= 0 then begin if ExportTabularOTFT.canProcess(el) then begin
-        ExportTabularOTFT.process(el);
-    end end;
-    if ExportAll_selection.indexOf('RACE.csv') >= 0 then begin if ExportTabularRACE.canProcess(el) then begin
-        ExportTabularRACE.process(el);
-    end end;
-    if ExportAll_selection.indexOf('WEAP.csv') >= 0 then begin if ExportTabularWEAP.canProcess(el) then begin
-        ExportTabularWEAP.process(el);
-    end end;
-    if ExportAll_selection.indexOf('BOOK.wiki') >= 0 then begin if ExportWikiBOOK.canProcess(el) then begin
-        ExportWikiBOOK.process(el);
-    end end;
-    if ExportAll_selection.indexOf('DIAL.wiki') >= 0 then begin if ExportWikiDIAL.canProcess(el) then begin
-        ExportWikiDIAL.process(el);
-    end end;
-    if ExportAll_selection.indexOf('NOTE.wiki') >= 0 then begin if ExportWikiNOTE.canProcess(el) then begin
-        ExportWikiNOTE.process(el);
-    end end;
-    if ExportAll_selection.indexOf('TERM.wiki') >= 0 then begin if ExportWikiTERM.canProcess(el) then begin
-        ExportWikiTERM.process(el);
-    end end;
+    if _selected('ALCH.csv') then begin ExportTabularALCH.process(el); end;
+    if _selected('ARMO.csv') then begin ExportTabularARMO.process(el); end;
+    if _selected('CLAS.csv') then begin ExportTabularCLAS.process(el); end;
+    if _selected('COBJ.csv') then begin ExportTabularCOBJ.process(el); end;
+    if _selected('ENTM.csv') then begin ExportTabularENTM.process(el); end;
+    if _selected('FACT.csv') then begin ExportTabularFACT.process(el); end;
+    if _selected('FLOR.csv') then begin ExportTabularFLOR.process(el); end;
+    if _selected('GLOB.csv') then begin ExportTabularGLOB.process(el); end;
+    if _selected('GMST.csv') then begin ExportTabularGMST.process(el); end;
+    if _selected('IDs.csv') then begin ExportTabularIDs.process(el); end;
+    if _selected('LVLI.csv') then begin ExportTabularLVLI.process(el); end;
+    if _selected('MISC.csv') then begin ExportTabularMISC.process(el); end;
+    if _selected('NPC_.csv') then begin ExportTabularNPC_.process(el); end;
+    if _selected('OMOD.csv') then begin ExportTabularOMOD.process(el); end;
+    if _selected('OTFT.csv') then begin ExportTabularOTFT.process(el); end;
+    if _selected('RACE.csv') then begin ExportTabularRACE.process(el); end;
+    if _selected('WEAP.csv') then begin ExportTabularWEAP.process(el); end;
+    if _selected('BOOK.wiki') then begin ExportWikiBOOK.process(el); end;
+    if _selected('DIAL.wiki') then begin ExportWikiDIAL.process(el); end;
+    if _selected('NOTE.wiki') then begin ExportWikiNOTE.process(el); end;
+    if _selected('TERM.wiki') then begin ExportWikiTERM.process(el); end;
 end;
 
 function finalize(): Integer;
 var ExportAll_outputLines: TStringList;
 begin
-    if ExportAll_selection.indexOf('ALCH.csv') >= 0 then begin
-        ExportTabularALCH.finalize();
-    end;
-    if ExportAll_selection.indexOf('ARMO.csv') >= 0 then begin
-        ExportTabularARMO.finalize();
-    end;
-    if ExportAll_selection.indexOf('CLAS.csv') >= 0 then begin
-        ExportTabularCLAS.finalize();
-    end;
-    if ExportAll_selection.indexOf('COBJ.csv') >= 0 then begin
-        ExportTabularCOBJ.finalize();
-    end;
-    if ExportAll_selection.indexOf('ENTM.csv') >= 0 then begin
-        ExportTabularENTM.finalize();
-    end;
-    if ExportAll_selection.indexOf('FACT.csv') >= 0 then begin
-        ExportTabularFACT.finalize();
-    end;
-    if ExportAll_selection.indexOf('FLOR.csv') >= 0 then begin
-        ExportTabularFLOR.finalize();
-    end;
-    if ExportAll_selection.indexOf('GLOB.csv') >= 0 then begin
-        ExportTabularGLOB.finalize();
-    end;
-    if ExportAll_selection.indexOf('GMST.csv') >= 0 then begin
-        ExportTabularGMST.finalize();
-    end;
-    if ExportAll_selection.indexOf('IDs.csv') >= 0 then begin
-        ExportTabularIDs.finalize();
-    end;
-    if ExportAll_selection.indexOf('LVLI.csv') >= 0 then begin
-        ExportTabularLVLI.finalize();
-    end;
-    if ExportAll_selection.indexOf('MISC.csv') >= 0 then begin
-        ExportTabularMISC.finalize();
-    end;
-    if ExportAll_selection.indexOf('NPC_.csv') >= 0 then begin
-        ExportTabularNPC_.finalize();
-    end;
-    if ExportAll_selection.indexOf('OMOD.csv') >= 0 then begin
-        ExportTabularOMOD.finalize();
-    end;
-    if ExportAll_selection.indexOf('OTFT.csv') >= 0 then begin
-        ExportTabularOTFT.finalize();
-    end;
-    if ExportAll_selection.indexOf('RACE.csv') >= 0 then begin
-        ExportTabularRACE.finalize();
-    end;
-    if ExportAll_selection.indexOf('WEAP.csv') >= 0 then begin
-        ExportTabularWEAP.finalize();
-    end;
-    if ExportAll_selection.indexOf('BOOK.wiki') >= 0 then begin
-        ExportWikiBOOK.finalize();
-    end;
-    if ExportAll_selection.indexOf('DIAL.wiki') >= 0 then begin
-        ExportWikiDIAL.finalize();
-    end;
-    if ExportAll_selection.indexOf('NOTE.wiki') >= 0 then begin
-        ExportWikiNOTE.finalize();
-    end;
-    if ExportAll_selection.indexOf('TERM.wiki') >= 0 then begin
-        ExportWikiTERM.finalize();
-    end;
+    if _selected('ALCH.csv') then begin ExportTabularALCH.finalize(); end;
+    if _selected('ARMO.csv') then begin ExportTabularARMO.finalize(); end;
+    if _selected('CLAS.csv') then begin ExportTabularCLAS.finalize(); end;
+    if _selected('COBJ.csv') then begin ExportTabularCOBJ.finalize(); end;
+    if _selected('ENTM.csv') then begin ExportTabularENTM.finalize(); end;
+    if _selected('FACT.csv') then begin ExportTabularFACT.finalize(); end;
+    if _selected('FLOR.csv') then begin ExportTabularFLOR.finalize(); end;
+    if _selected('GLOB.csv') then begin ExportTabularGLOB.finalize(); end;
+    if _selected('GMST.csv') then begin ExportTabularGMST.finalize(); end;
+    if _selected('IDs.csv') then begin ExportTabularIDs.finalize(); end;
+    if _selected('LVLI.csv') then begin ExportTabularLVLI.finalize(); end;
+    if _selected('MISC.csv') then begin ExportTabularMISC.finalize(); end;
+    if _selected('NPC_.csv') then begin ExportTabularNPC_.finalize(); end;
+    if _selected('OMOD.csv') then begin ExportTabularOMOD.finalize(); end;
+    if _selected('OTFT.csv') then begin ExportTabularOTFT.finalize(); end;
+    if _selected('RACE.csv') then begin ExportTabularRACE.finalize(); end;
+    if _selected('WEAP.csv') then begin ExportTabularWEAP.finalize(); end;
+    if _selected('BOOK.wiki') then begin ExportWikiBOOK.finalize(); end;
+    if _selected('DIAL.wiki') then begin ExportWikiDIAL.finalize(); end;
+    if _selected('NOTE.wiki') then begin ExportWikiNOTE.finalize(); end;
+    if _selected('TERM.wiki') then begin ExportWikiTERM.finalize(); end;
 
     ExportAll_selection.free();
 

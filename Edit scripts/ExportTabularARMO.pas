@@ -36,18 +36,10 @@ begin
     ExportTabularARMO_LOC_outputLines := initLocList();
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'ARMO';
-end;
-
 function process(armo: IInterface): Integer;
 var data: IInterface;
 begin
-    if not canProcess(armo) then begin
-        addWarning(name(armo) + ' is not an ARMO. Entry was ignored.');
-        exit;
-    end;
+    if signature(armo) <> 'ARMO' then begin exit; end;
 
     data := eBySign(armo, 'DATA');
 

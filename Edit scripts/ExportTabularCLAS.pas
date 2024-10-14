@@ -20,21 +20,13 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'CLAS';
-end;
-
 function process(clas: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if not canProcess(clas) then begin
-        addWarning(name(clas) + ' is not a CLAS. Entry was ignored.');
-        exit;
-    end;
+    if signature(clas) <> 'CLAS' then begin exit; end;
 
     acbs := eBySign(clas, 'ACBS');
     rnam := linkBySign(clas, 'RNAM');

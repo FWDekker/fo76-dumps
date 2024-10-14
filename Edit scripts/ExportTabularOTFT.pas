@@ -19,21 +19,13 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'OTFT';
-end;
-
 function process(otft: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if not canProcess(otft) then begin
-        addWarning(name(otft) + ' is not an OTFT. Entry was ignored.');
-        exit;
-    end;
+    if signature(otft) <> 'OTFT' then begin exit; end;
 
     ExportTabularOTFT_outputLines.add(
           escapeCsvString(getFileName(getFile(otft))) + ', '

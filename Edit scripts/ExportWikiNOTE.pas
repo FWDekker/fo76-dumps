@@ -13,17 +13,9 @@ begin
     ExportWikiNOTE_outputLines := TStringList.create();
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'NOTE';
-end;
-
 function process(note: IInterface): Integer;
 begin
-    if not canProcess(note) then begin
-        addWarning(name(note) + ' is not a NOTE. Entry was ignored.');
-        exit;
-    end;
+    if signature(note) <> 'NOTE' then begin exit; end;
 
     ExportWikiNOTE_lastSpeaker := '';
 

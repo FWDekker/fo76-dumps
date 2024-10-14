@@ -12,17 +12,9 @@ begin
     ExportWikiBOOK_outputLines := TStringList.create();
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'BOOK';
-end;
-
 function process(book: IInterface): Integer;
 begin
-    if not canProcess(book) then begin
-        addWarning(name(book) + ' is not a BOOK. Entry was ignored.');
-        exit;
-    end;
+    if signature(book) <> 'BOOK' then begin exit; end;
 
     ExportWikiBOOK_outputLines.add('==[' + getFileName(getFile(book)) + '] ' + evBySign(book, 'FULL') + '==');
     ExportWikiBOOK_outputLines.add('Form ID:      ' + stringFormID(book));

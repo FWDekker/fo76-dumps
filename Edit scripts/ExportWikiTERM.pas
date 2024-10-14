@@ -20,20 +20,12 @@ begin
     clearLargeFiles('dumps/TERM.wiki');
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'TERM';
-end;
-
 function process(term: IInterface): Integer;
 var header: String;
     contents: String;
     history: TStringList;
 begin
-    if not canProcess(term) then begin
-        addWarning(name(term) + ' is not a TERM. Entry was ignored.');
-        exit;
-    end;
+    if signature(term) <> 'TERM' then begin exit; end;
 
     header := escapeWiki(trim(evBySign(term, 'WNAM')));
     if not (header = '') then begin

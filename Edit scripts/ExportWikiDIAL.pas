@@ -12,24 +12,17 @@ begin
     ExportWikiDIAL_outputLines := TStringList.create();
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'QUST';
-end;
-
 function process(dial: IInterface): Integer;
 var transcript: String;
 begin
     // Filter out non-quest elements and nested elements
-    if not canProcess(dial) then begin
-        // No warning needed because this is expected behavior
-        exit;
-    end;
+
+    if signature(dial) <> 'QUST' then begin exit; end;
 
     transcript := trim(getQuestTranscript(dial));
-    if not (transcript = '') then begin
-        ExportWikiDIAL_outputLines.add(transcript + #10 + #10);
-    end;
+    if transcript = '' then begin exit; end
+
+    ExportWikiDIAL_outputLines.add(transcript + #10 + #10);
 end;
 
 function finalize(): Integer;

@@ -26,17 +26,9 @@ begin
     ExportTabularMISC_LOC_outputLines := initLocList();
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'MISC';
-end;
-
 function process(misc: IInterface): Integer;
 begin
-    if not canProcess(misc) then begin
-        addWarning(name(misc) + ' is not a MISC. Entry was ignored.');
-        exit;
-    end;
+    if signature(misc) <> 'MISC' then begin exit; end;
 
     ExportTabularMISC_outputLines.add(
           escapeCsvString(getFileName(getFile(misc))) + ', '

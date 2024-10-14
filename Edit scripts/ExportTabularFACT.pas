@@ -32,11 +32,6 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'FACT';
-end;
-
 function process(fact: IInterface): Integer;
 var venc: IInterface;
     venr: IInterface;
@@ -47,10 +42,7 @@ var venc: IInterface;
     bottlecapRange: String;
     itemList: String;
 begin
-    if not canProcess(fact) then begin
-        addWarning(name(fact) + ' is not a FACT. Entry was ignored.');
-        exit;
-    end;
+    if signature(fact) <> 'FACT' then begin exit; end;
 
     venc := linkBySign(fact, 'VENC');
     venr := linkBySign(fact, 'VENR');

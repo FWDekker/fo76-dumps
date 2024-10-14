@@ -39,21 +39,13 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'NPC_';
-end;
-
 function process(npc_: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if not canProcess(npc_) then begin
-        addWarning(name(npc_) + ' is not an NPC_. Entry was ignored.');
-        exit;
-    end;
+    if signature(npc_) <> 'NPC_' then begin exit; end;
 
     acbs := eBySign(npc_, 'ACBS');
     rnam := linkBySign(npc_, 'RNAM');

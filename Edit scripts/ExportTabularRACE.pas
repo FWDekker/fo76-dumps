@@ -22,21 +22,13 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'RACE';
-end;
-
 function process(race: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if not canProcess(race) then begin
-        addWarning(name(race) + ' is not a RACE. Entry was ignored.');
-        exit;
-    end;
+    if signature(race) <> 'RACE' then begin exit; end;
 
     acbs := eBySign(race, 'ACBS');
     rnam := linkBySign(race, 'RNAM');

@@ -30,11 +30,6 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := true;
-end;
-
 function process(el: IInterface): Integer;
 begin
     appendLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer, ExportTabularIDs_size, ExportTabularIDs_maxSize,

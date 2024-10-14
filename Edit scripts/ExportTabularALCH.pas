@@ -30,19 +30,11 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'ALCH';
-end;
-
 function process(alch: IInterface): Integer;
 var enit: IInterface;
     outputString: String;
 begin
-    if not canProcess(alch) then begin
-        addWarning(name(alch) + ' is not a ALCH. Entry was ignored.');
-        exit;
-    end;
+    if signature(alch) <> 'ALCH' then begin exit; end;
 
     enit := eBySign(alch, 'ENIT');
 

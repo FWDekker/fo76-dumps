@@ -18,17 +18,9 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'GLOB';
-end;
-
 function process(glob: IInterface): Integer;
 begin
-    if not canProcess(glob) then begin
-        addWarning(name(glob) + ' is not a GLOB. Entry was ignored.');
-        exit;
-    end;
+    if signature(glob) <> 'GLOB' then begin exit; end;
 
     ExportTabularGLOB_outputLines.add(
           escapeCsvString(getFileName(getFile(glob))) + ', '

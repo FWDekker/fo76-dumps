@@ -27,18 +27,10 @@ begin
     ExportTabularFLOR_LOC_outputLines := initLocList();
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'FLOR';
-end;
-
 function process(flor: IInterface): Integer;
 var data: IInterface;
 begin
-    if not canProcess(flor) then begin
-        addWarning(name(flor) + ' is not a FLOR. Entry was ignored.');
-        exit;
-    end;
+    if signature(flor) <> 'FLOR' then begin exit; end;
 
     data := eBySign(flor, 'DATA');
 

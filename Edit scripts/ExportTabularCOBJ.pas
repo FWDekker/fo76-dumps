@@ -22,19 +22,11 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'COBJ';
-end;
-
 function process(cobj: IInterface): Integer;
 var product: IInterface;
     recipe: IInterface;
 begin
-    if not canProcess(cobj) then begin
-        addWarning(name(cobj) + ' is not a COBJ. Entry was ignored.');
-        exit;
-    end;
+    if signature(cobj) <> 'COBJ' then begin exit; end;
 
     product := eBySign(cobj, 'CNAM');
     recipe := eBySign(cobj, 'GNAM');

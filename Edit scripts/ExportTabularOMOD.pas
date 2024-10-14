@@ -28,18 +28,10 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'OMOD';
-end;
-
 function process(omod: IInterface): Integer;
 var data: IInterface;
 begin
-    if not canProcess(omod) then begin
-        addWarning(name(omod) + ' is not a OMOD. Entry was ignored.');
-        exit;
-    end;
+    if signature(omod) <> 'OMOD' then begin exit; end;
 
     data := eBySign(omod, 'DATA');
 

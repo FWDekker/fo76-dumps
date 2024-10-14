@@ -19,17 +19,9 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'GMST';
-end;
-
 function process(gmst: IInterface): Integer;
 begin
-    if not canProcess(gmst) then begin
-        addWarning(name(gmst) + ' is not a GMST. Entry was ignored.');
-        exit;
-    end;
+    if signature(gmst) <> 'GMST' then begin exit; end;
 
     ExportTabularGMST_outputLines.add(
           escapeCsvString(getFileName(getFile(gmst))) + ', '

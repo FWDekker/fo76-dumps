@@ -26,17 +26,9 @@ begin
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'ENTM';
-end;
-
 function process(entm: IInterface): Integer;
 begin
-    if not canProcess(entm) then begin
-        addWarning(name(entm) + ' is not an ENTM. Entry was ignored.');
-        exit;
-    end;
+    if signature(entm) <> 'ENTM' then begin exit; end;
 
     ExportTabularENTM_outputLines.add(
           escapeCsvString(getFileName(getFile(entm))) + ', '

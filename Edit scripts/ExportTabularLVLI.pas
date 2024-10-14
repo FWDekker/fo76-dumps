@@ -24,18 +24,10 @@ begin
     ExportTabularLVLI_LOC_outputLines := initLocList();
 end;
 
-function canProcess(el: IInterface): Boolean;
-begin
-    result := signature(el) = 'LVLI';
-end;
-
 function process(lvli: IInterface): Integer;
 var data: IInterface;
 begin
-    if not canProcess(lvli) then begin
-        addWarning(name(lvli) + ' is not a LVLI. Entry was ignored.');
-        exit;
-    end;
+    if signature(lvli) <> 'LVLI' then begin exit; end;
 
     data := eBySign(lvli, 'DATA');
     ExportTabularLVLI_outputLines.add(
