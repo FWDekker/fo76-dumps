@@ -14,7 +14,7 @@ from State import cfg, subprocesses
 def xedit() -> None:
     """
     Runs xEdit and waits until it closes.
-    
+
     :return: `None`
     """
 

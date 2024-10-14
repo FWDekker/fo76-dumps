@@ -1,0 +1,16 @@
+[project]
+name = "fo76-dumps"
+version = "4.0.1"
+
+dependencies = [
+    "pandas==2.2.3",
+    "pefile==2024.8.26",
+]
+requires-python = ">=3.11"
+
+authors = [{name = "Florine W. Dekker"}]
+description = "Data dumps of Fallout 76 game files"
+readme = "README.md"
+
+[tool.setuptools]
+package-dir = {"fo76dumps" = ""}

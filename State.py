@@ -1,3 +1,4 @@
+import tomllib
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -23,7 +24,7 @@ def load_config() -> SimpleNamespace:
     my_cfg = SimpleNamespace(**my_cfg)
 
     # Version of this script
-    my_cfg.script_version = "4.0.0"
+    my_cfg.script_version = tomllib.loads((Path(__file__).parent / "pyproject.toml").read_text())["project"]["version"]
     # Path to scripts
     my_cfg.script_root = my_cfg.game_root / "Edit scripts/"
     # Path to exported dumps
