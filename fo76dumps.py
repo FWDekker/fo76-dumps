@@ -2,10 +2,7 @@ import os
 import shutil
 import subprocess
 import tempfile
-import traceback
 from pathlib import Path
-
-import pefile
 
 import Files
 from IO import prompt_confirmation, run_executable
@@ -102,21 +99,6 @@ def main() -> None:
     :return: `None`
     """
 
-    if cfg.game_version == "auto":
-        # noinspection PyBroadException
-        try:
-            pe = pefile.PE(cfg.game_root / "Fallout76.exe", fast_load=True)
-            pe.parse_data_directories(directories=[pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_RESOURCE"]])
-            cfg.game_version = pe.FileInfo[0][0].StringTable[0].entries[b"ProductVersion"].decode()
-        except:
-            traceback.print_exc()
-            print(
-                "ERROR: "
-                "Could not automatically determine version number of your Fallout 76 version. "
-                "Either resolve the issue shown above, or enter the game version yourself. "
-                "See 'config_default.py' for more information about the 'game_version' option."
-            )
-            exit(1)
     if not cfg.windows and "INSERT NUMBER HERE" in str(cfg.xedit_compatdata_path):
         if not prompt_confirmation(
             f"WARNING: "
