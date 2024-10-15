@@ -12,13 +12,13 @@ function initialize(): Integer;
 begin
     ExportTabularRACE_outputLines := TStringList.create();
     ExportTabularRACE_outputLines.add(
-            '"File"'        // Name of the originating ESM
-        + ', "Form ID"'     // Form ID
-        + ', "Editor ID"'   // Editor ID
-        + ', "Name"'        // Full name
-        + ', "Keywords"'    // Sorted JSON array of keywords. Each keyword is represented as
-                            // `{EditorID} [KYWD:{FormID}]`
-        + ', "Properties"'  // Sorted JSON object of properties
+        '"File", ' +       // Name of the originating ESM
+        '"Form ID", ' +    // Form ID
+        '"Editor ID", ' +  // Editor ID
+        '"Name", ' +       // Full name
+        '"Keywords", ' +   // Sorted JSON array of keywords. Each keyword is represented as
+                           // `{EditorID} [KYWD:{FormID}]`
+        '"Properties"'     // Sorted JSON object of properties
     );
 end;
 
@@ -35,18 +35,18 @@ var acbs: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    acbs := eBySign(race, 'ACBS');
-    rnam := linkBySign(race, 'RNAM');
-    aidt := eBySign(race, 'AIDT');
-    cnam := linkBySign(race, 'CNAM');
+    acbs := elementBySignature(race, 'ACBS');
+    rnam := linksTo(elementBySignature(race, 'RNAM'));
+    aidt := elementBySignature(race, 'AIDT');
+    cnam := linksTo(elementBySignature(race, 'CNAM'));
 
     ExportTabularRACE_outputLines.add(
-          escapeCsvString(getFileName(getFile(race))) + ', '
-        + escapeCsvString(stringFormID(race)) + ', '
-        + escapeCsvString(evBySign(race, 'EDID')) + ', '
-        + escapeCsvString(evBySign(race, 'FULL')) + ', '
-        + escapeCsvString(getJsonChildArray(eByPath(race, 'Keywords\KWDA'))) + ', '
-        + escapeCsvString(getJsonPropertyObject(race))
+        escapeCsvString(getFileName(getFile(race))) + ', ' +
+        escapeCsvString(stringFormID(race)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(race, 'EDID'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(race, 'FULL'))) + ', ' +
+        escapeCsvString(getJsonChildArray(elementByPath(race, 'Keywords\KWDA'))) + ', ' +
+        escapeCsvString(getJsonPropertyObject(race))
     );
 end;
 

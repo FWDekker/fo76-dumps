@@ -11,11 +11,11 @@ function initialize(): Integer;
 begin
     ExportTabularGMST_outputLines := TStringList.create();
     ExportTabularGMST_outputLines.add(
-            '"File"'       // Name of the originating ESM
-        + ', "Form ID"'    // Form ID
-        + ', "Editor ID"'  // Editor ID
-        + ', "Type"'       // Type of value, such as `string` or `float`
-        + ', "Value"'      // Value of the settings
+        '"File", ' +       // Name of the originating ESM
+        '"Form ID", ' +    // Form ID
+        '"Editor ID", ' +  // Editor ID
+        '"Type", ' +       // Type of value, such as `string` or `float`
+        '"Value"'          // Value of the settings
     );
 end;
 
@@ -29,11 +29,11 @@ end;
 function _process(gmst: IInterface): Integer;
 begin
     ExportTabularGMST_outputLines.add(
-          escapeCsvString(getFileName(getFile(gmst))) + ', '
-        + escapeCsvString(stringFormID(gmst)) + ', '
-        + escapeCsvString(evBySign(gmst, 'EDID')) + ', '
-        + escapeCsvString(letterToType(copy(evBySign(gmst, 'EDID'), 1, 1))) + ', '
-        + escapeCsvString(gev(lastElement(eBySign(gmst, 'DATA'))))
+        escapeCsvString(getFileName(getFile(gmst))) + ', ' +
+        escapeCsvString(stringFormID(gmst)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(gmst, 'EDID'))) + ', ' +
+        escapeCsvString(letterToType(copy(getEditValue(elementBySignature(gmst, 'EDID')), 1, 1))) + ', ' +
+        escapeCsvString(getEditValue(lastElement(elementBySignature(gmst, 'DATA'))))
     );
 end;
 

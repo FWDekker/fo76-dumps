@@ -92,22 +92,22 @@ var i: Integer;
 begin
     result := '';
 
-    props := eBySign(el, 'PRPS');
-    for i := 0 to eCount(props) - 1 do begin
-        prop := eByIndex(props, i);
-        avEdid := evBySign(linkByName(prop, 'Actor Value'), 'EDID');
+    props := elementBySignature(el, 'PRPS');
+    for i := 0 to elementCount(props) - 1 do begin
+        prop := elementByIndex(props, i);
+        avEdid := getEditValue(elementBySignature(linksTo(elementByName(prop, 'Actor Value')), 'EDID'));
 
-        if assigned(linkByName(prop, 'Curve Table')) then begin
-            avValue := evBySign(linkByName(prop, 'Curve Table'), 'EDID');
+        if assigned(linksTo(elementByName(prop, 'Curve Table'))) then begin
+            avValue := getEditValue(elementBySignature(linksTo(elementByName(prop, 'Curve Table')), 'EDID'));
         end else begin
-            avValue := evByName(prop, 'Value');
+            avValue := getEditValue(elementByName(prop, 'Value'));
         end;
         try
             avValue := floatToStr(strToFloat(avValue));  // Remove unnecessary decimals
         except end;
 
         result := result + '"' + escapeJson(avEdid) + '":"' + escapeJson(avValue) + '"';
-        if i < eCount(props) - 1 then begin
+        if i < elementCount(props) - 1 then begin
             result := result + ',';
         end;
     end;
@@ -129,8 +129,8 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    for i := 0 to eCount(list) - 1 do begin
-        resultList.add(evByIndex(list, i));
+    for i := 0 to elementCount(list) - 1 do begin
+        resultList.add(getEditValue(elementByIndex(list, i)));
     end;
 
     resultList.sort();
@@ -152,8 +152,8 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    for i := 0 to eCount(list) - 1 do begin
-        resultList.add(name(eByIndex(list, i)));
+    for i := 0 to elementCount(list) - 1 do begin
+        resultList.add(name(elementByIndex(list, i)));
     end;
 
     resultList.sort();

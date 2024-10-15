@@ -21,11 +21,15 @@ end;
 
 function _process(book: IInterface): Integer;
 begin
-    ExportWikiBOOK_outputLines.add('==[' + getFileName(getFile(book)) + '] ' + evBySign(book, 'FULL') + '==');
+    ExportWikiBOOK_outputLines.add(
+        '==[' + getFileName(getFile(book)) + '] ' +
+        getEditValue(elementBySignature(book, 'FULL')) +
+        '=='
+    );
     ExportWikiBOOK_outputLines.add('Form ID:      ' + stringFormID(book));
-    ExportWikiBOOK_outputLines.add('Editor ID:    ' + evBySign(book, 'EDID'));
-    ExportWikiBOOK_outputLines.add('Weight:       ' + evByPath(book, 'DATA\Weight'));
-    ExportWikiBOOK_outputLines.add('Value:        ' + evByPath(book, 'DATA\Value'));
+    ExportWikiBOOK_outputLines.add('Editor ID:    ' + getEditValue(elementBySignature(book, 'EDID')));
+    ExportWikiBOOK_outputLines.add('Weight:       ' + getEditValue(elementByPath(book, 'DATA\Weight')));
+    ExportWikiBOOK_outputLines.add('Value:        ' + getEditValue(elementByPath(book, 'DATA\Value')));
     ExportWikiBOOK_outputLines.add('Can be taken: ' + canBeTakenString(book));
     ExportWikiBOOK_outputLines.add('Transcript:' + #10 + getBookContents(book));
     ExportWikiBOOK_outputLines.add(#10);
@@ -43,7 +47,7 @@ function canBeTakenString(book: IInterface): String;
 var flags: String;
     pickUpFlag: String;
 begin
-    flags := evByPath(book, 'DNAM\Flags');
+    flags := getEditValue(elementByPath(book, 'DNAM\Flags'));
     if length(flags) = 1 then begin
         result := 'no';
     end;
@@ -59,15 +63,12 @@ end;
 function getBookContents(book: IInterface): String;
 var desc: String;
 begin
-    desc := trim(escapeWiki(evBySign(book, 'DESC')));
+    desc := trim(escapeWiki(getEditValue(elementBySignature(book, 'DESC'))));
 
     if desc = '' then begin
         result := 'No transcript';
     end else begin
-        result :=
-              '{{Transcript|text=' + #10
-            + desc + #10
-            + '}}';
+        result := '{{Transcript|text=' + #10 + desc + #10 + '}}';
     end;
 end;
 

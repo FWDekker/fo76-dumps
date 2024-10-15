@@ -55,50 +55,42 @@ var linkable: Integer;
 
     i: Integer;
 begin
-    if signature(quest) <> 'QUST' then begin
-        exit;
-    end;
+    if signature(quest) <> 'QUST' then begin exit; end;
 
     topics := childGroup(quest);
-    if eCount(topics) = 0 then begin
-        exit;
-    end;
+    if elementCount(topics) = 0 then begin exit; end;
 
     result := ''
-        + '==[' + getFileName(getFile(quest)) + '] ' + evBySign(quest, 'EDID')
-            + ' (' + stringFormID(quest) + ')==' + #10
-        + '{|class="va-table va-table-full np-table-dialogue"' + #10
-        + '|-' + #10
-        + '! style="width:2%" | #' + #10
-        + '! style="width:8%" | Dialog Topic' + #10
-        + '! style="width:5%" | Form ID' + #10
-        + '! style="width:30%" | Response Text' + #10
-        + '! style="width:30%" | Script Notes' + #10
-        + #10;
+        '==[' + getFileName(getFile(quest)) + '] ' + getEditValue(elementBySignature(quest, 'EDID')) +
+            ' (' + stringFormID(quest) + ')==' + #10 +
+        '{|class="va-table va-table-full np-table-dialogue"' + #10 +
+        '|-' + #10 +
+        '! style="width:2%" | #' + #10 +
+        '! style="width:8%" | Dialog Topic' + #10 +
+        '! style="width:5%" | Form ID' + #10 +
+        '! style="width:30%" | Response Text' + #10 +
+        '! style="width:30%" | Script Notes' + #10 +
+        #10;
 
     linkable := 1;
 
     previousTopic := 0;
     while true do begin
         topic := getElementAfter(topics, previousTopic);
-        if not assigned(topic) then begin
-            break;
-        end;
+        if not assigned(topic) then begin break; end;
         previousTopic := formID(topic);
 
-        if signature(topic) <> 'DIAL' then begin
-            continue;
-        end;
+        if signature(topic) <> 'DIAL' then begin continue; end;
 
         dialogs := childGroup(topic);
         topicHasRowSpan := false;
         topicSize := 0;
 
-        for i := 0 to eCount(dialogs) - 1 do begin
-            dialog := eByIndex(dialogs, i);
-            responses := eByName(dialog, 'Responses');
+        for i := 0 to elementCount(dialogs) - 1 do begin
+            dialog := elementByIndex(dialogs, i);
+            responses := elementByName(dialog, 'Responses');
 
-            topicSize := topicSize + eCount(responses);
+            topicSize := topicSize + elementCount(responses);
         end;
 
         previousDialog := 0;
@@ -110,32 +102,37 @@ begin
             previousDialog := formID(dialog);
             dialogHasRowSpan := false;
 
-            responses := eByName(dialog, 'Responses');
-            for i := 0 to eCount(responses) - 1 do begin
-                response := eByIndex(responses, i);
+            responses := elementByName(dialog, 'Responses');
+            for i := 0 to elementCount(responses) - 1 do begin
+                response := elementByIndex(responses, i);
 
-                result := result
-                    + '|-' + #10
-                    + '| {{Linkable|' + intToStr(linkable) + '}}' + #10;
+                result := result +
+                    '|-' + #10 +
+                    '| {{Linkable|' + intToStr(linkable) + '}}' + #10;
                 if not topicHasRowSpan then begin
-                    result := result
-                        + '| rowspan="' + intToStr(topicSize) + '" | {{ID|' + stringFormID(topic) + '}}' + #10;
+                    result := result +
+                        '| rowspan="' + intToStr(topicSize) + '" | {{ID|' + stringFormID(topic) + '}}' + #10;
                     topicHasRowSpan := true;
                 end;
                 if not dialogHasRowSpan then begin
-                    if eCount(responses) = 1 then begin
+                    if elementCount(responses) = 1 then begin
                         result := result + '| {{ID|' + stringFormID(dialog) + '}}' + #10;
                     end else begin
-                        result := result
-                            + '| rowspan="' + intToStr(eCount(responses))
-                                + '" | {{ID|' + stringFormID(dialog) + '}}' + #10;
+                        result := result +
+                            '| rowspan="' + intToStr(elementCount(responses)) +
+                            '" | {{ID|' + stringFormID(dialog) + '}}' + #10;
                     end;
                     dialogHasRowSpan := true;
                 end;
-                result := result
-                    + '| ' + escapeHTML(trim(evBySign(response, 'NAM1'))) + #10
-                    + '| ' + surroundIfNotEmpty(escapeHTML(trim(evBySign(response, 'NAM2'))), '''''', '''''') + #10
-                    + '' + #10;
+                result := result +
+                    '| ' + escapeHTML(trim(getEditValue(elementBySignature(response, 'NAM1')))) + #10 +
+                    '| ' +
+                    surroundIfNotEmpty(
+                        escapeHTML(trim(getEditValue(elementBySignature(response, 'NAM2')))),
+                        '''''',
+                        ''''''
+                    ) + #10 +
+                    #10;
 
                 linkable := linkable + 1;
             end;
@@ -153,16 +150,16 @@ var i: Integer;
 begin
     nextFormID := -1;
 
-    for i := 0 to eCount(group) - 1 do begin
-        el := eByIndex(group, i);
+    for i := 0 to elementCount(group) - 1 do begin
+        el := elementByIndex(group, i);
 
         if (formID(el) > previousFormID) and ((formID(el) <= nextFormID) or (nextFormId = -1)) then begin
             nextFormID := formID(el);
         end;
     end;
 
-    for i := 0 to eCount(group) - 1 do begin
-        el := eByIndex(group, i);
+    for i := 0 to elementCount(group) - 1 do begin
+        el := elementByIndex(group, i);
 
         if formID(el) = nextFormID then begin
             result := el;

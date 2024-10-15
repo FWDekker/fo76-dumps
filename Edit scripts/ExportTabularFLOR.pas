@@ -14,14 +14,14 @@ function initialize(): Integer;
 begin
     ExportTabularFLOR_outputLines := TStringList.create();
     ExportTabularFLOR_outputLines.add(
-            '"File"'        // Name of the originating ESM
-        + ', "Form ID"'     // Form ID
-        + ', "Editor ID"'   // Editor ID
-        + ', "Name"'        // Full name
-        + ', "Ingredient"'  // Item obtained when harvested
-        + ', "Keywords"'    // Sorted JSON array of keywords. Each keyword is represented as
+        '"File", ' +        // Name of the originating ESM
+        '"Form ID", ' +     // Form ID
+        '"Editor ID", ' +   // Editor ID
+        '"Name", ' +        // Full name
+        '"Ingredient", ' +  // Item obtained when harvested
+        '"Keywords", ' +    // Sorted JSON array of keywords. Each keyword is represented as
                             // `{EditorID} [KYWD:{FormID}]`
-        + ', "Properties"'  // Sorted JSON object of properties
+        '"Properties"'      // Sorted JSON object of properties
     );
 
     ExportTabularFLOR_LOC_outputLines := initLocList();
@@ -37,16 +37,16 @@ end;
 function _process(flor: IInterface): Integer;
 var data: IInterface;
 begin
-    data := eBySign(flor, 'DATA');
+    data := elementBySignature(flor, 'DATA');
 
     ExportTabularFLOR_outputLines.add(
-          escapeCsvString(getFileName(getFile(flor))) + ', '
-        + escapeCsvString(stringFormID(flor)) + ', '
-        + escapeCsvString(evBySign(flor, 'EDID')) + ', '
-        + escapeCsvString(evBySign(flor, 'FULL')) + ', '
-        + escapeCsvString(evByName(flor, 'PFIG')) + ', '
-        + escapeCsvString(getJsonChildArray(eByPath(flor, 'Keywords\KWDA'))) + ', '
-        + escapeCsvString(getJsonPropertyObject(flor))
+        escapeCsvString(getFileName(getFile(flor))) + ', ' +
+        escapeCsvString(stringFormID(flor)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(flor, 'EDID'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(flor, 'FULL'))) + ', ' +
+        escapeCsvString(getEditValue(elementByName(flor, 'PFIG'))) + ', ' +
+        escapeCsvString(getJsonChildArray(elementByPath(flor, 'Keywords\KWDA'))) + ', ' +
+        escapeCsvString(getJsonPropertyObject(flor))
     );
 
     appendLocationData(ExportTabularFLOR_LOC_outputLines, flor);

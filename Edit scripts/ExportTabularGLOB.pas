@@ -11,10 +11,10 @@ function initialize(): Integer;
 begin
     ExportTabularGLOB_outputLines := TStringList.create();
     ExportTabularGLOB_outputLines.add(
-            '"File"'       // Name of the originating ESM
-        + ', "Form ID"'    // Form ID
-        + ', "Editor ID"'  // Editor ID
-        + ', "Value"'      // Value of the global variable
+        '"File", ' +       // Name of the originating ESM
+        '"Form ID", ' +    // Form ID
+        '"Editor ID", ' +  // Editor ID
+        '"Value"'          // Value of the global variable
     );
 end;
 
@@ -28,10 +28,10 @@ end;
 function _process(glob: IInterface): Integer;
 begin
     ExportTabularGLOB_outputLines.add(
-          escapeCsvString(getFileName(getFile(glob))) + ', '
-        + escapeCsvString(stringFormID(glob)) + ', '
-        + escapeCsvString(evBySign(glob, 'EDID')) + ', '
-        + evBySign(glob, 'FLTV')
+        escapeCsvString(getFileName(getFile(glob))) + ', ' +
+        escapeCsvString(stringFormID(glob)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(glob, 'EDID'))) + ', ' +
+        getEditValue(elementBySignature(glob, 'FLTV'))
     );
 end;
 

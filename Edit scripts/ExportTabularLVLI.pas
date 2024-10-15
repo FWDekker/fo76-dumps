@@ -14,11 +14,11 @@ function initialize(): Integer;
 begin
     ExportTabularLVLI_outputLines := TStringList.create();
     ExportTabularLVLI_outputLines.add(
-            '"File"'          // Name of the originating ESM
-        + ', "Form ID"'       // Form ID
-        + ', "Editor ID"'     // Editor ID
-        + ', "Name"'          // Full name
-        + ', "Leveled List"'  // Leveled list
+        '"File", ' +       // Name of the originating ESM
+        '"Form ID", ' +    // Form ID
+        '"Editor ID", ' +  // Editor ID
+        '"Name", ' +       // Full name
+        '"Leveled List"'   // Leveled list
     );
 
     ExportTabularLVLI_LOC_outputLines := initLocList();
@@ -34,13 +34,13 @@ end;
 function _process(lvli: IInterface): Integer;
 var data: IInterface;
 begin
-    data := eBySign(lvli, 'DATA');
+    data := elementBySignature(lvli, 'DATA');
     ExportTabularLVLI_outputLines.add(
-          escapeCsvString(getFileName(getFile(lvli))) + ', '
-        + escapeCsvString(stringFormID(lvli)) + ', '
-        + escapeCsvString(evBySign(lvli, 'EDID')) + ', '
-        + escapeCsvString(evBySign(lvli, 'FULL')) + ', '
-        + escapeCsvString(getJsonLeveledListArray(lvli))
+        escapeCsvString(getFileName(getFile(lvli))) + ', ' +
+        escapeCsvString(stringFormID(lvli)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(lvli, 'EDID'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(lvli, 'FULL'))) + ', ' +
+        escapeCsvString(getJsonLeveledListArray(lvli))
     );
 
     appendLocationData(ExportTabularLVLI_LOC_outputLines, lvli);
@@ -76,28 +76,28 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    entries := eByName(el, 'Leveled List Entries');
-    for i := 0 to eCount(entries) - 1 do begin
-        entry := eByIndex(entries, i);
-        lvlo := eBySign(entry, 'LVLO');
-        baseData := eByName(lvlo, 'Base Data');
+    entries := elementByName(el, 'Leveled List Entries');
+    for i := 0 to elementCount(entries) - 1 do begin
+        entry := elementByIndex(entries, i);
+        lvlo := elementBySignature(entry, 'LVLO');
+        baseData := elementByName(lvlo, 'Base Data');
 
         if assigned(baseData) then begin
             resultList.add(
                 '{' +
-                 '"Reference":"'   + escapeJson(evByName(baseData, 'Reference'))   + '"' +
-                ',"Level":"'       + escapeJson(evByName(baseData, 'Level'))       + '"' +
-                ',"Count":"'       + escapeJson(evByName(baseData, 'Count'))       + '"' +
-                ',"Chance None":"' + escapeJson(evByName(baseData, 'Chance None')) + '"' +
+                '"Reference":"' + escapeJson(getEditValue(elementByName(baseData, 'Reference'))) + '",' +
+                '"Level":"' + escapeJson(getEditValue(elementByName(baseData, 'Level'))) + '",' +
+                '"Count":"' + escapeJson(getEditValue(elementByName(baseData, 'Count'))) + '",' +
+                '"Chance None":"' + escapeJson(getEditValue(elementByName(baseData, 'Chance None'))) + '"' +
                 '}'
             );
         end else begin
             resultList.add(
                 '{' +
-                 '"Reference":"'     + escapeJson(evByName(lvlo, 'Reference')) + '"' +
-                ',"Minimum Level":"' + escapeJson(evBySign(entry, 'LVLV'))     + '"' +
-                ',"Count":"'         + escapeJson(evBySign(entry, 'LVIV'))     + '"' +
-                ',"Chance None":"'   + escapeJson(evBySign(entry, 'LVOV'))     + '"' +
+                '"Reference":"' + escapeJson(getEditValue(elementByName(lvlo, 'Reference'))) + '",' +
+                '"Minimum Level":"' + escapeJson(getEditValue(elementBySignature(entry, 'LVLV'))) + '",' +
+                '"Count":"' + escapeJson(getEditValue(elementBySignature(entry, 'LVIV'))) + '",' +
+                '"Chance None":"' + escapeJson(getEditValue(elementBySignature(entry, 'LVOV'))) + '"' +
                 '}'
             );
         end;

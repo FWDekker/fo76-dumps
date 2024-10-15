@@ -1,9 +1,13 @@
 # Changelog
-## [4.0.1] -- 2023-10-14
+## [4.0.1] -- 2023-10-16
+No changes have been made to the output format or contents.
+
 * Automatically detect game version number from executable.
-* Explicitly ignore `PLYT` records to prevent crash with EcksEdit 4.1.6.9.
+* Explicitly ignore `PLYT` records to prevent crash with EcksEdit 4.1.6.9 on latest PTS versions.
+* Significantly speed up dump scripts (from 5 hours to 2 hours) by reducing "multiplexer" complexity and inlining utility functions.
 * Modernise Python project dependency management.
-* Format all code using [Black](https://black.readthedocs.io/en/stable/).
+* Format all Python code using [Black](https://black.readthedocs.io/en/stable/).
+* Re-format all Pascal code using [updated project code style](https://github.com/FWDekker/fo76-dumps/wiki/Code-style).
 
 
 ## [4.0.0] -- 2023-10-13

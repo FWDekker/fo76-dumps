@@ -21,12 +21,12 @@ begin
     clearLargeFiles('dumps/IDs.csv');
 
     appendLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer, ExportTabularIDs_size, ExportTabularIDs_maxSize,
-            '"File"'       // Name of the originating ESM
-        + ', "Signature"'  // Signature
-        + ', "Form ID"'    // Form ID
-        + ', "Editor ID"'  // Editor ID
-        + ', "Name"'       // Full name
-        + ', "Keywords"'   // Sorted JSON array of keywords. Each keyword is represented as `{EditorID} [KYWD:{FormID}]`
+        '"File", ' +       // Name of the originating ESM
+        '"Signature", ' +  // Signature
+        '"Form ID", ' +    // Form ID
+        '"Editor ID", ' +  // Editor ID
+        '"Name", ' +       // Full name
+        '"Keywords"'       // Sorted JSON array of keywords. Each keyword is represented as `{EditorID} [KYWD:{FormID}]`
     );
 end;
 
@@ -37,13 +37,17 @@ end;
 
 function _process(el: IInterface): Integer;
 begin
-    appendLargeFile('dumps/IDs.csv', ExportTabularIDs_buffer, ExportTabularIDs_size, ExportTabularIDs_maxSize,
-          escapeCsvString(getFileName(getFile(el))) + ', '
-        + escapeCsvString(signature(el)) + ', '
-        + escapeCsvString(stringFormID(el)) + ', '
-        + escapeCsvString(evBySign(el, 'EDID')) + ', '
-        + escapeCsvString(evBySign(el, 'FULL')) + ', '
-        + escapeCsvString(getJsonChildArray(eByPath(el, 'Keywords\KWDA')))
+    appendLargeFile(
+        'dumps/IDs.csv',
+        ExportTabularIDs_buffer,
+        ExportTabularIDs_size,
+        ExportTabularIDs_maxSize,
+        escapeCsvString(getFileName(getFile(el))) + ', ' +
+            escapeCsvString(signature(el)) + ', ' +
+            escapeCsvString(lowerCase(intToHex(formID(el), 8))) + ', ' +
+            escapeCsvString(getEditValue(elementBySignature(el, 'EDID'))) + ', ' +
+            escapeCsvString(getEditValue(elementBySignature(el, 'FULL'))) + ', ' +
+            escapeCsvString(getJsonChildArray(elementByPath(el, 'Keywords\KWDA')))
     );
 end;
 

@@ -12,20 +12,20 @@ function initialize(): Integer;
 begin
     ExportTabularALCH_outputLines := TStringList.create();
     ExportTabularALCH_outputLines.add(
-            '"File"'              // Name of the originating ESM
-        + ', "Form ID"'           // Form ID
-        + ', "Editor ID"'         // Editor ID
-        + ', "Name"'              // Full name
-        + ', "Description"'       // Description
-        + ', "Weight"'            // Weight
-        + ', "Value"'             // Value
-        + ', "Flags"'             // Sorted list of flag names
-        + ', "Addiction"'         // Editor ID of addiction (possibly null)
-        + ', "Addiction chance"'  // Addiction chance
-        + ', "Health"'            // Editor ID of health curve table (possibly null)
-        + ', "Spoiled"'           // Editor ID of spoiled version (possibly null)
-        + ', "Effects"'           // Unsorted array of effect objects. Conditions are not included
-        + ', "Keywords"'          // Sorted JSON array of keywords. Each keyword is represented as
+        '"File", ' +              // Name of the originating ESM
+        '"Form ID", ' +           // Form ID
+        '"Editor ID", ' +         // Editor ID
+        '"Name", ' +              // Full name
+        '"Description", ' +       // Description
+        '"Weight", ' +            // Weight
+        '"Value", ' +             // Value
+        '"Flags", ' +             // Sorted list of flag names
+        '"Addiction", ' +         // Editor ID of addiction (possibly null)
+        '"Addiction chance", ' +  // Addiction chance
+        '"Health", ' +            // Editor ID of health curve table (possibly null)
+        '"Spoiled", ' +           // Editor ID of spoiled version (possibly null)
+        '"Effects", ' +           // Unsorted array of effect objects. Conditions are not included
+        '"Keywords"'              // Sorted JSON array of keywords. Each keyword is represented as
                                   // `{EditorID} [KYWD:{FormID}]`
     );
 end;
@@ -41,23 +41,23 @@ function _process(alch: IInterface): Integer;
 var enit: IInterface;
     outputString: String;
 begin
-    enit := eBySign(alch, 'ENIT');
+    enit := elementBySignature(alch, 'ENIT');
 
     outputString :=
-          escapeCsvString(getFileName(getFile(alch))) + ', '
-        + escapeCsvString(stringFormID(alch)) + ', '
-        + escapeCsvString(evBySign(alch, 'EDID')) + ', '
-        + escapeCsvString(evBySign(alch, 'FULL')) + ', '
-        + escapeCsvString(evBySign(alch, 'DESC')) + ', '
-        + escapeCsvString(evBySign(alch, 'DATA')) + ', '
-        + escapeCsvString(evByName(enit, 'Value')) + ', '
-        + escapeCsvString(getJsonFlagArray(eByName(enit, 'Flags'))) + ', '
-        + escapeCsvString(evByName(enit, 'Addiction')) + ', '
-        + escapeCsvString(evByName(enit, 'Addiction Chance')) + ', '
-        + escapeCsvString(evByName(enit, 'Health')) + ', '
-        + escapeCsvString(evByName(enit, 'Spoiled')) + ', '
-        + escapeCsvString(getJsonEffectsArray(eByName(alch, 'Effects'))) + ', '
-        + escapeCsvString(getJsonChildArray(eByPath(alch, 'Keywords\KWDA')));
+        escapeCsvString(getFileName(getFile(alch))) + ', ' +
+        escapeCsvString(stringFormID(alch)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(alch, 'EDID'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(alch, 'FULL'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(alch, 'DESC'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(alch, 'DATA'))) + ', ' +
+        escapeCsvString(getEditValue(elementByName(enit, 'Value'))) + ', ' +
+        escapeCsvString(getJsonFlagArray(elementByName(enit, 'Flags'))) + ', ' +
+        escapeCsvString(getEditValue(elementByName(enit, 'Addiction'))) + ', ' +
+        escapeCsvString(getEditValue(elementByName(enit, 'Addiction Chance'))) + ', ' +
+        escapeCsvString(getEditValue(elementByName(enit, 'Health'))) + ', ' +
+        escapeCsvString(getEditValue(elementByName(enit, 'Spoiled'))) + ', ' +
+        escapeCsvString(getJsonEffectsArray(elementByName(alch, 'Effects'))) + ', ' +
+        escapeCsvString(getJsonChildArray(elementByPath(alch, 'Keywords\KWDA')));
 
     ExportTabularALCH_outputLines.add(outputString);
 end;
@@ -121,33 +121,33 @@ begin
 
     resultList := TStringList.create();
 
-    for i := 0 to eCount(effects) - 1 do begin
-        effect := eByIndex(effects, i);
-        efit := eBySign(effect, 'EFIT');
+    for i := 0 to elementCount(effects) - 1 do begin
+        effect := elementByIndex(effects, i);
+        efit := elementBySignature(effect, 'EFIT');
 
-        if eHasByPath(effect, 'MAGG - Magnitude') then begin
-            magnitude := evBySign(effect, 'MAGG');
-        end else if eHasByPath(efit, 'Magnitude') then begin
-            magnitude := evByName(efit, 'Magnitude');
+        if elementExists(effect, 'MAGG - Magnitude') then begin
+            magnitude := getEditValue(elementBySignature(effect, 'MAGG'));
+        end else if elementExists(efit, 'Magnitude') then begin
+            magnitude := getEditValue(elementByName(efit, 'Magnitude'));
         end else begin
             magnitude := '';
         end;
 
-        if eHasByPath(effect, 'DURG - Duration') then begin
-            duration := evBySign(effect, 'DURG');
-        end else if eHasByPath(efit, 'Duration') then begin
-            duration := evByName(efit, 'Duration');
+        if elementExists(effect, 'DURG - Duration') then begin
+            duration := getEditValue(elementBySignature(effect, 'DURG'));
+        end else if elementExists(efit, 'Duration') then begin
+            duration := getEditValue(elementByName(efit, 'Duration'));
         end else begin
             duration := '';
         end;
 
         resultList.add(
             '{' +
-             '"Base Effect":"'       + escapeJson(evBySign(effect, 'EFID')) + '"' +
-            ',"Magnitude":"'         + escapeJson(magnitude)                + '"' +
-            ',"Duration":"'          + escapeJson(duration)                 + '"' +
-            ',"Area":"'              + escapeJson(evByName(efit, 'Area'))   + '"' +
-            ',"Curve Table":"'       + escapeJson(evBySign(effect, 'CVT0')) + '"' +
+            '"Base Effect":"' + escapeJson(getEditValue(elementBySignature(effect, 'EFID'))) + '",' +
+            '"Magnitude":"' + escapeJson(magnitude) + '",' +
+            '"Duration":"' + escapeJson(duration) + '",' +
+            '"Area":"' + escapeJson(getEditValue(elementByName(efit, 'Area'))) + '",' +
+            '"Curve Table":"' + escapeJson(getEditValue(elementBySignature(effect, 'CVT0'))) + '"' +
             '}'
         );
     end;

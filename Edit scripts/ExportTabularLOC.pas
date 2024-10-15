@@ -15,15 +15,15 @@ function initLocList(): TStringList;
 begin
     result := TStringList.create();
     result.add(
-            '"File"'         // Name of the originating ESM of the reference
-        + ', "Ref Form ID"'  // Form ID of reference
-        + ', "Form ID"'      // Form ID of item
-        + ', "Editor ID"'    // Editor ID of item
-        + ', "Name"'         // Full name of item
-        + ', "Layer"'        // Layer the reference is linked to
-        + ', "Cell"'         // World cell
-        + ', "Position"'     // Vec3 position
-        + ', "Rotation"'     // Vec3 rotation
+        '"File", ' +         // Name of the originating ESM of the reference
+        '"Ref Form ID", ' +  // Form ID of reference
+        '"Form ID", ' +      // Form ID of item
+        '"Editor ID", ' +    // Editor ID of item
+        '"Name", ' +         // Full name of item
+        '"Layer", ' +        // Layer the reference is linked to
+        '"Cell", ' +         // World cell
+        '"Position", ' +     // Vec3 position
+        '"Rotation"'         // Vec3 rotation
     );
 end;
 
@@ -40,22 +40,22 @@ var ref: IwbElement;
 begin
     for i := 0 to referencedByCount(el) - 1 do begin
         ref := referencedByIndex(el, i);
-        data := eBySign(ref, 'DATA');
+        data := elementBySignature(ref, 'DATA');
 
         if (signature(ref) <> 'REFR') or (not elementExists(data, 'Position')) then begin
             continue;
         end;
 
         locations.add(
-              escapeCsvString(getFileName(getFile(ref))) + ', '
-            + escapeCsvString(stringFormID(ref)) + ', '
-            + escapeCsvString(stringFormID(el)) + ', '
-            + escapeCsvString(evBySign(el, 'EDID')) + ', '
-            + escapeCsvString(evBySign(el, 'FULL')) + ', '
-            + escapeCsvString(evBySign(ref, 'XLYR')) + ', '
-            + escapeCsvString(gev(ElementByName(ref, 'Cell'))) + ', '
-            + escapeCsvString(vec3ToString(ElementByName(data,'Position'))) + ', '
-            + escapeCsvString(vec3ToString(ElementByName(data,'Rotation')))
+            escapeCsvString(getFileName(getFile(ref))) + ', ' +
+            escapeCsvString(stringFormID(ref)) + ', ' +
+            escapeCsvString(stringFormID(el)) + ', ' +
+            escapeCsvString(getEditValue(elementBySignature(el, 'EDID'))) + ', ' +
+            escapeCsvString(getEditValue(elementBySignature(el, 'FULL'))) + ', ' +
+            escapeCsvString(getEditValue(elementBySignature(ref, 'XLYR'))) + ', ' +
+            escapeCsvString(getEditValue(ElementByName(ref, 'Cell'))) + ', ' +
+            escapeCsvString(vec3ToString(ElementByName(data,'Position'))) + ', ' +
+            escapeCsvString(vec3ToString(ElementByName(data,'Rotation')))
         );
     end;
 end;
@@ -68,7 +68,10 @@ end;
  *)
 function vec3ToString(vec3: IInterface): String;
 begin
-    result := evByName(vec3, 'X') + ':' + evByName(vec3, 'Y') + ':' + evByName(vec3, 'Z');
+    result :=
+        getEditValue(elementByName(vec3, 'X')) + ':' +
+        getEditValue(elementByName(vec3, 'Y')) + ':' +
+        getEditValue(elementByName(vec3, 'Z'));
 end;
 
 
