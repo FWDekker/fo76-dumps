@@ -12,40 +12,37 @@ function initialize(): Integer;
 begin
     ExportTabularCOBJ_outputLines := TStringList.create();
     ExportTabularCOBJ_outputLines.add(
-            '"File"'        // Name of the originating ESM
-        + ', "Form ID"'     // Form ID
-        + ', "Editor ID"'   // Editor ID
-        + ', "Product"'     // Reference to product
-        + ', "Recipe"'      // Reference to recipe
-        + ', "Components"'  // Sorted JSON array of the components needed to craft. Each component is formatted as
-                            // `[editor id] ([amount])`
+        '"File", ' +       // Name of the originating ESM
+        '"Form ID", ' +    // Form ID
+        '"Editor ID", ' +  // Editor ID
+        '"Product", ' +    // Reference to product
+        '"Recipe", ' +     // Reference to recipe
+        '"Components"'     // Sorted JSON array of the components needed to craft. Each component is formatted as
+                           // `[editor id] ([amount])`
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
+function process(el: IInterface): Integer;
 begin
-    result := signature(el) = 'COBJ';
+    if signature(el) <> 'COBJ' then begin exit; end;
+
+    _process(el);
 end;
 
-function process(cobj: IInterface): Integer;
+function _process(cobj: IInterface): Integer;
 var product: IInterface;
     recipe: IInterface;
 begin
-    if not canProcess(cobj) then begin
-        addWarning(name(cobj) + ' is not a COBJ. Entry was ignored.');
-        exit;
-    end;
-
-    product := eBySign(cobj, 'CNAM');
-    recipe := eBySign(cobj, 'GNAM');
+    product := elementBySignature(cobj, 'CNAM');
+    recipe := elementBySignature(cobj, 'GNAM');
 
     ExportTabularCOBJ_outputLines.add(
-          escapeCsvString(getFileName(getFile(cobj))) + ', '
-        + escapeCsvString(stringFormID(cobj)) + ', '
-        + escapeCsvString(evBySign(cobj, 'EDID')) + ', '
-        + escapeCsvString(ifThen(not assigned(linksTo(product)), '', gev(product))) + ', '
-        + escapeCsvString(ifThen(not assigned(linksTo(recipe)), '', gev(recipe))) + ', '
-        + escapeCsvString(getJsonComponentArray(cobj))
+        escapeCsvString(getFileName(getFile(cobj))) + ', ' +
+        escapeCsvString(stringFormID(cobj)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(cobj, 'EDID'))) + ', ' +
+        escapeCsvString(ifThen(not assigned(linksTo(product)), '', getEditValue(product))) + ', ' +
+        escapeCsvString(ifThen(not assigned(linksTo(recipe)), '', getEditValue(recipe))) + ', ' +
+        escapeCsvString(getJsonComponentArray(cobj))
     );
 end;
 
@@ -71,15 +68,15 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    components := eBySign(cobj, 'FVPA');
-    for i := 0 to eCount(components) - 1 do begin
-        component := eByIndex(components, i);
+    components := elementBySignature(cobj, 'FVPA');
+    for i := 0 to elementCount(components) - 1 do begin
+        component := elementByIndex(components, i);
 
         resultList.add(
             '{' +
-             '"Component":"'   + escapeJson(evByName(component, 'Component'))   + '"' +
-            ',"Count":"'       + escapeJson(evByName(component, 'Count'))       + '"' +
-            ',"Curve Table":"' + escapeJson(evByName(component, 'Curve Table')) + '"' +
+            '"Component":"' + escapeJson(getEditValue(elementByName(component, 'Component'))) + '",' +
+            '"Count":"' + escapeJson(getEditValue(elementByName(component, 'Count'))) + '",' +
+            '"Curve Table":"' + escapeJson(getEditValue(elementByName(component, 'Curve Table'))) + '"' +
             '}'
         );
     end;

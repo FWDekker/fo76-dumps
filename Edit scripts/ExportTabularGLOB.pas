@@ -11,30 +11,27 @@ function initialize(): Integer;
 begin
     ExportTabularGLOB_outputLines := TStringList.create();
     ExportTabularGLOB_outputLines.add(
-            '"File"'       // Name of the originating ESM
-        + ', "Form ID"'    // Form ID
-        + ', "Editor ID"'  // Editor ID
-        + ', "Value"'      // Value of the global variable
+        '"File", ' +       // Name of the originating ESM
+        '"Form ID", ' +    // Form ID
+        '"Editor ID", ' +  // Editor ID
+        '"Value"'          // Value of the global variable
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
+function process(el: IInterface): Integer;
 begin
-    result := signature(el) = 'GLOB';
+    if signature(el) <> 'GLOB' then begin exit; end;
+
+    _process(el);
 end;
 
-function process(glob: IInterface): Integer;
+function _process(glob: IInterface): Integer;
 begin
-    if not canProcess(glob) then begin
-        addWarning(name(glob) + ' is not a GLOB. Entry was ignored.');
-        exit;
-    end;
-
     ExportTabularGLOB_outputLines.add(
-          escapeCsvString(getFileName(getFile(glob))) + ', '
-        + escapeCsvString(stringFormID(glob)) + ', '
-        + escapeCsvString(evBySign(glob, 'EDID')) + ', '
-        + evBySign(glob, 'FLTV')
+        escapeCsvString(getFileName(getFile(glob))) + ', ' +
+        escapeCsvString(stringFormID(glob)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(glob, 'EDID'))) + ', ' +
+        getEditValue(elementBySignature(glob, 'FLTV'))
     );
 end;
 

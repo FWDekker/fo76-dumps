@@ -20,22 +20,19 @@ begin
     clearLargeFiles('dumps/TERM.wiki');
 end;
 
-function canProcess(el: IInterface): Boolean;
+function process(el: IInterface): Integer;
 begin
-    result := signature(el) = 'TERM';
+    if signature(el) <> 'TERM' then begin exit; end;
+
+    _process(el);
 end;
 
-function process(term: IInterface): Integer;
+function _process(term: IInterface): Integer;
 var header: String;
     contents: String;
     history: TStringList;
 begin
-    if not canProcess(term) then begin
-        addWarning(name(term) + ' is not a TERM. Entry was ignored.');
-        exit;
-    end;
-
-    header := escapeWiki(trim(evBySign(term, 'WNAM')));
+    header := escapeWiki(trim(getEditValue(elementBySignature(term, 'WNAM'))));
     if not (header = '') then begin
         header := header + #10;
     end;
@@ -47,13 +44,18 @@ begin
         contents := '' + #10 + contents + #10 + #10;
     end;
 
-    appendLargeFile('dumps/TERM.wiki', ExportWikiTERM_buffer, ExportWikiTERM_size, ExportWikiTERM_maxSize,
-          '==[' + getFileName(getFile(term)) + '] ' + evBySign(term, 'FULL') + ' (' + stringFormID(term) + ')==' + #10
-        + '{{Transcript|text=' + #10
-        + 'Welcome to ROBCO Industries (TM) Termlink' + #10
-        + header
-        + '}}' + #10
-        + contents
+    appendLargeFile(
+        'dumps/TERM.wiki',
+        ExportWikiTERM_buffer,
+        ExportWikiTERM_size,
+        ExportWikiTERM_maxSize,
+        '==[' + getFileName(getFile(term)) + '] ' +
+            getEditValue(elementBySignature(term, 'FULL')) + ' (' + stringFormID(term) + ')==' + #10 +
+            '{{Transcript|text=' + #10 +
+            'Welcome to ROBCO Industries (TM) Termlink' + #10 +
+            header +
+            '}}' + #10 +
+            contents
     );
 end;
 
@@ -76,60 +78,66 @@ var body: IInterface;
 begin
     history.add(stringFormID(el));
 
-    body := eByName(el, 'Body Text');
-    for i := 0 to eCount(body) - 1 do begin
-        bodyItem := eByIndex(body, i);
+    body := elementByName(el, 'Body Text');
+    for i := 0 to elementCount(body) - 1 do begin
+        bodyItem := elementByIndex(body, i);
 
-        if eCount(eByName(bodyItem, 'Conditions')) > 0 then begin
+        if elementCount(elementByName(bodyItem, 'Conditions')) > 0 then begin
             result := result + '{{Info: The following body is conditional}}' + #10;
         end;
-        result := result
-            + '{{Transcript|text=' + #10
-            + escapeWiki(trim(evBySign(bodyItem, 'BTXT'))) + #10
-            + '}}' + #10;
+        result := result +
+            '{{Transcript|text=' + #10 +
+            escapeWiki(trim(getEditValue(elementBySignature(bodyItem, 'BTXT')))) + #10 +
+            '}}' + #10;
     end;
 
-    menu := eByName(el, 'Menu Items');
-    for i := 0 to eCount(menu) - 1 do begin
-        menuItem := eByIndex(menu, i);
-        menuItemType := evBySign(menuItem, 'ANAM');
+    menu := elementByName(el, 'Menu Items');
+    for i := 0 to elementCount(menu) - 1 do begin
+        menuItem := elementByIndex(menu, i);
+        menuItemType := getEditValue(elementBySignature(menuItem, 'ANAM'));
 
         if (menuItemType = 'Submenu - Return to Top Level') or (menuItemType = 'Submenu - Force Redraw') then begin
             continue;
         end;
 
         result := result + #10;
-        if eCount(eByPath(menuItem, 'Conditions')) > 0 then begin
+        if elementCount(elementByPath(menuItem, 'Conditions')) > 0 then begin
             result := result + '{{Info: The following header is conditional}}' + #10;
         end;
 
         if menuItemType = 'Display Text' then begin
-            result := result
-                + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), history.count) + #10
-                + '{{Transcript|text=' + #10
-                + escapeWiki(trim(evBySign(menuItem, 'UNAM'))) + #10
-                + '}}' + #10;
+            result := result +
+                createWikiHeader(escapeWiki(getEditValue(elementBySignature(menuItem, 'ITXT'))), history.count) + #10 +
+                '{{Transcript|text=' + #10 +
+                escapeWiki(trim(getEditValue(elementBySignature(menuItem, 'UNAM')))) + #10 +
+                '}}' + #10;
         end else if menuItemType = 'Submenu - Terminal' then begin
-            if history.indexOf(stringFormID(linkBySign(menuItem, 'TNAM'))) >= 0 then begin
-                if evBySign(menuItem, 'RNAM') <> '' then begin
-                    result := result
-                        + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), history.count) + #10
-                        + '{{Transcript|text=' + #10
-                        + trim(escapeWiki(evBySign(menuItem, 'RNAM'))) + #10
-                        + '}}' + #10;
+            if history.indexOf(stringFormID(linksTo(elementBySignature(menuItem, 'TNAM')))) >= 0 then begin
+                if getEditValue(elementBySignature(menuItem, 'RNAM')) <> '' then begin
+                    result := result +
+                        createWikiHeader(
+                            escapeWiki(getEditValue(elementBySignature(menuItem, 'ITXT'))),
+                            history.count
+                        ) + #10 +
+                        '{{Transcript|text=' + #10 +
+                        trim(escapeWiki(getEditValue(elementBySignature(menuItem, 'RNAM')))) + #10 +
+                        '}}' + #10;
                 end;
             end else begin
-                result := result
-                    + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), history.count) + #10
-                    + trim(getTerminalContents(linkBySign(menuItem, 'TNAM'), history)) + #10;
+                result := result +
+                    createWikiHeader(
+                        escapeWiki(getEditValue(elementBySignature(menuItem, 'ITXT'))),
+                        history.count
+                    ) + #10 +
+                    trim(getTerminalContents(linksTo(elementBySignature(menuItem, 'TNAM')), history)) + #10;
             end;
         end else if menuItemType = 'Display Image' then begin
-            result := result + '{{Image: ' + evBySign(menuItem, 'VNAM') + '}}' + #10;
+            result := result + '{{Image: ' + getEditValue(elementBySignature(menuItem, 'VNAM')) + '}}' + #10;
         end else begin
             // Non-fatal error
-            result := result
-                + createWikiHeader(escapeWiki(evBySign(menuItem, 'ITXT')), history.count) + #10
-                + addError('Unexpected menu item type `' + menuItemType + '`') + #10;
+            result := result +
+                createWikiHeader(escapeWiki(getEditValue(elementBySignature(menuItem, 'ITXT'))), history.count) + #10 +
+                addError('Unexpected menu item type `' + menuItemType + '`') + #10;
         end;
     end;
 end;

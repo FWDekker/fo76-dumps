@@ -7,134 +7,9 @@ unit ExportCore;
 
 (***
  *
- * Shorthands for commonly used functions.
- *
- * Some terminology: Given an element identified as `EDID - Editor ID`, the signature is `EDID` and the name is
- * `EDID - Editor ID`. If an element has no signature, it can only be addressed by its name. A nested element can be
- * addressed by its path, which is a sequence of signatures and names (or mixtures thereof), separated by backslashes.
+ * xEdit utility functions
  *
  **)
-
-(**
- * Shorthand for [getEditValue].
- *)
-function gev(el: IwbElement): String;
-begin
-    result := getEditValue(el);
-end;
-
-(**
- * Shorthand for [elementBySignature].
- *)
-function eBySign(el: IwbContainer; sig: String): IwbElement;
-begin
-    result := elementBySignature(el, sig);
-end;
-
-(**
- * Shorthand for [elementByName].
- *)
-function eByName(el: IwbContainer; nam: String): IwbElement;
-begin
-    result := elementByName(el, nam);
-end;
-
-(**
- * Shorthand for [elementByPath].
- *)
-function eByPath(el: IwbContainer; path: String): IwbElement;
-begin
-    result := elementByPath(el, path);
-end;
-
-(**
- * Shorthand for [elementExists].
- *)
-function eHasByPath(el: IwbContainer; path: String): Boolean;
-begin
-    result := elementExists(el, path);
-end;
-
-(**
- * Shorthand for [elementCount].
- *)
-function eCount(el: IwbContainer): Integer;
-begin
-    result := elementCount(el);
-end;
-
-(**
- * Shorthand for [elementByIndex].
- *)
-function eByIndex(el: IwbContainer; i: Integer): IwbElement;
-begin
-    result := elementByIndex(el, i);
-end;
-
-(**
- * Shorthand for calling [getEditValue] and [elementBySignature].
- *)
-function evBySign(el: IInterface; sig: String): String;
-begin
-    result := gev(eBySign(el, sig));
-end;
-
-(**
- * Shorthand for calling [getEditValue] and [elementByName].
- *)
-function evByName(el: IInterface; nam: String): String;
-begin
-    result := gev(eByName(el, nam));
-end;
-
-(**
- * Shorthand for calling [getEditValue] and [elementByPath].
- *)
-function evByPath(el: IInterface; path: String): String;
-begin
-    result := gev(eByPath(el, path));
-end;
-
-(**
- * Shorthand for calling [getEditValue] and [elementByIndex].
- *)
-function evByIndex(el: IInterface; i: Integer): String;
-begin
-    result := gev(eByIndex(el, i));
-end;
-
-(**
- * Shorthand for calling [linksTo] and [elementBySignature].
- *)
-function linkBySign(el: IInterface; sig: String): IInterface;
-begin
-    result := linksTo(eBySign(el, sig));
-end;
-
-(**
- * Shorthand for calling [linksTo] and [elementByName].
- *)
-function linkByName(el: IInterface; nam: String): IInterface;
-begin
-    result := linksTo(eByName(el, nam));
-end;
-
-(**
- * Shorthand for calling [linksTo] and [elementByPath].
- *)
-function linkByPath(el: IInterface; path: String): IInterface;
-begin
-    result := linksTo(eByPath(el, path));
-end;
-
-(**
- * Shorthand for calling [linksTo] and [elementByIndex].
- *)
-function linkByIndex(el: IInterface; i: Integer): IInterface;
-begin
-    result := linksTo(eByIndex(el, i));
-end;
-
 
 (**
  * Returns a lowercase string representation of [el]'s form ID.
@@ -146,14 +21,6 @@ function stringFormID(el: IInterface): String;
 begin
     result := lowerCase(intToHex(formID(el), 8));
 end;
-
-
-
-(***
- *
- * xEdit utility functions
- *
- **)
 
 (**
  * Returns `true` iff [el] is referenced by a record with signature [sig].

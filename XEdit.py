@@ -14,24 +14,31 @@ from State import cfg, subprocesses
 def xedit() -> None:
     """
     Runs xEdit and waits until it closes.
-    
+
     :return: `None`
     """
 
-    print(f"> Running xEdit using '{cfg.xedit_path}'.\n"
-          f"> Be sure to double-check version information in the xEdit window!")
+    print(
+        f"> Running xEdit using '{cfg.xedit_path}'.\n"
+        f"> Be sure to double-check version information in the xEdit window!"
+    )
 
     # Check for existing files
     if cfg.done_path.exists():
-        if not prompt_confirmation(f"> WARNING: "
-                                   f"'{cfg.done_path.name}' already exists and must be deleted. "
-                                   f"Do you want to DELETE '{cfg.done_path}' and continue? (y/n) "):
+        if not prompt_confirmation(
+            f"> WARNING: "
+            f"'{cfg.done_path.name}' already exists and must be deleted. "
+            f"Do you want to DELETE '{cfg.done_path}' and continue? (y/n) "
+        ):
             exit()
         Files.delete(cfg.done_path)
 
     # Create ini if it does not exist
-    config_dir = (Path.home() / "Documents/My Games/Fallout 76/" if cfg.windows
-                  else cfg.xedit_compatdata_path / "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/")
+    config_dir = (
+        Path.home() / "Documents/My Games/Fallout 76/"
+        if cfg.windows
+        else cfg.xedit_compatdata_path / "pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76/"
+    )
     config_dir.mkdir(exist_ok=True, parents=True)
     (config_dir / "Fallout76.ini").touch(exist_ok=True)
 
@@ -39,17 +46,21 @@ def xedit() -> None:
     done_time = cfg.done_path.stat().st_mtime if cfg.done_path.exists() else None
 
     # Actually run xEdit
-    run_executable(args=[cfg.xedit_path, f"-D:{cfg.game_root / 'Data/'}", "ExportAll.fo76pas"],
-                   compatdata_path=cfg.xedit_compatdata_path if not cfg.windows else "",
-                   cwd=cfg.script_root)
+    run_executable(
+        args=[cfg.xedit_path, f"-D:{cfg.game_root / 'Data/'}", "ExportAll.fo76pas"],
+        compatdata_path=cfg.xedit_compatdata_path if not cfg.windows else "",
+        cwd=cfg.script_root,
+    )
 
     # Check if `_done.txt` changed
     new_done_time = cfg.done_path.stat().st_mtime if cfg.done_path.exists() else None
     if new_done_time is None or done_time == new_done_time:
-        if not prompt_confirmation(f"> WARNING: "
-                                   f"xEdit did not create or update '{cfg.done_path.name}', indicating that the dump "
-                                   f"scripts may have failed. "
-                                   f"Continue anyway? (y/n) "):
+        if not prompt_confirmation(
+            f"> WARNING: "
+            f"xEdit did not create or update '{cfg.done_path.name}', indicating that the dump "
+            f"scripts may have failed. "
+            f"Continue anyway? (y/n) "
+        ):
             exit()
 
     # Post-processing
@@ -133,20 +144,28 @@ def create_db() -> None:
 
     # Check for existing files
     if cfg.db_path.exists():
-        if not prompt_confirmation(f">> WARNING: "
-                                   f"'{cfg.db_path.name}' already exists and must be deleted. "
-                                   f"Do you want to DELETE '{cfg.db_path}' and continue? (y/n) "):
+        if not prompt_confirmation(
+            f">> WARNING: "
+            f"'{cfg.db_path.name}' already exists and must be deleted. "
+            f"Do you want to DELETE '{cfg.db_path}' and continue? (y/n) "
+        ):
             exit()
         Files.delete(cfg.db_path)
 
     # Import into database
     with sqlite3.connect(cfg.db_path) as con:
         for csv in list(cfg.dump_root.glob("*.csv")):
-            table_name = csv.stem.split('.', 1)[1]
+            table_name = csv.stem.split(".", 1)[1]
             print(f">>> Importing '{csv.name}' into table '{table_name}'.")
 
-            df = pd.read_csv(csv, quotechar='"', doublequote=True, skipinitialspace=True,
-                             dtype="string", encoding="iso-8859-1")
+            df = pd.read_csv(
+                csv,
+                quotechar='"',
+                doublequote=True,
+                skipinitialspace=True,
+                dtype="string",
+                encoding="iso-8859-1",
+            )
             df.columns = df.columns.str.replace(" ", "_")
             df.to_sql(table_name, con, index=False)
 
@@ -162,16 +181,18 @@ def archive_start() -> None:
 
     print(">> Archiving large xEdit dumps in the background.")
 
-    for dump in (list(cfg.dump_root.glob("*.csv")) +
-                 list(cfg.dump_root.glob("*.wiki")) +
-                 list(cfg.dump_root.glob("*.db"))):
+    dumps = list(cfg.dump_root.glob("*.csv")) + list(cfg.dump_root.glob("*.wiki")) + list(cfg.dump_root.glob("*.db"))
+    for dump in dumps:
         if dump.stat().st_size < 10000000:
             continue
 
         print(f">>> Starting archiving of '{dump.name}'.")
-        process = subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4", f"{dump.name}.7z", dump.name],
-                                   cwd=cfg.dump_root,
-                                   stdout=subprocess.DEVNULL,
-                                   stderr=subprocess.STDOUT)
-        subprocesses[dump.name] = {"process": process,
-                                   "post": lambda it=dump: Files.move_into(it, cfg.dump_archived)}
+        subprocesses[dump.name] = {
+            "process": subprocess.Popen(
+                [cfg.archiver_path, "a", "-mx9", "-mmt4", f"{dump.name}.7z", dump.name],
+                cwd=cfg.dump_root,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.STDOUT,
+            ),
+            "post": lambda it=dump: Files.move_into(it, cfg.dump_archived),
+        }

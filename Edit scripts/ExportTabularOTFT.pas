@@ -12,34 +12,31 @@ function initialize(): Integer;
 begin
     ExportTabularOTFT_outputLines := TStringList.create();
     ExportTabularOTFT_outputLines.add(
-            '"File"'       // Name of the originating ESM
-        + ', "Form ID"'    // Form ID
-        + ', "Editor ID"'  // Editor ID
-        + ', "Items"'      // Sorted JSON array of items contained in the outfit
+        '"File", ' +       // Name of the originating ESM
+        '"Form ID", ' +    // Form ID
+        '"Editor ID", ' +  // Editor ID
+        '"Items"'          // Sorted JSON array of items contained in the outfit
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
+function process(el: IInterface): Integer;
 begin
-    result := signature(el) = 'OTFT';
+    if signature(el) <> 'OTFT' then begin exit; end;
+
+    _process(el);
 end;
 
-function process(otft: IInterface): Integer;
+function _process(otft: IInterface): Integer;
 var acbs: IInterface;
     rnam: IInterface;
     aidt: IInterface;
     cnam: IInterface;
 begin
-    if not canProcess(otft) then begin
-        addWarning(name(otft) + ' is not an OTFT. Entry was ignored.');
-        exit;
-    end;
-
     ExportTabularOTFT_outputLines.add(
-          escapeCsvString(getFileName(getFile(otft))) + ', '
-        + escapeCsvString(stringFormID(otft)) + ', '
-        + escapeCsvString(evBySign(otft, 'EDID')) + ', '
-        + escapeCsvString(getJsonChildArray(eBySign(otft, 'INAM')))
+        escapeCsvString(getFileName(getFile(otft))) + ', ' +
+        escapeCsvString(stringFormID(otft)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(otft, 'EDID'))) + ', ' +
+        escapeCsvString(getJsonChildArray(elementBySignature(otft, 'INAM')))
     );
 end;
 

@@ -13,25 +13,25 @@ begin
     ExportWikiNOTE_outputLines := TStringList.create();
 end;
 
-function canProcess(el: IInterface): Boolean;
+function process(el: IInterface): Integer;
 begin
-    result := signature(el) = 'NOTE';
+    if signature(el) <> 'NOTE' then begin exit; end;
+
+    _process(el);
 end;
 
-function process(note: IInterface): Integer;
+function _process(note: IInterface): Integer;
 begin
-    if not canProcess(note) then begin
-        addWarning(name(note) + ' is not a NOTE. Entry was ignored.');
-        exit;
-    end;
-
     ExportWikiNOTE_lastSpeaker := '';
 
-    ExportWikiNOTE_outputLines.add('==[' + getFileName(getFile(note)) + '] ' + evBySign(note, 'FULL') + '==');
+    ExportWikiNOTE_outputLines.add(
+        '==[' + getFileName(getFile(note)) + '] ' +
+        getEditValue(elementBySignature(note, 'FULL')) + '=='
+    );
     ExportWikiNOTE_outputLines.add('Form ID:   ' + stringFormID(note));
-    ExportWikiNOTE_outputLines.add('Editor ID: ' + evBySign(note, 'EDID'));
-    ExportWikiNOTE_outputLines.add('Weight:    ' + evByPath(note, 'DATA\Weight'));
-    ExportWikiNOTE_outputLines.add('Value:     ' + evByPath(note, 'DATA\Value'));
+    ExportWikiNOTE_outputLines.add('Editor ID: ' + getEditValue(elementBySignature(note, 'EDID')));
+    ExportWikiNOTE_outputLines.add('Weight:    ' + getEditValue(elementByPath(note, 'DATA\Weight')));
+    ExportWikiNOTE_outputLines.add('Value:     ' + getEditValue(elementByPath(note, 'DATA\Value')));
     ExportWikiNOTE_outputLines.add('Transcript: ' + #10 + getNoteDialogue(note) + #10 + #10);
 end;
 
@@ -44,7 +44,8 @@ end;
 
 
 function getNoteDialogue(note: IInterface): String;
-var actions: IInterface;
+var action: IInterface;
+    actions: IInterface;
     actionList: TList;
 
     maxStage: Integer;
@@ -53,21 +54,22 @@ var actions: IInterface;
 
     i: Integer;
 begin
-    if evByPath(note, 'SNAM\Terminal') <> '' then begin
-        result := ''
-            + 'This disk shows terminal entries from `TERM:'
-            + stringFormID(linkByPath(note, 'SNAM\Terminal'))
-            + '`.';
+    if getEditValue(elementByPath(note, 'SNAM\Terminal')) <> '' then begin
+        result :=
+            'This disk shows terminal entries from `TERM:' +
+            stringFormID(linksTo(elementByPath(note, 'SNAM\Terminal'))) +
+            '`.';
         exit;
     end;
 
-    actions := eByName(linkByPath(note, 'SNAM\Scene'), 'Actions');
+    actions := elementByName(linksTo(elementByPath(note, 'SNAM\Scene')), 'Actions');
 
     // Find max stage (and validate their values)
     maxStage := 0;
-    for i := 0 to eCount(actions) - 1 do begin
-        startStage := strToInt(evBySign(eByIndex(actions, i), 'SNAM'));
-        endStage := strToInt(evBySign(eByIndex(actions, i), 'ENAM'));
+    for i := 0 to elementCount(actions) - 1 do begin
+        action := elementByIndex(actions, i);
+        startStage := strToInt(getEditValue(elementBySignature(action, 'SNAM')));
+        endStage := strToInt(getEditValue(elementBySignature(action, 'ENAM')));
 
         if startStage < 0 then begin
             result := addError('Negative ENAM');
@@ -91,21 +93,21 @@ begin
     end;
 
     // Populate TList
-    for i := 0 to eCount(actions) - 1 do begin
-        startStage := strToInt(evBySign(eByIndex(actions, i), 'SNAM'));
+    for i := 0 to elementCount(actions) - 1 do begin
+        startStage := strToInt(getEditValue(elementBySignature(elementByIndex(actions, i), 'SNAM')));
 
         actionList.delete(startStage);
-        actionList.insert(startStage, eByIndex(actions, i));
+        actionList.insert(startStage, elementByIndex(actions, i));
     end;
 
     // Iterate TList to build transcript
     result := '{{Transcript|text=' + #10;
 
     for i := 0 to maxStage do begin
-        if evBySign(objectToElement(actionList.items[i]), 'DATA') <> '' then begin
-            result := result
-                + getTopicDialogue(linkBySign(objectToElement(actionList.items[i]), 'DATA'))
-                + #10 + #10;
+        if getEditValue(elementBySignature(objectToElement(actionList.items[i]), 'DATA')) <> '' then begin
+            result := result +
+                getTopicDialogue(linksTo(elementBySignature(objectToElement(actionList.items[i]), 'DATA'))) +
+                #10 + #10;
         end;
     end;
     delete(result, length(result) - 1, 1);  // Remove trailing newline
@@ -116,7 +118,8 @@ begin
 end;
 
 function getTopicDialogue(topic: IInterface): String;
-var speaker: String;
+var speakerRecord: IInterface;
+    speaker: String;
     lines: IInterface;
     line: String;
     comment: String;
@@ -128,20 +131,21 @@ begin
         exit;
     end;
 
-    if eCount(childGroup(topic)) = 0 then begin
+    if elementCount(childGroup(topic)) = 0 then begin
         result := addError('Topic has 0 children');
         exit;
     end;
 
-    if eCount(childGroup(topic)) <> 1 then begin
+    if elementCount(childGroup(topic)) <> 1 then begin
         // Non-fatal error
         result := addError('Manually check `DIAL:' + stringFormID(topic) + '` for cut content lines');
     end;
 
     // Add speaker at start of paragraph
-    speaker := evBySign(linkBySign(eByIndex(childGroup(topic), 0), 'ANAM'), 'FULL');
+    speakerRecord := linksTo(elementBySignature(elementByIndex(childGroup(topic), 0), 'ANAM'));
+    speaker := getEditValue(elementBySignature(speakerRecord, 'FULL'));
     if speaker = '' then begin
-        speaker := evBySign(linkBySign(eByIndex(childGroup(topic), 0), 'ANAM'), 'EDID');
+        speaker := getEditValue(elementBySignature(speakerRecord, 'EDID'));
     end;
     if (speaker <> '_NPC_NoLines') and (speaker <> ExportWikiNOTE_lastSpeaker) then begin
         result := result + '''''''' + speaker + ''''''': ';
@@ -149,10 +153,10 @@ begin
     ExportWikiNOTE_lastSpeaker := speaker;
 
     // Add lines of paragraph
-    lines := eByName(eByIndex(childGroup(topic), 0), 'Responses');
-    for i := 0 to eCount(lines) do begin
-        line := escapeHTML(trim(evBySign(eByIndex(lines, i), 'NAM1')));
-        comment := escapeHTML(trim(evBySign(eByIndex(lines, i), 'NAM2')));
+    lines := elementByName(elementByIndex(childGroup(topic), 0), 'Responses');
+    for i := 0 to elementCount(lines) do begin
+        line := escapeHTML(trim(getEditValue(elementBySignature(elementByIndex(lines, i), 'NAM1'))));
+        comment := escapeHTML(trim(getEditValue(elementBySignature(elementByIndex(lines, i), 'NAM2'))));
         comment := stringReplace(comment, '"', '&quot;', [rfReplaceAll]);
 
         if trim(comment) = '' then begin

@@ -14,38 +14,35 @@ function initialize(): Integer;
 begin
     ExportTabularMISC_outputLines := TStringList.create();
     ExportTabularMISC_outputLines.add(
-            '"File"'        // Name of the originating ESM
-        + ', "Form ID"'     // Form ID
-        + ', "Editor ID"'   // Editor ID
-        + ', "Name"'        // Full name
-        + ', "Weight"'      // Item weight in pounds
-        + ', "Value"'       // Item value in bottlecaps
-        + ', "Components"'  // Sorted JSON array of the components needed to craft. Each component is represented by a
-                            // JSON object containing the component identifier and the count
+        '"File", ' +       // Name of the originating ESM
+        '"Form ID", ' +    // Form ID
+        '"Editor ID", ' +  // Editor ID
+        '"Name", ' +       // Full name
+        '"Weight", ' +     // Item weight in pounds
+        '"Value", ' +      // Item value in bottlecaps
+        '"Components"'     // Sorted JSON array of the components needed to craft. Each component is represented by a
+                           // JSON object containing the component identifier and the count
     );
     ExportTabularMISC_LOC_outputLines := initLocList();
 end;
 
-function canProcess(el: IInterface): Boolean;
+function process(el: IInterface): Integer;
 begin
-    result := signature(el) = 'MISC';
+    if signature(el) <> 'MISC' then begin exit; end;
+
+    _process(el);
 end;
 
-function process(misc: IInterface): Integer;
+function _process(misc: IInterface): Integer;
 begin
-    if not canProcess(misc) then begin
-        addWarning(name(misc) + ' is not a MISC. Entry was ignored.');
-        exit;
-    end;
-
     ExportTabularMISC_outputLines.add(
-          escapeCsvString(getFileName(getFile(misc))) + ', '
-        + escapeCsvString(stringFormID(misc)) + ', '
-        + escapeCsvString(evBySign(misc, 'EDID')) + ', '
-        + escapeCsvString(evBySign(misc, 'FULL')) + ', '
-        + escapeCsvString(evByPath(misc, 'DATA\Weight')) + ', '
-        + escapeCsvString(evByPath(misc, 'DATA\Value')) + ', '
-        + escapeCsvString(getJsonComponentArray(misc))
+        escapeCsvString(getFileName(getFile(misc))) + ', ' +
+        escapeCsvString(stringFormID(misc)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(misc, 'EDID'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(misc, 'FULL'))) + ', ' +
+        escapeCsvString(getEditValue(elementByPath(misc, 'DATA\Weight'))) + ', ' +
+        escapeCsvString(getEditValue(elementByPath(misc, 'DATA\Value'))) + ', ' +
+        escapeCsvString(getJsonComponentArray(misc))
     );
 
     appendLocationData(ExportTabularMISC_LOC_outputLines, misc);
@@ -79,17 +76,17 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    components := eBySign(el, 'MCQP');
-    for i := 0 to eCount(components) - 1 do begin
-        entry := eByIndex(components, i);
-        component := eByName(entry, 'Component');
-        quantity := eByName(entry, 'Component Count Keyword');
+    components := elementBySignature(el, 'MCQP');
+    for i := 0 to elementCount(components) - 1 do begin
+        entry := elementByIndex(components, i);
+        component := elementByName(entry, 'Component');
+        quantity := elementByName(entry, 'Component Count Keyword');
 
         resultList.add(
             '{' +
-             '"Component":"'               + escapeJson(gev(component))                                                          + '"' +
-            ',"Component Count Keyword":"' + escapeJson(gev(quantity))                                                           + '"' +
-            ',"Count":"'                   + escapeJson(intToStr(quantityKeywordToValue(linksTo(component), linksTo(quantity)))) + '"' +
+            '"Component":"' + escapeJson(getEditValue(component)) + '",' +
+            '"Component Count Keyword":"' + escapeJson(getEditValue(quantity)) + '",' +
+            '"Count":"' + escapeJson(intToStr(quantityKeywordToValue(linksTo(component), linksTo(quantity)))) + '"' +
             '}'
         );
     end;
@@ -112,19 +109,21 @@ var i: Integer;
     componentQuantities: IInterface;
     componentQuantity: IInterface;
 begin
-    quantityName := evBySign(quantity, 'EDID');
-    componentQuantities := eBySign(component, 'CVPA');
+    quantityName := getEditValue(elementBySignature(quantity, 'EDID'));
+    componentQuantities := elementBySignature(component, 'CVPA');
 
-    for i := 0 to eCount(componentQuantities) - 1 do begin
-        componentQuantity := eByIndex(componentQuantities, i);
+    for i := 0 to elementCount(componentQuantities) - 1 do begin
+        componentQuantity := elementByIndex(componentQuantities, i);
 
         if
             strEquals(
                 quantityName,
-                evBySign(linkByName(componentQuantity, 'Scrap Count Keyword'), 'EDID')
+                getEditValue(
+                    elementBySignature(linksTo(elementByName(componentQuantity, 'Scrap Count Keyword')), 'EDID')
+                )
             )
         then begin
-            result := evByName(componentQuantity, 'Scrap Component Count');
+            result := getEditValue(elementByName(componentQuantity, 'Scrap Component Count'));
             break;
         end;
     end;

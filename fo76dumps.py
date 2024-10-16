@@ -25,8 +25,10 @@ def ba2extract() -> None:
         with tempfile.TemporaryDirectory(prefix=f"fo76-dumps-{target}") as temp_dir:
             temp_dir = Path(temp_dir)
 
-            run_executable(args=[cfg.ba2extract_path, cfg.game_root / 'Data' / target, temp_dir],
-                           compatdata_path=cfg.ba2extract_compatdata_path if not cfg.windows else "")
+            run_executable(
+                args=[cfg.ba2extract_path, cfg.game_root / "Data" / target, temp_dir],
+                compatdata_path=cfg.ba2extract_compatdata_path if not cfg.windows else "",
+            )
 
             for archive_path, desired_path in files.items():
                 desired_path = cfg.dump_root / f"raw.{desired_path}"
@@ -53,14 +55,23 @@ def archive_esms_start() -> None:
     """
 
     print("> Archiving ESMs in the background.")
-    subprocesses["ESMs"] = {"process": subprocess.Popen([cfg.archiver_path, "a", "-mx9", "-mmt4",
-                                                         f"SeventySix.esm.v{cfg.game_version}.7z",
-                                                         cfg.game_root / "Data/SeventySix.esm",
-                                                         cfg.game_root / "Data/NW.esm"],
-                                                        cwd=cfg.dump_root,
-                                                        stdout=subprocess.DEVNULL,
-                                                        stderr=subprocess.STDOUT),
-                            "post": lambda *args: None}
+    subprocesses["ESMs"] = {
+        "process": subprocess.Popen(
+            [
+                cfg.archiver_path,
+                "a",
+                "-mx9",
+                "-mmt4",
+                f"SeventySix.esm.v{cfg.game_version}.7z",
+                cfg.game_root / "Data/SeventySix.esm",
+                cfg.game_root / "Data/NW.esm",
+            ],
+            cwd=cfg.dump_root,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.STDOUT,
+        ),
+        "post": lambda *args: None,
+    }
     print("")
 
 
@@ -88,42 +99,38 @@ def main() -> None:
     :return: `None`
     """
 
-    if cfg.game_version == "x.y.z.w":
-        if not prompt_confirmation(f"WARNING: "
-                                   f"You did not adjust the game version in the configuration. "
-                                   f"The game version is currently set to '{cfg.game_version}'."
-                                   f"This may cause some dump files to have incorrect filenames. "
-                                   f"Check the dump scripts wiki at "
-                                   f"https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps/ for more "
-                                   f"information. "
-                                   f"Continue anyway? (y/n) "):
-            exit()
     if not cfg.windows and "INSERT NUMBER HERE" in str(cfg.xedit_compatdata_path):
-        if not prompt_confirmation(f"WARNING: "
-                                   f"You did not adjust the compatdata path for xEdit in the configuration. "
-                                   f"The compatdata path is currently set to '{cfg.xedit_compatdata_path}'. "
-                                   f"This may cause issues when launching xEdit. "
-                                   f"Check the dump scripts wiki at "
-                                   f"https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps/ for more "
-                                   f"information. "
-                                   f"Continue anyway? (y/n) "):
+        if not prompt_confirmation(
+            f"WARNING: "
+            f"You did not adjust the compatdata path for xEdit in the configuration. "
+            f"The compatdata path is currently set to '{cfg.xedit_compatdata_path}'. "
+            f"This may cause issues when launching xEdit. "
+            f"Check the dump scripts wiki at "
+            f"https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps/ for more "
+            f"information. "
+            f"Continue anyway? (y/n) "
+        ):
             exit()
     if not cfg.windows and "INSERT NUMBER HERE" in str(cfg.ba2extract_compatdata_path):
-        if not prompt_confirmation(f"WARNING: "
-                                   f"You did not adjust the compatdata path for ba2extract in the configuration. "
-                                   f"The compatdata path is currently set to '{cfg.ba2extract_compatdata_path}'. "
-                                   f"This may cause issues when launching ba2extract. "
-                                   f"Check the dump scripts wiki at "
-                                   f"https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps/ for more "
-                                   f"information. "
-                                   f"Continue anyway? (y/n) "):
+        if not prompt_confirmation(
+            f"WARNING: "
+            f"You did not adjust the compatdata path for ba2extract in the configuration. "
+            f"The compatdata path is currently set to '{cfg.ba2extract_compatdata_path}'. "
+            f"This may cause issues when launching ba2extract. "
+            f"Check the dump scripts wiki at "
+            f"https://github.com/FWDekker/fo76-dumps/wiki/Generating-dumps/ for more "
+            f"information. "
+            f"Continue anyway? (y/n) "
+        ):
             exit()
     if cfg.dump_root.exists() and len(os.listdir(cfg.dump_root)) != 0:
-        if prompt_confirmation(f"INFO: "
-                               f"The dump output directory '{cfg.dump_root}' exists and is not empty. "
-                               f"It may be a good idea to delete this directory. "
-                               f"Do you want to DELETE the directory and its contents? "
-                               f"This is optional, the dump scripts will run after this either way. (y/n) "):
+        if prompt_confirmation(
+            f"INFO: "
+            f"The dump output directory '{cfg.dump_root}' exists and is not empty. "
+            f"It may be a good idea to delete this directory. "
+            f"Do you want to DELETE the directory and its contents? "
+            f"This is optional, the dump scripts will run after this either way. (y/n) "
+        ):
             Files.delete(cfg.dump_root)
     print("")
 

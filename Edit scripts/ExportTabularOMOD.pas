@@ -12,51 +12,48 @@ function initialize(): Integer;
 begin
     ExportTabularOMOD_outputLines := TStringList.create();
     ExportTabularOMOD_outputLines.add(
-            '"File"'                 // Name of the originating ESM
-        + ', "Form ID"'              // Form ID
-        + ', "Editor ID"'            // Editor ID
-        + ', "Name"'                 // Full name
-        + ', "Description"'          // Description
-        + ', "Form type"'            // Type of mod (`Armor` or `Weapon`)
-        + ', "Loose mod"'            // Loose mod (MISC)
-        + ', "Attach point"'         // Attach point
-        + ', "Attach parent slots"'  // Sorted JSON array of attach parent slots
-        + ', "Includes"'             // Sorted JSON object of includes
-        + ', "Properties"'           // Sorted JSON object of properties
-        + ', "Target keywords"'      // Sorted JSON array of keywords. Each keyword is represented as
+        '"File", ' +                 // Name of the originating ESM
+        '"Form ID", ' +              // Form ID
+        '"Editor ID", ' +            // Editor ID
+        '"Name", ' +                 // Full name
+        '"Description", ' +          // Description
+        '"Form type", ' +            // Type of mod (`Armor` or `Weapon`)
+        '"Loose mod", ' +            // Loose mod (MISC)
+        '"Attach point", ' +         // Attach point
+        '"Attach parent slots", ' +  // Sorted JSON array of attach parent slots
+        '"Includes", ' +             // Sorted JSON object of includes
+        '"Properties", ' +           // Sorted JSON object of properties
+        '"Target keywords"'          // Sorted JSON array of keywords. Each keyword is represented as
                                      // `{EditorID} [KYWD:{FormID}]`
     );
 end;
 
-function canProcess(el: IInterface): Boolean;
+function process(el: IInterface): Integer;
 begin
-    result := signature(el) = 'OMOD';
+    if signature(el) <> 'OMOD' then begin exit; end;
+
+    _process(el);
 end;
 
-function process(omod: IInterface): Integer;
+function _process(omod: IInterface): Integer;
 var data: IInterface;
 begin
-    if not canProcess(omod) then begin
-        addWarning(name(omod) + ' is not a OMOD. Entry was ignored.');
-        exit;
-    end;
-
-    data := eBySign(omod, 'DATA');
+    data := elementBySignature(omod, 'DATA');
 
     ExportTabularOMOD_outputLines.add(
-              escapeCsvString(getFileName(getFile(omod))) + ', '
-            + escapeCsvString(stringFormID(omod)) + ', '
-            + escapeCsvString(evBySign(omod, 'EDID')) + ', '
-            + escapeCsvString(evBySign(omod, 'FULL')) + ', '
-            + escapeCsvString(evBySign(omod, 'DESC')) + ', '
-            + escapeCsvString(evByName(data, 'Form Type')) + ', '
-            + escapeCsvString(evBySign(omod, 'LNAM')) + ', '
-            + escapeCsvString(evByName(data, 'Attach Point')) + ', '
-            + escapeCsvString(getJsonChildArray(eByName(data, 'Attach Parent Slots'))) + ', '
-            + escapeCsvString(getJsonIncludesArray(data)) + ', '
-            + escapeCsvString(getJsonOMODPropertyObject(data)) + ', '
-            + escapeCsvString(getJsonChildArray(eBySign(omod, 'MNAM')))
-        );
+        escapeCsvString(getFileName(getFile(omod))) + ', ' +
+        escapeCsvString(stringFormID(omod)) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(omod, 'EDID'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(omod, 'FULL'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(omod, 'DESC'))) + ', ' +
+        escapeCsvString(getEditValue(elementByName(data, 'Form Type'))) + ', ' +
+        escapeCsvString(getEditValue(elementBySignature(omod, 'LNAM'))) + ', ' +
+        escapeCsvString(getEditValue(elementByName(data, 'Attach Point'))) + ', ' +
+        escapeCsvString(getJsonChildArray(elementByName(data, 'Attach Parent Slots'))) + ', ' +
+        escapeCsvString(getJsonIncludesArray(data)) + ', ' +
+        escapeCsvString(getJsonOMODPropertyObject(data)) + ', ' +
+        escapeCsvString(getJsonChildArray(elementBySignature(omod, 'MNAM')))
+    );
 end;
 
 function finalize(): Integer;
@@ -81,15 +78,15 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    includes := eByName(data, 'Includes');
-    for i := 0 to eCount(includes) - 1 do begin
-        include := eByIndex(includes, i);
+    includes := elementByName(data, 'Includes');
+    for i := 0 to elementCount(includes) - 1 do begin
+        include := elementByIndex(includes, i);
         resultList.add(
             '{' +
-             '"Mod":"'            + escapeJson(evByName(include, 'Mod'))            + '"' +
-            ',"Minimum Level":"'  + escapeJson(evByName(include, 'Minimum Level'))  + '"' +
-            ',"Optional":"'       + escapeJson(evByName(include, 'Optional'))       + '"' +
-            ',"Don''t Use All":"' + escapeJson(evByName(include, 'Don''t Use All')) + '"' +
+            '"Mod":"' + escapeJson(getEditValue(elementByName(include, 'Mod'))) + '",' +
+            '"Minimum Level":"' + escapeJson(getEditValue(elementByName(include, 'Minimum Level'))) + '",' +
+            '"Optional":"' + escapeJson(getEditValue(elementByName(include, 'Optional'))) + '",' +
+            '"Don''t Use All":"' + escapeJson(getEditValue(elementByName(include, 'Don''t Use All'))) + '"' +
             '}'
         );
     end;
@@ -113,17 +110,17 @@ var i: Integer;
 begin
     resultList := TStringList.create();
 
-    props := eByName(data, 'Properties');
-    for i := 0 to eCount(props) - 1 do begin
-        prop := eByIndex(props, i);
+    props := elementByName(data, 'Properties');
+    for i := 0 to elementCount(props) - 1 do begin
+        prop := elementByIndex(props, i);
         resultList.add(
             '{' +
-             '"Value Type":"'    + escapeJson(evByName(prop, 'Value Type'))    + '"' +
-            ',"Function Type":"' + escapeJson(evByName(prop, 'Function Type')) + '"' +
-            ',"Property":"'      + escapeJson(evByName(prop, 'Property'))      + '"' +
-            ',"Value 1":"'       + escapeJson(evByName(prop, 'Value 1'))       + '"' +
-            ',"Value 2":"'       + escapeJson(evByName(prop, 'Value 2'))       + '"' +
-            ',"Curve Table":"'   + escapeJson(evByName(prop, 'Curve Table'))   + '"' +
+            '"Value Type":"' + escapeJson(getEditValue(elementByName(prop, 'Value Type'))) + '",' +
+            '"Function Type":"' + escapeJson(getEditValue(elementByName(prop, 'Function Type'))) + '",' +
+            '"Property":"' + escapeJson(getEditValue(elementByName(prop, 'Property'))) + '",' +
+            '"Value 1":"' + escapeJson(getEditValue(elementByName(prop, 'Value 1'))) + '",' +
+            '"Value 2":"' + escapeJson(getEditValue(elementByName(prop, 'Value 2'))) + '",' +
+            '"Curve Table":"' + escapeJson(getEditValue(elementByName(prop, 'Curve Table'))) + '"' +
             '}'
         );
     end;
