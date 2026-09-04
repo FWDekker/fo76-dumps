@@ -1,21 +1,22 @@
 [project]
 name = "fo76-dumps"
-version = "4.5.0"
+version = "4.6.0"
 authors = [{name = "Florine W. Dekker"}]
 description = "Data dumps of Fallout 76 game files"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 dependencies = [
-    "pandas==3.0.3",
+    "pandas==3.0.5",
     "pefile==2024.8.26",
 ]
 classifiers = ["Private :: Do Not Upload"]
 
 [dependency-groups]
 dev = [
-    "black==26.3.1",
+    "black==26.5.1",
 ]
 
 [tool.black]
 line-length = 120
 force-exclude = "config_default.py"
+target-version = ["py313"]
